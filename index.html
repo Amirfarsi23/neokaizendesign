@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoKaizen Design — BIM & Tech Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #07090d;
+  --bg2:    #0b0f16;
+  --bg3:    #0f141e;
+  --cyan:   #00d4ff;
+  --amber:  #f5a623;
+  --white:  #dde4ee;
+  --muted:  #4e5f72;
+  --dim:    #1a2535;
+  --border: rgba(0,212,255,0.1);
+  --glow:   rgba(0,212,255,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── BLUEPRINT GRID ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--cyan); }
+
+/* ════════════════════════════════
+   NAV
+════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 5vw;
+  background: rgba(7,9,13,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: padding 0.3s;
+}
+nav.scrolled { padding: 0.7rem 5vw; }
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  text-decoration: none;
+}
+.logo span { color: var(--cyan); }
+
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cyan); }
+
+.nav-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.4rem;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: transparent;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--cyan); color: var(--bg); }
+
+/* hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: 0.3s; }
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 9rem 5vw 5rem;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+
+/* animated radial glow */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: 20%; left: 55%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.15); opacity: 0.6; }
+}
+
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--cyan);
+  margin-bottom: 1.4rem;
+  display: flex; align-items: center; gap: 0.8rem;
+  animation: fadeUp 0.8s 0.1s both;
+}
+.hero-eyebrow::before {
+  content: ''; width: 2.5rem; height: 1px; background: var(--cyan);
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.2rem, 7.5vw, 8rem);
+  line-height: 0.9; letter-spacing: 0.02em;
+  margin-bottom: 1.8rem;
+  animation: fadeUp 0.8s 0.2s both;
+}
+h1 .outline {
+  -webkit-text-stroke: 1.5px var(--cyan);
+  color: transparent;
+}
+h1 .solid { color: var(--white); }
+
+.hero-desc {
+  font-size: 1rem; line-height: 1.8;
+  color: var(--muted); max-width: 460px;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.8s 0.3s both;
+}
+
+.hero-btns {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.4s both;
+}
+
+.btn-primary {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem 2.2rem;
+  background: var(--cyan); color: var(--bg);
+  border: none; cursor: pointer; font-weight: 500;
+  text-decoration: none; display: inline-block;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.btn-ghost {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem 2.2rem;
+  background: transparent; color: var(--white);
+  border: 1px solid var(--border);
+  cursor: pointer; text-decoration: none; display: inline-block;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-1px); }
+
+.hero-tags {
+  display: flex; flex-wrap: wrap; gap: 0.55rem;
+  margin-top: 2.5rem;
+  animation: fadeUp 0.8s 0.5s both;
+}
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border); color: var(--muted);
+}
+
+/* hero visual */
+.hero-visual {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+  animation: fadeUp 0.8s 0.3s both;
+}
+
+.bim-graphic {
+  width: 340px; height: 340px;
+  position: relative;
+}
+.bim-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 20s linear infinite;
+}
+.bim-ring:nth-child(1) { width: 100%; height: 100%; animation-duration: 25s; }
+.bim-ring:nth-child(2) { width: 75%; height: 75%; animation-direction: reverse; animation-duration: 18s; }
+.bim-ring:nth-child(3) { width: 50%; height: 50%; animation-duration: 12s; }
+
+.bim-ring::before {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--cyan);
+  border-radius: 50%;
+  top: -4px; left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+@keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+.bim-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px; height: 120px;
+  border: 1px solid rgba(0,212,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,212,255,0.04);
+}
+.bim-center::before, .bim-center::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border-color: var(--cyan); border-style: solid;
+}
+.bim-center::before { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.bim-center::after  { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+.bim-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.12em; color: var(--cyan);
+}
+
+/* floating data points */
+.bim-dot {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.1em; color: var(--cyan);
+  background: rgba(0,212,255,0.06);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+}
+.bim-dot:nth-child(5)  { top: 10px; left: -40px; }
+.bim-dot:nth-child(6)  { bottom: 30px; right: -50px; }
+.bim-dot:nth-child(7)  { top: 50%; right: -60px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════
+   SECTION SHARED
+════════════════════════════════ */
+section { position: relative; z-index: 1; }
+
+.section-wrap {
+  max-width: 1200px; margin: 0 auto;
+  padding: 7rem 5vw;
+}
+
+.section-header { margin-bottom: 3.5rem; }
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.section-label::before {
+  content: ''; width: 1.8rem; height: 1px; background: var(--cyan);
+}
+
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  line-height: 0.95; letter-spacing: 0.02em;
+}
+
+.section-sub {
+  font-size: 0.95rem; line-height: 1.75; color: var(--muted);
+  max-width: 520px; margin-top: 1rem;
+}
+
+/* ════════════════════════════════
+   ABOUT
+════════════════════════════════ */
+#about {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1.5fr;
+  gap: 5rem; align-items: start;
+}
+
+.about-portrait {
+  aspect-ratio: 3/4;
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+}
+.portrait-initials {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6rem; color: rgba(0,212,255,0.1);
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+/* replace with: <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover"> */
+.about-portrait::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 35%; background: linear-gradient(to top, var(--bg2), transparent);
+}
+
+.corner { position: absolute; width: 18px; height: 18px; border-color: var(--cyan); border-style: solid; }
+.tl { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+.tr { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+.bl { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; }
+.br { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+
+.portrait-name {
+  position: absolute; bottom: 1.2rem; left: 1.2rem; z-index: 2;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--cyan); text-transform: uppercase;
+}
+
+.about-text p {
+  font-size: 0.97rem; line-height: 1.85; color: var(--muted);
+  margin-bottom: 1.1rem;
+}
+.about-text p strong { color: var(--white); font-weight: 600; }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border);
+  margin: 2.5rem 0;
+}
+.stat {
+  background: var(--bg2);
+  padding: 1.5rem 1.2rem; text-align: center;
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.6rem; color: var(--cyan);
+  display: block; line-height: 1;
+}
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); margin-top: 0.3rem; display: block;
+}
+
+.pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid var(--border); color: var(--cyan);
+}
+
+/* ════════════════════════════════
+   SERVICES
+════════════════════════════════ */
+#services { border-bottom: 1px solid var(--border); }
+
+.services-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border);
+}
+
+.svc-card {
+  background: var(--bg);
+  padding: 2.5rem;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+  cursor: default;
+}
+.svc-card:hover { background: var(--bg2); }
+.svc-card:hover .svc-num { color: rgba(0,212,255,0.12); }
+.svc-card:hover .svc-icon { border-color: var(--cyan); }
+
+.svc-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem; color: rgba(255,255,255,0.03);
+  position: absolute; top: 0.5rem; right: 1.2rem;
+  line-height: 1; transition: color 0.3s; pointer-events: none;
+}
+
+.svc-icon {
+  width: 46px; height: 46px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s;
+}
+.svc-icon svg { width: 20px; height: 20px; stroke: var(--cyan); fill: none; stroke-width: 1.5; }
+
+.svc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--white); margin-bottom: 0.75rem;
+}
+.svc-desc {
+  font-size: 0.87rem; line-height: 1.75; color: var(--muted);
+}
+.svc-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }
+.svc-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border); color: var(--muted);
+}
+
+/* ════════════════════════════════
+   PORTFOLIO
+════════════════════════════════ */
+#portfolio {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+
+.portfolio-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 1px; background: var(--border);
+}
+
+.proj-card {
+  background: var(--bg);
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.proj-card:hover { background: var(--bg3); }
+.proj-card:hover .proj-overlay { opacity: 1; }
+.proj-card:hover .proj-img-placeholder { transform: scale(1.03); }
+
+.proj-img-placeholder {
+  height: 220px;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.5s;
+  overflow: hidden;
+  position: relative;
+}
+/* blueprint lines inside image placeholder */
+.proj-img-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.proj-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem; color: rgba(0,212,255,0.12);
+  letter-spacing: 0.05em; position: relative; z-index: 1;
+}
+
+.proj-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,212,255,0.05);
+  opacity: 0; transition: opacity 0.3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.proj-overlay-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  background: var(--bg);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.proj-body { padding: 1.8rem 2rem; }
+
+.proj-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 0.6rem;
+}
+.proj-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--white); margin-bottom: 0.75rem;
+}
+.proj-desc {
+  font-size: 0.85rem; line-height: 1.7; color: var(--muted);
+}
+.proj-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.2rem; }
+.proj-stack-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid var(--border); color: var(--muted);
+}
+
+/* ════════════════════════════════
+   CONTACT
+════════════════════════════════ */
+#contact { border-bottom: 1px solid var(--border); }
+
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.4fr;
+  gap: 5rem; align-items: start;
+}
+
+.contact-info h2 { margin-bottom: 1.2rem; }
+
+.contact-info p {
+  font-size: 0.95rem; line-height: 1.8; color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.contact-details { display: flex; flex-direction: column; gap: 1rem; }
+.contact-item {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-item:hover { color: var(--cyan); }
+.contact-item-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.contact-item-icon svg { width: 15px; height: 15px; stroke: var(--cyan); fill: none; stroke-width: 1.5; }
+
+/* FORM */
+.contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+.field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted);
+}
+.field input,
+.field textarea,
+.field select {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+  -webkit-appearance: none;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus { border-color: var(--cyan); }
+.field textarea { min-height: 130px; }
+.field select option { background: var(--bg2); }
+
+.form-submit {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  background: var(--cyan); color: var(--bg);
+  border: none; cursor: pointer; font-weight: 500;
+  transition: opacity 0.2s, transform 0.2s;
+  align-self: flex-start;
+}
+.form-submit:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.form-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+footer {
+  position: relative; z-index: 1;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 3rem 5vw;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1.5rem;
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.1em;
+  color: var(--white); text-decoration: none;
+}
+.footer-logo span { color: var(--cyan); }
+
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--cyan); }
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.08em; color: var(--muted);
+}
+
+/* ════════════════════════════════
+   DIVIDER LINE
+════════════════════════════════ */
+.divider {
+  height: 1px; background: var(--border);
+  position: relative; z-index: 1;
+}
+
+/* ════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-portrait { aspect-ratio: 4/3; }
+  .services-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .form-row { grid-template-columns: 1fr; }
+
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: fixed; top: 56px; left: 0; right: 0;
+    background: rgba(7,9,13,0.98);
+    padding: 2rem 5vw;
+    border-bottom: 1px solid var(--border);
+    gap: 1.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="navbar">
+  <a href="#hero" class="logo">Neo<span>Kaizen</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <p class="hero-eyebrow">BIM &amp; Tech Consulting</p>
+      <h1>
+        <span class="solid">BUILDING</span><br>
+        <span class="outline">INTELLIGENCE</span><br>
+        <span class="solid">SYSTEMS</span>
+      </h1>
+      <p class="hero-desc">
+        Transforming AEC workflows through AI-powered BIM, intelligent knowledge graphs, and spatial computing. From IFC data to actionable building insights.
+      </p>
+      <div class="hero-btns">
+        <a href="#portfolio" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-ghost">Start a Project</a>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">IFC / BIM</span>
+        <span class="tag">Neo4j</span>
+        <span class="tag">AI Integration</span>
+        <span class="tag">Revit</span>
+        <span class="tag">Digital Twin</span>
+        <span class="tag">Unity VR</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="bim-graphic">
+        <div class="bim-ring"></div>
+        <div class="bim-ring"></div>
+        <div class="bim-ring"></div>
+        <div class="bim-center">
+          <span class="bim-label">BIM</span>
+        </div>
+        <div class="bim-dot">IFC_4.0</div>
+        <div class="bim-dot">Neo4j</div>
+        <div class="bim-dot">AI / NLP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">About</p>
+      <h2>THE PERSON<br>BEHIND THE CODE</h2>
+    </div>
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="about-portrait">
+          <!-- Replace the line below with: <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+          <span class="portrait-initials">AH</span>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <span class="portrait-name">Amirhossein — BIM Researcher</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="about-text">
+          <p>
+            I'm a <strong>PhD researcher and BIM consultant</strong> based in Germany, working at the intersection of building information modeling, artificial intelligence, and spatial computing.
+          </p>
+          <p>
+            My research focuses on creating <strong>intelligent building data systems</strong> — transforming raw IFC models into queryable knowledge graphs that answer complex architectural and engineering questions in natural language.
+          </p>
+          <p>
+            With hands-on experience in <strong>Revit, Dynamo, DesignBuilder</strong>, and cutting-edge tools like Neo4j and Claude AI, I bridge the gap between traditional AEC workflows and the next generation of digital building intelligence.
+          </p>
+          <p>
+            Currently exploring <strong>AR/MR applications</strong> for on-site construction, digital twin systems, and AI-assisted building performance optimization.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="stat-num">5+</span>
+            <span class="stat-lbl">Years BIM</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">10+</span>
+            <span class="stat-lbl">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">3</span>
+            <span class="stat-lbl">Countries</span>
+          </div>
+        </div>
+
+        <p class="section-label" style="margin-top:0.5rem;">Core Skills</p>
+        <div class="pill-row">
+          <span class="pill">Revit</span>
+          <span class="pill">IFC / OpenBIM</span>
+          <span class="pill">Neo4j</span>
+          <span class="pill">Python</span>
+          <span class="pill">Claude API</span>
+          <span class="pill">Unity / VR</span>
+          <span class="pill">DesignBuilder</span>
+          <span class="pill">Dynamo</span>
+          <span class="pill">Flask</span>
+          <span class="pill">AR / XR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ══ -->
+<section id="services">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Services</p>
+      <h2>WHAT I<br>OFFER</h2>
+      <p class="section-sub">End-to-end consulting from BIM authoring to AI-powered building intelligence systems.</p>
+    </div>
+    <div class="services-grid reveal">
+
+      <div class="svc-card">
+        <span class="svc-num">01</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <p class="svc-title">BIM Modeling &amp; Revit Design</p>
+        <p class="svc-desc">Professional architectural and structural BIM modeling using Revit. LOD 200–400 models with full parametric families, schedules, and documentation packages ready for construction.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Revit</span>
+          <span class="svc-tag">Dynamo</span>
+          <span class="svc-tag">IFC Export</span>
+          <span class="svc-tag">LOD 400</span>
+        </div>
+      </div>
+
+      <div class="svc-card">
+        <span class="svc-num">02</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        </div>
+        <p class="svc-title">AI-Powered BIM Intelligence</p>
+        <p class="svc-desc">Transform your IFC models into intelligent knowledge graphs. Query building data in natural language, automate Raumbuch generation, and extract spatial insights using Claude AI + Neo4j.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">IFC Parsing</span>
+          <span class="svc-tag">Neo4j</span>
+          <span class="svc-tag">Claude API</span>
+          <span class="svc-tag">NLP</span>
+        </div>
+      </div>
+
+      <div class="svc-card">
+        <span class="svc-num">03</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <p class="svc-title">Building Energy Simulation</p>
+        <p class="svc-desc">Detailed thermal and energy performance analysis using DesignBuilder and EnergyPlus. ASHRAE 55 comfort analysis, cooling/heating load calculations, and energy benchmarking reports.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">DesignBuilder</span>
+          <span class="svc-tag">EnergyPlus</span>
+          <span class="svc-tag">ASHRAE 55</span>
+          <span class="svc-tag">HVAC</span>
+        </div>
+      </div>
+
+      <div class="svc-card">
+        <span class="svc-num">04</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <p class="svc-title">Digital Twin &amp; AR/VR</p>
+        <p class="svc-desc">Development of interactive digital twins and AR-overlay solutions for construction sites. HoloLens 2 and Unity-based visualizations connecting live BIM data to spatial computing environments.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Unity</span>
+          <span class="svc-tag">HoloLens 2</span>
+          <span class="svc-tag">XR</span>
+          <span class="svc-tag">Digital Twin</span>
+        </div>
+      </div>
+
+      <div class="svc-card">
+        <span class="svc-num">05</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <p class="svc-title">BIM Workflow Automation</p>
+        <p class="svc-desc">Custom Dynamo scripts and Python tools to automate repetitive BIM tasks — automated Raumbuch per DIN 277, clash detection pipelines, and data extraction workflows.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Dynamo</span>
+          <span class="svc-tag">Python</span>
+          <span class="svc-tag">DIN 277</span>
+          <span class="svc-tag">VOB/C</span>
+        </div>
+      </div>
+
+      <div class="svc-card">
+        <span class="svc-num">06</span>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <p class="svc-title">Consulting &amp; Training</p>
+        <p class="svc-desc">BIM strategy consulting for AEC firms — implementation roadmaps, ISO 19650 compliance, team training on Revit and OpenBIM workflows, and custom AI integration advisory.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">ISO 19650</span>
+          <span class="svc-tag">OpenBIM</span>
+          <span class="svc-tag">Training</span>
+          <span class="svc-tag">Strategy</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PORTFOLIO ══ -->
+<section id="portfolio">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Portfolio</p>
+      <h2>SELECTED<br>PROJECTS</h2>
+      <p class="section-sub">A selection of research, consulting, and development work across BIM, AI, and spatial computing.</p>
+    </div>
+    <div class="portfolio-grid reveal">
+
+      <div class="proj-card">
+        <div class="proj-img-placeholder">
+          <!-- Replace with: <img src="project1.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+          <span class="proj-icon">BIM NEXUS</span>
+        </div>
+        <div class="proj-overlay">
+          <a href="#contact" class="proj-overlay-btn">Learn More →</a>
+        </div>
+        <div class="proj-body">
+          <p class="proj-type">AI + BIM Platform</p>
+          <p class="proj-title">BIM Nexus — AI Building Intelligence</p>
+          <p class="proj-desc">PhD-level platform integrating IFC parsing, Neo4j knowledge graphs, and Claude AI for natural language building queries. Automated DIN 277 Raumbuch generation and dark-themed Flask web interface.</p>
+          <div class="proj-stack">
+            <span class="proj-stack-tag">Flask</span>
+            <span class="proj-stack-tag">Neo4j</span>
+            <span class="proj-stack-tag">Claude API</span>
+            <span class="proj-stack-tag">IFC</span>
+            <span class="proj-stack-tag">Python</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-img-placeholder">
+          <!-- Replace with: <img src="project2.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+          <span class="proj-icon">AR XR</span>
+        </div>
+        <div class="proj-overlay">
+          <a href="#contact" class="proj-overlay-btn">Learn More →</a>
+        </div>
+        <div class="proj-body">
+          <p class="proj-type">Spatial Computing</p>
+          <p class="proj-title">AR Construction Assistant — HoloLens 2</p>
+          <p class="proj-desc">Mixed reality application for construction sites with live BIM overlay, AI-powered worker assistant, and real-time IFC data contribution. Built on HoloLens 2 with Unity and Flask/Neo4j backend.</p>
+          <div class="proj-stack">
+            <span class="proj-stack-tag">Unity</span>
+            <span class="proj-stack-tag">HoloLens 2</span>
+            <span class="proj-stack-tag">IFC.js</span>
+            <span class="proj-stack-tag">FastAPI</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-img-placeholder">
+          <!-- Replace with: <img src="project3.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+          <span class="proj-icon">ENERGY</span>
+        </div>
+        <div class="proj-overlay">
+          <a href="#contact" class="proj-overlay-btn">Learn More →</a>
+        </div>
+        <div class="proj-body">
+          <p class="proj-type">Energy Simulation</p>
+          <p class="proj-title">Residential Building Energy Analysis</p>
+          <p class="proj-desc">Comprehensive thermal comfort and energy performance simulation for a residential complex. ASHRAE 55-2004 compliance, cooling design load calculation, and benchmarking against national standards.</p>
+          <div class="proj-stack">
+            <span class="proj-stack-tag">DesignBuilder</span>
+            <span class="proj-stack-tag">EnergyPlus</span>
+            <span class="proj-stack-tag">ASHRAE 55</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-img-placeholder">
+          <!-- Replace with: <img src="project4.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+          <span class="proj-icon">REVIT</span>
+        </div>
+        <div class="proj-overlay">
+          <a href="#contact" class="proj-overlay-btn">Learn More →</a>
+        </div>
+        <div class="proj-body">
+          <p class="proj-type">BIM Modeling</p>
+          <p class="proj-title">3D BIM Modeling &amp; Documentation</p>
+          <p class="proj-desc">Full-detail LOD 350 architectural and structural BIM models with automated room schedules, DIN 277 area calculations, and construction documentation for German building regulations.</p>
+          <div class="proj-stack">
+            <span class="proj-stack-tag">Revit</span>
+            <span class="proj-stack-tag">Dynamo</span>
+            <span class="proj-stack-tag">DIN 277</span>
+            <span class="proj-stack-tag">IFC4</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="contact-grid">
+      <div class="reveal">
+        <p class="section-label">Contact</p>
+        <h2>LET'S BUILD<br>SOMETHING</h2>
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);margin:1rem 0 2rem;">
+          Have a BIM project, research collaboration, or consulting need? I'd love to hear about it. Let's discuss how intelligent building data systems can transform your workflow.
+        </p>
+        <div class="contact-details">
+          <a href="mailto:hello@neokaizendesign.com" class="contact-item">
+            <div class="contact-item-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            hello@neokaizendesign.com
+          </a>
+          <a href="https://github.com/Amirfarsi23" target="_blank" class="contact-item">
+            <div class="contact-item-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </div>
+            github.com/Amirfarsi23
+          </a>
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            Würzburg, Bavaria — Germany
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="field">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" placeholder="John" required>
+            </div>
+            <div class="field">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" placeholder="Doe" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@company.com" required>
+          </div>
+          <div class="field">
+            <label for="service">Service Interested In</label>
+            <select id="service">
+              <option value="">Select a service...</option>
+              <option>BIM Modeling &amp; Revit Design</option>
+              <option>AI-Powered BIM Intelligence</option>
+              <option>Building Energy Simulation</option>
+              <option>Digital Twin &amp; AR/VR</option>
+              <option>BIM Workflow Automation</option>
+              <option>Consulting &amp; Training</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Project Details</label>
+            <textarea id="message" placeholder="Tell me about your project, timeline, and goals..." required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message →</button>
+          <p class="form-note" id="formMsg"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <a href="#hero" class="footer-logo">Neo<span>Kaizen</span> Design</a>
+  <nav class="footer-links">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#portfolio">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <p class="footer-copy">© 2025 NeoKaizen Design · neokaizendesign.com</p>
+</footer>
+
+<script>
+// ── NAV scroll shrink
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── Hamburger menu
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// ── Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(r => observer.observe(r));
+
+// ── Contact form (replace with your backend or Formspree)
+function handleSubmit(e) {
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  msg.textContent = '✓ Message sent! I\'ll get back to you within 24 hours.';
+  msg.style.color = 'var(--cyan)';
+  e.target.reset();
+  setTimeout(() => msg.textContent = '', 5000);
+}
+</script>
+</body>
+</html>
