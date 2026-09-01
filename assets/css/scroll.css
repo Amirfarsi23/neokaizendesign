@@ -43,7 +43,9 @@
 /* --- Bühne --- */
 .scroller { height: var(--story-len); position: relative; }
 .stage {
-  position: sticky; top: 0; height: 100vh; width: 100%;
+  position: sticky; top: 0; width: 100%;
+  height: 100vh;      /* Fallback */
+  height: 100svh;     /* Handy: ohne Adressleisten-Sprung */
   overflow: hidden; background: #000;
 }
 #viewA { position: absolute; inset: 0; will-change: transform; }
@@ -127,10 +129,19 @@
 /* --- Handy --- */
 @media (max-width: 700px) {
   .scroller { height: var(--story-len-m); }
-  #brand { font-size: 1.7rem; }
-  #navmenu { gap: 1.1rem; }
-  #navmenu a { font-size: .68rem; letter-spacing: .1em; }
-  #story-cap { left: 6vw; right: 6vw; bottom: 10vh; }
+  #brand { font-size: 1.45rem; }
+  #navmenu { gap: .85rem; }
+  #navmenu a { font-size: .6rem; letter-spacing: .07em; }
+  #topbar-bg { height: 104px; }          /* Platz für zwei Zeilen */
+  #story-cap { left: 6vw; right: 6vw; bottom: 9vh; }
+  #story-tag { top: 12vh; }
+}
+
+/* sehr schmale Geräte */
+@media (max-width: 380px) {
+  #brand { font-size: 1.2rem; }
+  #navmenu { gap: .6rem; }
+  #navmenu a { font-size: .55rem; letter-spacing: .04em; }
 }
 
 /* --- reduzierte Bewegung: nur Übergänge aus, Scroll-Länge bleibt --- */

@@ -46,17 +46,17 @@ loading="lazy">      <img class="ly" id="f-restaurant" src="assets/img/scroll/18
 loading="lazy">      <img class="ly" id="f-buero" src="assets/img/scroll/19-buero.jpg" alt=""
 loading="lazy">
       <div id="lensbl"></div>
-      <svg id="lens" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+      <svg id="lens" viewBox="0 0 1600 900" aria-hidden="true">
         <defs>
-          <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+          <filter id="soft"><feGaussianBlur id="softblur" stdDeviation="22"/></filter>
           <mask id="goggle">
-            <rect width="1600" height="900" fill="#fff"/>
+            <rect id="mask-bg" width="1600" height="900" fill="#fff"/>
             <g filter="url(#soft)">
               <rect id="hole" x="150" y="85" width="1300" height="730" rx="310" ry="310" fill="#000"/>
             </g>
           </mask>
         </defs>
-        <rect width="1600" height="900" fill="#000" mask="url(#goggle)"/>
+        <rect id="lens-bg" width="1600" height="900" fill="#000" mask="url(#goggle)"/>
       </svg>
     </div>
 
