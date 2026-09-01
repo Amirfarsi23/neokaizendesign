@@ -2,7 +2,12 @@
    NeoKaizen — Projekte als Fotostapel, Cursor, Nach-oben-Button
    =========================================================== */
 
-/* ---------- Cursor: das Spiralzeichen ---------- */
+/* ---------- Cursor: das Spiralzeichen (nur mit Maus) ---------- */
+@media (hover: none), (pointer: coarse) {
+  body, a, button, input, textarea, select,
+  .hamburger, .proj-pile { cursor: auto !important; }
+}
+
 body,
 a, button, input, textarea, select, .hamburger {
   cursor: url("../img/brand/cursor-gold.png") 18 18, auto;

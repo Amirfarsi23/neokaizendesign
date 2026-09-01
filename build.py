@@ -21,7 +21,10 @@ IMG       = ROOT / "assets" / "img" / "projects"
 IMG_ALT   = ROOT / "images" / "Projects"
 OUT       = ROOT / "index.html"
 
-IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".avif"}
+IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"}
+# Formate, die ein Browser NICHT anzeigen kann — werden gemeldet
+BAD_EXT   = {".tif", ".tiff", ".bmp", ".heic", ".heif", ".psd", ".raw",
+             ".cr2", ".nef", ".arw", ".dng", ".svg"}
 
 
 def load(name):
@@ -49,11 +52,26 @@ def prepare_projects(meta):
 
     projects = []
     for folder, web in folders:
-        imgs = sorted(f.name for f in folder.iterdir()
-                      if f.suffix.lower() in IMAGE_EXT)
+        files = [f for f in folder.iterdir() if f.is_file()]
+        imgs  = sorted(f.name for f in files if f.suffix.lower() in IMAGE_EXT)
+        bad   = sorted(f.name for f in files if f.suffix.lower() in BAD_EXT)
+        other = sorted(f.name for f in files
+                       if f.suffix.lower() not in IMAGE_EXT
+                       and f.suffix.lower() not in BAD_EXT)
+        subs  = sorted(d.name for d in folder.iterdir() if d.is_dir())
+
         if not imgs:
-            print(f"  ! leer, übersprungen: {folder.name}")
+            reason = "keine Bilder"
+            if bad:   reason = f"Format wird im Browser nicht angezeigt: {', '.join(bad[:3])}"
+            elif subs:  reason = f"Bilder liegen in Unterordnern: {', '.join(subs[:3])}"
+            elif other: reason = f"unbekannte Dateien: {', '.join(other[:3])}"
+            print(f"  ! Ordner {folder.name:<4} übersprungen — {reason}")
             continue
+
+        note = ""
+        if bad:   note += f"  ({len(bad)} Datei(en) im falschen Format ignoriert)"
+        if subs:  note += f"  (Unterordner ignoriert: {', '.join(subs[:2])})"
+        print(f"  · Ordner {folder.name:<4} {len(imgs)} Bild(er){note}")
 
         m = dict(by_slug.get(folder.name, {}))
         cover = m.get("cover") if m.get("cover") in imgs else imgs[0]
@@ -77,7 +95,7 @@ def prepare_projects(meta):
             "images":  gallery,
         })
 
-    print(f"  {len(projects)} Projektordner gefunden")
+    print(f"  → {len(projects)} Projekt(e) übernommen\n")
     return projects
 
 

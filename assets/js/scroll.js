@@ -43,14 +43,30 @@
   };
 
   /* ---- lens opening width (press [ and ] to tune, value logs to console) ---- */
-  let LW = 1300;
+  let LW = 1300;                       // 700 = enge Röhre · 1560 = schmaler Rand
+  const maskBg = $('mask-bg'), lensBg = $('lens-bg'), softBlur = $('softblur');
+
   function setLens() {
-    const h = Math.round(LW * 730 / 1300), r = Math.round(LW * 0.238);
-    hole.setAttribute('width', LW);        hole.setAttribute('height', h);
-    hole.setAttribute('x', (1600 - LW) / 2); hole.setAttribute('y', (900 - h) / 2);
-    hole.setAttribute('rx', r);            hole.setAttribute('ry', r);
+    // viewBox exactly matches the stage in pixels -> no stretching on any screen
+    const r = stage.getBoundingClientRect();
+    const W = Math.max(1, Math.round(r.width));
+    const H = Math.max(1, Math.round(r.height));
+    lens.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    [maskBg, lensBg].forEach(el => {
+      el.setAttribute('width', W); el.setAttribute('height', H);
+    });
+
+    const k  = LW / 1600;                       // how much of the frame stays open
+    const ow = W * k, oh = H * k;
+    const rad = Math.min(W, H) * 0.30;
+    hole.setAttribute('x', (W - ow) / 2);  hole.setAttribute('y', (H - oh) / 2);
+    hole.setAttribute('width', ow);        hole.setAttribute('height', oh);
+    hole.setAttribute('rx', rad);          hole.setAttribute('ry', rad);
+    softBlur.setAttribute('stdDeviation', Math.max(10, Math.min(W, H) * 0.035));
   }
   setLens();
+  addEventListener('resize', setLens);
+  addEventListener('orientationchange', () => setTimeout(setLens, 200));
   addEventListener('keydown', (e) => {
     if (e.key !== '[' && e.key !== ']') return;
     LW = e.key === '[' ? Math.max(700, LW - 40) : Math.min(1560, LW + 40);
@@ -69,12 +85,17 @@
     m = {
       bw: b.width, bh: b.height, nw: n.width, nh: n.height,
       vw, vh, small,
-      pad: small ? 20 : 40,
-      dockScale: small ? 0.62 : 0.42
+      pad: small ? 16 : 40,
+      dockScale: small ? 0.60 : 0.42
     };
   }
   measure();
-  addEventListener('resize', measure);
+  addEventListener('resize', () => { measure(); setLens(); });
+
+  /* beim Neuladen immer oben starten */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  addEventListener('load', () => scrollTo(0, 0));
+  scrollTo(0, 0);
 
   function dock(t) {
     // brand: centred above the middle  ->  top-left of the bar
@@ -86,8 +107,9 @@
 
     // nav: centred under the brand  ->  right side of the bar
     const nx0 = (m.vw - m.nw) / 2,           ny0 = m.vh * 0.42 + m.bh + 34;
-    const nx1 = m.small ? m.pad : m.vw - m.nw - m.pad;
-    const ny1 = m.small ? 58 : 34;
+    // Handy: Menü rutscht auf eine eigene Zeile unter den Namen
+    const nx1 = m.small ? Math.max(m.pad, (m.vw - m.nw) / 2) : m.vw - m.nw - m.pad;
+    const ny1 = m.small ? 56 : 34;
     navmenu.style.transform =
       `translate(${nx0 + (nx1 - nx0) * t}px, ${ny0 + (ny1 - ny0) * t}px)`;
 
