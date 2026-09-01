@@ -1,0 +1,26 @@
+[
+  {
+    "title": "3D-Design & Visualisierung",
+    "desc": "Fotorealistische Bilder und 3D-Modelle Ihres Entwurfs — Wohnung, Haus, Küche, Garten oder Büro.",
+    "tags": ["Revit", "Blender", "Twinmotion"],
+    "icon": "cube"
+  },
+  {
+    "title": "360°-Rundgang",
+    "desc": "Ein Link, jedes Handy, keine App. Ihre Kunden gehen durch den Raum, bevor er gebaut ist.",
+    "tags": ["360°", "Web", "WebXR"],
+    "icon": "panorama"
+  },
+  {
+    "title": "VR-Präsentation",
+    "desc": "Mit der Brille mitten im Raum stehen — für Verkaufsraum, Musterwohnung und Messe.",
+    "tags": ["VR", "Meta Quest", "Unity"],
+    "icon": "headset"
+  },
+  {
+    "title": "AR & MR vor Ort",
+    "desc": "Der Entwurf in Originalgröße am echten Ort. Im Rohbau, im Raum, im Garten.",
+    "tags": ["AR", "MR", "Vor Ort"],
+    "icon": "layers"
+  }
+]

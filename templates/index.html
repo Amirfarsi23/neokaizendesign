@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% include "partials/scroll.html" %}
+
+<main id="page">
+
+<!-- PROJEKTE -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Projekte</p>
+      <h2>AUSGEWÄHLTE<br>ARBEITEN</h2>
+    </div>
+    <div class="proj-list">
+      {%- for p in projects %}
+      {% set num = loop.index %}{% include "partials/project_card.html" %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- LEISTUNGEN -->
+<section id="services">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Leistungen</p>
+      <h2>WAS WIR<br>MACHEN</h2>
+    </div>
+    <div class="services-grid reveal">
+      {%- for s in services %}
+      {% set num = loop.index %}{% include "partials/service_card.html" %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ÜBER MICH -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Über uns</p>
+      <h2>MUTIG PLANEN,<br>MUTIG ZEIGEN</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        {% for para in site.about.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+      </div>
+      <div class="about-facts">
+        {% for f in site.about.facts %}
+        <div class="fact"><span class="fact-k">{{ f.k }}</span><span class="fact-v">{{ f.v }}</span></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Kontakt</p>
+      <h2>ERZÄHLEN SIE MIR<br>VON IHREM PROJEKT</h2>
+    </div>
+    <div class="contact-grid reveal">
+      <div class="contact-info">
+        <p>{{ site.contact.intro }}</p>
+        <div class="contact-details">
+          <a href="mailto:{{ site.contact.email }}" class="contact-item">
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            {{ site.contact.email }}
+          </a>
+          <div class="contact-item">
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <span>{{ site.contact.location }}</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg></div>
+            <span>{{ site.contact.languages }}</span>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" action="https://formspree.io/f/YOUR_ID" method="POST">
+        <input type="text"  name="name"    placeholder="Name"    required>
+        <input type="email" name="email"   placeholder="E-Mail"  required>
+        <select name="leistung">
+          <option value="">Leistung wählen …</option>
+          {%- for s in services %}
+          <option value="{{ s.title }}">{{ s.title }}</option>
+          {%- endfor %}
+          <option value="Sonstiges">Sonstiges</option>
+        </select>
+        <textarea name="message" rows="5" placeholder="Kurz zum Projekt …" required></textarea>
+        <button type="submit" class="btn-primary">Nachricht senden</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+{% endblock %}
