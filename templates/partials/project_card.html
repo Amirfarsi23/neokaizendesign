@@ -1,0 +1,20 @@
+<article class="proj" data-slug="{{ p.slug }}">
+  <div class="proj-info">
+    <span class="proj-idx">{{ "%02d"|format(num) }}</span>
+    <h3 class="proj-title">{{ p.title }}</h3>
+    {% if p.summary %}<p class="proj-summary">{{ p.summary }}</p>{% endif %}
+    {% set bits = [p.type, p.client, p.year] | select | list %}
+    {% if bits %}<p class="proj-meta">{{ bits | join(" · ") }}</p>{% endif %}
+    {% if p.tags %}
+    <div class="svc-tags">{% for t in p.tags %}<span class="svc-tag">{{ t }}</span>{% endfor %}</div>
+    {% endif %}
+    <span class="proj-count">{{ p.images|length }} Bild{{ '' if p.images|length == 1 else 'er' }}</span>
+  </div>
+
+  <div class="proj-pile">
+    {%- for im in p.images %}
+    <img class="pile-img" src="{{ p.dir }}{{ im.file }}" alt="{{ im.caption or p.title }}"
+         data-i="{{ loop.index0 }}" loading="lazy">
+    {%- endfor %}
+  </div>
+</article>

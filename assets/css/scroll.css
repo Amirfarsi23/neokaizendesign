@@ -1,0 +1,139 @@
+/* ===========================================================
+   NeoKaizen — Intro + Scroll Story
+
+   SCROLL-GESCHWINDIGKEIT: nur --story-len ändern.
+   Größerer Wert = langsamer.
+   =========================================================== */
+
+:root {
+  --story-len:   5000vh;  /* Desktop — 3000 schnell · 5000 mittel · 8000 langsam */
+  --story-len-m: 3400vh;  /* Handy   — etwa 2/3 vom Desktop-Wert */
+}
+
+/* --- fixierte Marke + Menü (Position kommt aus dem JS) --- */
+#brand, #navmenu {
+  position: fixed; top: 0; left: 0;
+  transform-origin: left top;
+  z-index: 60; will-change: transform;
+}
+#brand {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 2.6rem; letter-spacing: .02em; line-height: 1;
+  color: #fff; text-decoration: none; white-space: nowrap;
+}
+#navmenu {
+  display: flex; gap: 2.2rem; list-style: none;
+  margin: 0; padding: 0; white-space: nowrap;
+}
+#navmenu a {
+  font-family: 'DM Mono', monospace; font-size: .82rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,255,255,.78); text-decoration: none;
+  transition: color .25s ease;
+}
+#navmenu a:hover { color: var(--gold, #c9a84c); }
+
+#topbar-bg {
+  position: fixed; top: 0; left: 0; right: 0; height: 76px;
+  background: rgba(6,8,16,.72); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  opacity: 0; z-index: 55; pointer-events: none;
+}
+
+/* --- Bühne --- */
+.scroller { height: var(--story-len); position: relative; }
+.stage {
+  position: sticky; top: 0; height: 100vh; width: 100%;
+  overflow: hidden; background: #000;
+}
+#viewA { position: absolute; inset: 0; will-change: transform; }
+.ly {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+}
+
+#lens   { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+#lensbl {
+  position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  backdrop-filter: blur(7px);
+  -webkit-mask-image: radial-gradient(ellipse 52% 62% at 50% 50%, rgba(0,0,0,0) 62%, #000 100%);
+          mask-image: radial-gradient(ellipse 52% 62% at 50% 50%, rgba(0,0,0,0) 62%, #000 100%);
+}
+#black { position: absolute; inset: 0; background: #000; opacity: 1; pointer-events: none; }
+
+/* --- Bildunterschriften --- */
+#story-cap {
+  position: absolute; left: 6vw; bottom: 12vh; max-width: 38rem;
+  color: #fff; z-index: 5; pointer-events: none;
+  text-shadow: 0 2px 26px rgba(0,0,0,.9);
+  opacity: 0; transition: opacity .45s ease;
+}
+#story-cap h2 {
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: clamp(1.4rem, 3.2vw, 2.7rem);
+  line-height: 1.15; letter-spacing: -.01em;
+}
+#story-cap p {
+  margin-top: .8rem; line-height: 1.65; opacity: .88;
+  font-size: clamp(.84rem, 1.05vw, 1.02rem);
+  max-width: 34rem;
+}
+.cap-service {
+  display: inline-block; margin-top: 1.1rem;
+  padding: .42rem .85rem;
+  border: 1px solid rgba(201,168,76,.45);
+  border-radius: 3px;
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(.62rem, .78vw, .72rem);
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--gold2, #e8c97a);
+  background: rgba(201,168,76,.07);
+  text-shadow: none;
+}
+@media (max-width: 700px) {
+  .cap-service { font-size: .6rem; letter-spacing: .06em; padding: .35rem .6rem; }
+}
+
+#story-tag {
+  position: absolute; left: 6vw; top: 14vh; z-index: 5;
+  transition: opacity .45s ease;
+  font-family: 'DM Mono', monospace; font-size: .7rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: #fff; opacity: .5; pointer-events: none;
+}
+
+/* --- Schlusssatz --- */
+#outro {
+  position: absolute; inset: 0; z-index: 6;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; opacity: 0; pointer-events: none;
+  background: rgba(0,0,0,.55);
+}
+#outro h2 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 3.2rem);
+  line-height: 1.2; max-width: 18ch; color: #fff;
+}
+.outro-hint {
+  margin-top: 2rem; font-family: 'DM Mono', monospace;
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+}
+
+/* --- normale Seite unter der Story --- */
+#page { position: relative; z-index: 10; background: var(--bg, #060810); }
+
+/* --- Handy --- */
+@media (max-width: 700px) {
+  .scroller { height: var(--story-len-m); }
+  #brand { font-size: 1.7rem; }
+  #navmenu { gap: 1.1rem; }
+  #navmenu a { font-size: .68rem; letter-spacing: .1em; }
+  #story-cap { left: 6vw; right: 6vw; bottom: 10vh; }
+}
+
+/* --- reduzierte Bewegung: nur Übergänge aus, Scroll-Länge bleibt --- */
+@media (prefers-reduced-motion: reduce) {
+  #navmenu a { transition: none; }
+}

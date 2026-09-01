@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/scroll.css">
+<link rel="stylesheet" href="assets/css/pieces.css">
+<link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+</head>
+<body>
+
+<div id="topbar-bg"></div>
+<a href="#top" id="brand">
+  <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
+  <span>{{ site.company|upper }}</span>
+</a>
+<ul id="navmenu">
+  {%- for item in site.nav %}
+  <li><a href="{{ item.href }}">{{ item.label }}</a></li>
+  {%- endfor %}
+</ul>
+
+{% block content %}{% endblock %}
+
+<script>
+window.NKD_FRAMES   = {{ scroll.frames|tojson }};
+window.NKD_CAPTIONS = {{ scroll.captions|tojson }};
+</script>
+<button id="to-top" aria-label="Nach oben">
+  <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<script src="assets/js/scroll.js"></script>
+<script src="assets/js/pieces.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

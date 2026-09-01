@@ -1,0 +1,221 @@
+{
+  "frames": [
+    {
+      "key": "plan",
+      "file": "01-plan.jpg"
+    },
+    {
+      "key": "waende",
+      "file": "02-waende.jpg"
+    },
+    {
+      "key": "modell",
+      "file": "03-modell.jpg"
+    },
+    {
+      "key": "skizze",
+      "file": "04-skizze.jpg"
+    },
+    {
+      "key": "brille1",
+      "file": "05-brille-1.jpg"
+    },
+    {
+      "key": "brille2",
+      "file": "06-brille-2.jpg"
+    },
+    {
+      "key": "brille3",
+      "file": "07-brille-3.jpg"
+    },
+    {
+      "key": "raum",
+      "file": "08-raum.jpg"
+    },
+    {
+      "key": "varSofa",
+      "file": "09-var-sofa.jpg"
+    },
+    {
+      "key": "varBoden",
+      "file": "10-var-boden.jpg"
+    },
+    {
+      "key": "varWand",
+      "file": "11-var-wand.jpg"
+    },
+    {
+      "key": "varKueche",
+      "file": "12-var-kueche.jpg"
+    },
+    {
+      "key": "rohbau",
+      "file": "13-rohbau.jpg"
+    },
+    {
+      "key": "winter",
+      "file": "14-winter.jpg"
+    },
+    {
+      "key": "nacht",
+      "file": "15-nacht.jpg"
+    },
+    {
+      "key": "tablet",
+      "file": "16-tablet.jpg"
+    },
+    {
+      "key": "garten",
+      "file": "17-garten.jpg"
+    },
+    {
+      "key": "restaurant",
+      "file": "18-restaurant.jpg"
+    },
+    {
+      "key": "buero",
+      "file": "19-buero.jpg"
+    }
+  ],
+  "captions": [
+    {
+      "from": 0,
+      "to": 5,
+      "tag": "01",
+      "title": "Der Plan",
+      "sub": "Ihre Kunden sehen Linien auf Papier. Sie sehen kein Zuhause.",
+      "service": "",
+      "mode": ""
+    },
+    {
+      "from": 5,
+      "to": 10,
+      "tag": "02",
+      "title": "Linien werden Wände",
+      "sub": "Aus dem Grundriss wird ein Raum mit Höhe, Tiefe und Proportion.",
+      "service": "",
+      "mode": ""
+    },
+    {
+      "from": 10,
+      "to": 15,
+      "tag": "03",
+      "title": "Das Modell",
+      "sub": "Geometrie, Struktur, Maße — die Grundlage für alles Weitere.",
+      "service": "3D-Modellierung aus Ihren Plänen · Revit · IFC · Blender",
+      "mode": ""
+    },
+    {
+      "from": 15,
+      "to": 20,
+      "tag": "04",
+      "title": "Wir bauen Ihren Entwurf",
+      "sub": "Gebäude, Wohnung, Innenraum, Küche oder einzelnes Möbelstück — wir modellieren und visualisieren es. Aus Ihren Plänen, aus einem Katalog oder aus einer Skizze auf Papier.",
+      "service": "3D-Design · Visualisierung · Küchen & Möbel · Revit-Familien",
+      "mode": ""
+    },
+    {
+      "from": 20,
+      "to": 26,
+      "tag": "",
+      "title": "",
+      "sub": "",
+      "service": "",
+      "mode": ""
+    },
+    {
+      "from": 26,
+      "to": 36,
+      "tag": "05",
+      "title": "Warum überhaupt eine Brille?",
+      "sub": "Weil kein Bild vermittelt, wie groß ein Raum wirklich ist. Wer einmal darin gestanden hat, weiß sofort, ob das Wohnzimmer reicht — und hört auf zu zögern.",
+      "service": "VR-Präsentation für Verkaufsraum, Musterwohnung und Messe",
+      "mode": "VR"
+    },
+    {
+      "from": 36,
+      "to": 42,
+      "tag": "06",
+      "title": "Erleben, bevor es gebaut ist",
+      "sub": "Kein Prospekt, kein Musterkoffer. Ihr Kunde geht durch seine Wohnung, tritt ans Fenster und sieht seine Aussicht — nicht irgendeine.",
+      "service": "",
+      "mode": "VR"
+    },
+    {
+      "from": 42,
+      "to": 62,
+      "tag": "07",
+      "title": "Ihr Kunde entscheidet mit",
+      "sub": "Sofa, Boden, Wand, Küchenfront: Ihr Kunde ändert die Ausstattung selbst und sieht jede Variante sofort. Der Preis läuft mit. Wer den Unterschied sieht, wählt häufiger die bessere Ausführung — und reklamiert hinterher nicht.",
+      "service": "Interaktiver Konfigurator in VR · Varianten mit Preisanzeige",
+      "mode": "VR"
+    },
+    {
+      "from": 62,
+      "to": 74,
+      "tag": "08",
+      "title": "Brille ab: der Rohbau",
+      "sub": "Derselbe Standpunkt, heute. Beton, Staub, offene Öffnungen — die Realität, in der Ihr Kunde gerade steht.",
+      "service": "",
+      "mode": "MR"
+    },
+    {
+      "from": 74,
+      "to": 76,
+      "tag": "09",
+      "title": "Brille auf: die fertige Wohnung",
+      "sub": "Ein Handgriff zwischen Baustelle und Ergebnis. Genau dieser Wechsel verkauft eine Wohnung, die es noch nicht gibt.",
+      "service": "MR vor Ort im Rohbau · Beratung zu Sonderwünschen",
+      "mode": "MR"
+    },
+    {
+      "from": 76,
+      "to": 86,
+      "tag": "10",
+      "title": "Zu jeder Tages- und Jahreszeit",
+      "sub": "Sommer, Winter, Abend. Ihr Kunde sieht, wie das Licht im Juli in den Raum fällt und wie es sich im Dezember anfühlt — ohne ein Jahr zu warten.",
+      "service": "",
+      "mode": "VR"
+    },
+    {
+      "from": 86,
+      "to": 91,
+      "tag": "11",
+      "title": "Und ganz ohne Brille",
+      "sub": "Auf dem Tablet, direkt vor Ort. Kein Headset, keine Einweisung: Ihr Mitarbeiter hält das Gerät hoch, der Entwurf steht an der echten Stelle.",
+      "service": "AR auf Tablet und Handy · ohne App, nur ein Link",
+      "mode": "AR"
+    },
+    {
+      "from": 91,
+      "to": 94,
+      "tag": "12",
+      "title": "Ihr Garten",
+      "sub": "Pergola, Weg, neuer Baum — im echten Grundstück platziert. Mit Zeitachse: wie hoch der Baum in fünf oder in fünfzehn Jahren steht und wohin er Schatten wirft.",
+      "service": "AR für Garten- und Landschaftsbau",
+      "mode": "AR · MR"
+    },
+    {
+      "from": 94,
+      "to": 97,
+      "tag": "13",
+      "title": "Restaurant und Bar",
+      "sub": "Bestuhlung, Tresen und Beleuchtung im leeren Raum sehen und ändern, bevor irgendetwas bestellt wird.",
+      "service": "AR für Gastronomie und Ladenbau",
+      "mode": "AR · MR"
+    },
+    {
+      "from": 97,
+      "to": 101,
+      "tag": "14",
+      "title": "Büro",
+      "sub": "Arbeitsplätze, Trennwände und Wegeführung im echten Rohbau prüfen — bevor der Mietvertrag unterschrieben ist.",
+      "service": "AR für Büroplanung und Flächenvermietung",
+      "mode": "AR · MR"
+    }
+  ],
+  "outro": {
+    "title": "Bauen Sie erst, wenn Ihr Kunde es gesehen hat.",
+    "hint": "weiter scrollen"
+  }
+}

@@ -1,0 +1,37 @@
+<div class="scroller" id="scroller">
+  <div class="stage" id="stage">
+
+    <div id="viewA">
+      {%- for f in scroll.frames %}
+      <img class="ly" id="f-{{ f.key }}" src="assets/img/scroll/{{ f.file }}" alt=""
+           {% if loop.index0 > 2 %}loading="lazy"{% endif %}>
+      {%- endfor %}
+
+      <div id="lensbl"></div>
+      <svg id="lens" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+          <mask id="goggle">
+            <rect width="1600" height="900" fill="#fff"/>
+            <g filter="url(#soft)">
+              <rect id="hole" x="150" y="85" width="1300" height="730" rx="310" ry="310" fill="#000"/>
+            </g>
+          </mask>
+        </defs>
+        <rect width="1600" height="900" fill="#000" mask="url(#goggle)"/>
+      </svg>
+    </div>
+
+    <div id="black"></div>
+
+    <div id="story-cap"><h2></h2><p></p><span class="cap-service"></span></div>
+    <div id="story-tag"></div>
+    <div id="story-mode"></div>
+
+    <div id="outro">
+      <h2>{{ scroll.outro.title }}</h2>
+      <span class="outro-hint">{{ scroll.outro.hint }} ↓</span>
+    </div>
+
+  </div>
+</div>

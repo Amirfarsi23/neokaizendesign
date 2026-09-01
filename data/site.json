@@ -1,0 +1,78 @@
+{
+  "lang": "de",
+  "title": "NeoKaizen Design — Visualisierung, VR & AR",
+  "description": "3D-Design, 360°-Rundgänge, VR und AR für Bauträger, Innenarchitektur, Küchen- und Gartenplanung.",
+  "company": "NeoKaizen Design",
+  "nav": [
+    {
+      "label": "Projekte",
+      "href": "#projects"
+    },
+    {
+      "label": "Leistungen",
+      "href": "#services"
+    },
+    {
+      "label": "Über uns",
+      "href": "#about"
+    },
+    {
+      "label": "Kontakt",
+      "href": "#contact"
+    }
+  ],
+  "hero": {
+    "eyebrow": "3D-Design · 360° · VR · AR",
+    "line1": "ERLEBEN,",
+    "line2": "BEVOR ES",
+    "line3": "GEBAUT IST",
+    "desc": "3D-Design, 360°-Rundgänge, VR und AR — für Bauträger, Innenarchitektur, Küchen- und Gartenplanung.",
+    "cta": "Projekt besprechen",
+    "tags": [
+      "3D-Visualisierung",
+      "360°-Rundgang",
+      "VR",
+      "AR / MR",
+      "Revit",
+      "Blender"
+    ]
+  },
+  "contact": {
+    "intro": "Sie haben ein Projekt — ein Gebäude, eine Wohnung, eine Küche, einen Garten oder eine Fläche, die Sie vermarkten müssen? Schreiben Sie kurz, worum es geht.",
+    "email": "info@neokaizendesign.com",
+    "github": "https://github.com/Amirfarsi23",
+    "location": "Eggenfelden, Bayern — Deutschland",
+    "phone": "",
+    "languages": "Deutsch · English"
+  },
+  "footer": {
+    "note": "Alle Darstellungen auf dieser Seite sind Konzeptstudien."
+  },
+  "about": {
+    "heading": "ÜBER UNS",
+    "paragraphs": [
+      "Wir sind ein junges Team aus Designern und Ingenieuren mit vielen abgeschlossenen Planungs- und Visualisierungsprojekten — in Deutschland und darüber hinaus.",
+      "Projekte, an denen wir mitgearbeitet haben, entstanden in Deutschland, Österreich, der Schweiz, im Iran und im Oman. Diese Bandbreite prägt, wie wir arbeiten: technisch genau, aber offen für andere Wege.",
+      "Jetzt gehen wir unseren eigenen Weg. Wir wollen das machen, was andere lieber auslassen — weil es neu ist, weil es aufwendiger ist, weil es Mut braucht. Wir sind mutig in unseren Entwürfen und mutig darin, neue Technologie einzusetzen, wenn sie die Qualität wirklich verbessert.",
+      "Wir kommen aus dem Bauingenieurwesen. Wir wissen, was gebaut wird — nicht nur, was gut aussieht."
+    ],
+    "facts": [
+      {
+        "k": "Standort",
+        "v": "Eggenfelden, Bayern"
+      },
+      {
+        "k": "Projekte in",
+        "v": "DE · AT · CH · IR · OM"
+      },
+      {
+        "k": "Schwerpunkt",
+        "v": "3D · 360° · VR · AR / MR"
+      },
+      {
+        "k": "Werkzeuge",
+        "v": "Revit · Blender · Twinmotion · Unity"
+      }
+    ]
+  }
+}

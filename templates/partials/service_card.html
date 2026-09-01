@@ -1,0 +1,9 @@
+<div class="svc-card">
+  <span class="svc-num">{{ "%02d"|format(num) }}</span>
+  <div class="svc-icon">{% include "icons/" ~ s.icon ~ ".svg" ignore missing %}</div>
+  <p class="svc-title">{{ s.title }}</p>
+  <p class="svc-desc">{{ s.desc }}</p>
+  <div class="svc-tags">
+    {%- for t in s.tags %}<span class="svc-tag">{{ t }}</span>{% endfor %}
+  </div>
+</div>
