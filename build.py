@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 NeoKaizen Design — static site builder.
