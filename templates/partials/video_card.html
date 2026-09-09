@@ -1,0 +1,11 @@
+<article class="video-card">
+  <div class="yt-facade" data-yt="{{ v.youtube_id }}">
+    <img class="yt-thumb" src="https://img.youtube.com/vi/{{ v.youtube_id }}/hqdefault.jpg"
+         alt="{{ v.title or 'XR Video' }}" loading="lazy">
+    <button type="button" class="yt-play" aria-label="Video abspielen: {{ v.title or 'XR Video' }}">
+      <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+    </button>
+  </div>
+  {% if v.title %}<h3 class="video-title">{{ v.title }}</h3>{% endif %}
+  {% for para in v.summary_paragraphs %}<p class="video-summary">{{ para }}</p>{% endfor %}
+</article>

@@ -117,6 +117,21 @@
     if (e.key === 'ArrowLeft')  show(idx - 1);
   });
 
+  /* ---------- YouTube-Facade: Klick lädt erst dann das Embed ---------- */
+  document.querySelectorAll('.yt-facade').forEach((box) => {
+    box.querySelector('.yt-play').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = box.dataset.yt;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.title = 'YouTube video';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      box.appendChild(iframe);
+      box.classList.add('playing');
+    });
+  });
+
   let ticking = false;
   function onScroll() {
     if (ticking) return;

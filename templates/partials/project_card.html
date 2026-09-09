@@ -2,13 +2,23 @@
   <div class="proj-info">
     <span class="proj-idx">{{ "%02d"|format(num) }}</span>
     <h3 class="proj-title">{{ p.title }}</h3>
-    {% if p.summary %}<p class="proj-summary">{{ p.summary }}</p>{% endif %}
+    {% for para in p.summary_paragraphs %}<p class="proj-summary">{{ para }}</p>{% endfor %}
     {% set bits = [p.type, p.client, p.year] | select | list %}
     {% if bits %}<p class="proj-meta">{{ bits | join(" · ") }}</p>{% endif %}
     {% if p.tags %}
     <div class="svc-tags">{% for t in p.tags %}<span class="svc-tag">{{ t }}</span>{% endfor %}</div>
     {% endif %}
     <span class="proj-count">{{ p.images|length }} Bild{{ '' if p.images|length == 1 else 'er' }}</span>
+
+    {% if p.youtube_id %}
+    <div class="yt-facade proj-video" data-yt="{{ p.youtube_id }}">
+      <img class="yt-thumb" src="https://img.youtube.com/vi/{{ p.youtube_id }}/hqdefault.jpg"
+           alt="Video: {{ p.title }}" loading="lazy">
+      <button type="button" class="yt-play" aria-label="Video abspielen: {{ p.title }}">
+        <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+      </button>
+    </div>
+    {% endif %}
   </div>
 
   <div class="proj-pile">
