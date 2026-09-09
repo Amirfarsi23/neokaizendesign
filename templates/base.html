@@ -5,6 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ site.title }}</title>
 <meta name="description" content="{{ site.description }}">
+<link rel="canonical" href="{{ site.url }}">
+<meta name="theme-color" content="#060810">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.company }}">
+<meta property="og:url" content="{{ site.url }}">
+<meta property="og:title" content="{{ site.title }}">
+<meta property="og:description" content="{{ site.description }}">
+<meta property="og:image" content="{{ site.url }}assets/img/brand/og-image.jpg">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ site.title }}">
+<meta name="twitter:description" content="{{ site.description }}">
+<meta name="twitter:image" content="{{ site.url }}assets/img/brand/og-image.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": {{ site.company|tojson }},
+  "url": {{ site.url|tojson }},
+  "email": {{ site.contact.email|tojson }},
+  "image": {{ (site.url ~ "assets/img/brand/og-image.jpg")|tojson }},
+  "description": {{ site.description|tojson }},
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Eggenfelden",
+    "addressRegion": "Bayern",
+    "addressCountry": "DE"
+  },
+  "sameAs": [{{ site.contact.instagram|tojson }}, {{ site.contact.github|tojson }}]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -14,16 +48,23 @@
 </head>
 <body>
 
+<a href="#page" class="skip-link">Zum Inhalt springen</a>
+<h1 class="visually-hidden">{{ site.title }}</h1>
+<div id="cursor-glow"></div>
 <div id="topbar-bg"></div>
-<a href="#top" id="brand">
-  <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
-  <span>{{ site.company|upper }}</span>
-</a>
-<ul id="navmenu">
-  {%- for item in site.nav %}
-  <li><a href="{{ item.href }}">{{ item.label }}</a></li>
-  {%- endfor %}
-</ul>
+<nav id="site-nav" aria-label="Hauptnavigation">
+  <a href="#top" id="brand">
+    <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
+    <span>{{ site.company|upper }}</span>
+  </a>
+  <ul id="navmenu">
+    {%- for item in site.nav %}
+    {%- if item.href != '#videos' or videos %}
+    <li><a href="{{ item.href }}">{{ item.label }}</a></li>
+    {%- endif %}
+    {%- endfor %}
+  </ul>
+</nav>
 
 {% block content %}{% endblock %}
 

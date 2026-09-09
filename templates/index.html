@@ -20,6 +20,23 @@
   </div>
 </section>
 
+{% if videos %}
+<!-- VIDEOS -->
+<section id="videos">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <p class="section-label">Videos</p>
+      <h2>XR IN<br>BEWEGUNG</h2>
+    </div>
+    <div class="video-grid reveal">
+      {%- for v in videos %}
+      {% include "partials/video_card.html" %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <!-- LEISTUNGEN -->
 <section id="services">
   <div class="section-wrap">
@@ -80,9 +97,15 @@
             <div class="contact-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg></div>
             <span>{{ site.contact.languages }}</span>
           </div>
+          {% if site.contact.instagram %}
+          <a href="{{ site.contact.instagram }}" class="contact-item" target="_blank" rel="noopener">
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></div>
+            Instagram
+          </a>
+          {% endif %}
         </div>
       </div>
-      <form class="contact-form" action="https://formspree.io/f/YOUR_ID" method="POST">
+      <form class="contact-form" id="contact-form" data-mailto="{{ site.contact.email }}">
         <input type="text"  name="name"    placeholder="Name"    required>
         <input type="email" name="email"   placeholder="E-Mail"  required>
         <select name="leistung">

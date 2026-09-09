@@ -1,5 +1,6 @@
 {
   "lang": "de",
+  "url": "https://neokaizendesign.com/",
   "title": "NeoKaizen Design — Visualisierung, VR & AR",
   "description": "3D-Design, 360°-Rundgänge, VR und AR für Bauträger, Innenarchitektur, Küchen- und Gartenplanung.",
   "company": "NeoKaizen Design",
@@ -7,6 +8,10 @@
     {
       "label": "Projekte",
       "href": "#projects"
+    },
+    {
+      "label": "Videos",
+      "href": "#videos"
     },
     {
       "label": "Leistungen",
@@ -41,6 +46,7 @@
     "intro": "Sie haben ein Projekt — ein Gebäude, eine Wohnung, eine Küche, einen Garten oder eine Fläche, die Sie vermarkten müssen? Schreiben Sie kurz, worum es geht.",
     "email": "info@neokaizendesign.com",
     "github": "https://github.com/Amirfarsi23",
+    "instagram": "https://www.instagram.com/neokaizendesign/",
     "location": "Eggenfelden, Bayern — Deutschland",
     "phone": "",
     "languages": "Deutsch · English"

@@ -24,22 +24,52 @@ Ohne weitere Angaben heißt das Projekt wie der Ordner. Leere Ordner werden übe
 
 ### Titel und Beschreibung ergänzen
 
-Später in `data/projects.json`, mit dem Ordnernamen als Schlüssel:
+Jeder Projektordner hat eine `info.txt` (z. B. `images/Projects/1/info.txt`) —
+die 8 bestehenden Ordner haben bereits eine leere Datei, einfach reinschreiben:
 
-```json
-{
-  "1": {
-    "title": "Wohnhaus Landshut",
-    "type": "Innenraum",
-    "client": "Bauträger XY",
-    "year": "2026",
-    "summary": "Ein Satz dazu.",
-    "tags": ["3D-Design", "VR"]
-  }
-}
+```
+Wohnhaus Landshut
+
+Ihre Kunden sehen Linien auf Papier. Wir zeigen ihnen ihr Zuhause.
+Zweiter Absatz, falls gewünscht.
 ```
 
-Nur die Felder eintragen, die gebraucht werden — der Rest bleibt einfach leer.
+Erste Zeile = Titel, danach eine Leerzeile, danach die Beschreibung
+(ein oder mehrere Absätze). Bleibt die Datei leer, wird einfach der
+Ordnername als Titel angezeigt — wie bisher.
+
+Wer mehr Kontrolle will, kann stattdessen (oder zusätzlich) mit
+`Schlüssel: Wert`-Zeilen am Anfang der Datei arbeiten:
+
+```
+Title: Wohnhaus Landshut
+Type: Innenraum
+Client: Bauträger XY
+Year: 2026
+Tags: 3D-Design, VR
+YouTube: https://youtu.be/XXXXXXXXXXX
+
+Ihre Kunden sehen Linien auf Papier. Wir zeigen ihnen ihr Zuhause.
+```
+
+Nur die Zeilen eintragen, die gebraucht werden — der Rest bleibt einfach leer.
+`YouTube:` ist optional: sobald gesetzt, zeigt die Projektkarte darunter ein
+Vorschaubild mit Play-Button; das eigentliche Video (via youtube-nocookie.com)
+lädt erst, wenn jemand draufklickt.
+
+Neues Projekt = neuer Ordner mit Bildern (und optional `info.txt`) unter
+`images/Projects/`, dann `python build.py` — völlig automatisch, keine
+weitere Änderung nötig.
+
+(`data/projects.json` funktioniert weiterhin als Alternative/Ergänzung,
+falls du JSON lieber magst — `info.txt` gewinnt bei doppelten Angaben.)
+
+## Videos
+
+Ein eigener "Videos"-Abschnitt für XR-Videos, unabhängig von den Projekten.
+Siehe `data/videos/README.md` — kurz gesagt: eine `.txt`-Datei pro Video in
+`data/videos/`, mit einem `YouTube:`-Link darin. Ohne Videos bleibt der
+Abschnitt einfach unsichtbar; die erste Datei lässt ihn automatisch erscheinen.
 
 ## Scroll-Story
 
