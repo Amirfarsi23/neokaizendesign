@@ -6,7 +6,7 @@
 <title>{{ site.title }}</title>
 <meta name="description" content="{{ site.description }}">
 <link rel="canonical" href="{{ site.url }}">
-<meta name="theme-color" content="#060810">
+<meta name="theme-color" content="#05060a">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ site.company }}">
@@ -55,12 +55,12 @@
 <nav id="site-nav" aria-label="Hauptnavigation">
   <a href="#top" id="brand">
     <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
-    <span>{{ site.company|upper }}</span>
+    <span class="wordmark"><span class="wm-light">NEO</span><span class="wm-structure">KAIZEN</span> <span class="wm-light">DESIGN</span></span>
   </a>
   <ul id="navmenu">
     {%- for item in site.nav %}
     {%- if item.href != '#videos' or videos %}
-    <li><a href="{{ item.href }}">{{ item.label }}</a></li>
+    <li><a href="{{ item.href }}"{% if item.tool %} class="is-tool"{% endif %}>{{ item.label }}</a></li>
     {%- endif %}
     {%- endfor %}
   </ul>

@@ -52,6 +52,47 @@
   </div>
 </section>
 
+<!-- KÜCHLKASTL -->
+<section id="kuechlkastl">
+  <div class="section-wrap">
+    <div class="tool-panel reveal">
+
+      <div class="tool-copy">
+        <p class="section-label">{{ site.tool.kicker }}</p>
+        <h2 class="tool-name">
+          <span class="wm-light">Küchl</span><span class="wm-structure">kastl</span>
+        </h2>
+        <hr class="rule-brand tool-rule">
+
+        <p class="tool-lead">{{ site.tool.headline }}</p>
+        <p class="tool-body">{{ site.tool.body }}</p>
+        <p class="tool-scope">{{ site.tool.scope }}</p>
+
+        <div class="tool-actions">
+          <a class="tool-cta" href="{{ site.tool.href }}">{{ site.tool.cta }}</a>
+          <a class="tool-ghost" href="#tool-feedback">{{ site.tool.feedback_cta }}</a>
+        </div>
+      </div>
+
+      <ul class="tool-steps">
+        <li><span>Modell laden</span><small>IFC · OBJ · FBX · glTF · STL</small></li>
+        <li><span>Kante klicken</span><small>Die Tür schwingt darum auf</small></li>
+        <li><span>Material und Licht</span><small>Holz, Stein, Stoff, Spots</small></li>
+        <li><span>Link verschicken</span><small>Rechner · VR · AR am Handy</small></li>
+      </ul>
+
+    </div>
+
+    <aside id="tool-feedback" class="tool-feedback reveal">
+      <p class="tool-note">{{ site.tool.note }}</p>
+      <a class="tool-mail"
+         href="mailto:{{ site.contact.email }}?subject={{ site.tool.feedback_subject | urlencode }}">
+        {{ site.contact.email }}
+      </a>
+    </aside>
+  </div>
+</section>
+
 <!-- ÜBER MICH -->
 <section id="about">
   <div class="section-wrap">

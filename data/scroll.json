@@ -1,20 +1,12 @@
 {
   "frames": [
     {
-      "key": "plan",
-      "file": "01-plan.jpg"
-    },
-    {
-      "key": "waende",
-      "file": "02-waende.jpg"
-    },
-    {
-      "key": "modell",
-      "file": "03-modell.jpg"
-    },
-    {
       "key": "skizze",
       "file": "04-skizze.jpg"
+    },
+    {
+      "key": "render",
+      "file": "02-render.jpg"
     },
     {
       "key": "brille1",
@@ -80,42 +72,24 @@
   "captions": [
     {
       "from": 0,
-      "to": 5,
-      "tag": "01",
-      "title": "Der Plan",
-      "sub": "Ihre Kunden sehen Linien auf Papier. Sie sehen kein Zuhause.",
-      "service": "",
-      "mode": ""
-    },
-    {
-      "from": 5,
       "to": 10,
-      "tag": "02",
-      "title": "Linien werden Wände",
-      "sub": "Aus dem Grundriss wird ein Raum mit Höhe, Tiefe und Proportion.",
-      "service": "",
+      "tag": "01",
+      "title": "Aus der Skizze wird ein Modell",
+      "sub": "Grundriss, Skizze oder Aufmaß — wir bauen daraus ein maßhaltiges 3D-Modell: Geometrie, Proportion, Konstruktion.",
+      "service": "3D-Modellierung",
       "mode": ""
     },
     {
       "from": 10,
-      "to": 15,
-      "tag": "03",
-      "title": "Das Modell",
-      "sub": "Geometrie, Struktur, Maße — die Grundlage für alles Weitere.",
-      "service": "3D-Modellierung aus Ihren Plänen · Revit · IFC · Blender",
+      "to": 24,
+      "tag": "02",
+      "title": "Und aus dem Modell ein Bild",
+      "sub": "Licht, Material und Kamera. Ihr Kunde sieht keinen Plan mehr, sondern den Raum.",
+      "service": "Visualisierung",
       "mode": ""
     },
     {
-      "from": 15,
-      "to": 20,
-      "tag": "04",
-      "title": "Wir bauen Ihren Entwurf",
-      "sub": "Gebäude, Wohnung, Innenraum, Küche oder einzelnes Möbelstück — wir modellieren und visualisieren es. Aus Ihren Plänen, aus einem Katalog oder aus einer Skizze auf Papier.",
-      "service": "3D-Design · Visualisierung · Küchen & Möbel · Revit-Familien",
-      "mode": ""
-    },
-    {
-      "from": 20,
+      "from": 24,
       "to": 26,
       "tag": "",
       "title": "",

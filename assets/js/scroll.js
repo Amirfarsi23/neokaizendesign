@@ -34,7 +34,7 @@
 
   /* ---- frame fade-in ranges, 0–100 across the story ---- */
   const FADE = {
-    waende:   [ 5, 10], modell:   [10, 15], skizze:   [15, 20],
+    render:   [10, 20],
     brille1:  [24, 25.5], brille2: [26, 31], brille3: [31, 36],
     raum:     [36, 42],
     varSofa:  [42, 47], varBoden: [47, 52], varWand: [52, 57], varKueche: [57, 62],
