@@ -15,6 +15,10 @@ const DE = {
   'Select a door, press Add hinge, then click the edge it should swing around.':
     'Tür auswählen, <em>Scharnier</em> drücken, dann die Kante anklicken, um die sie schwingen soll.',
   'Contact us': 'Kontakt',
+  'Open on a phone or headset': 'Auf Handy oder Headset öffnen',
+  'Copy link': 'Link kopieren',
+  'Close': 'Schließen',
+  'Checking…': 'Prüfe…',
   'Eicha Kuchl is a demo': 'Eicha Kuchl ist eine Demo',
   /* toolbar */
   'Open model…': 'Modell öffnen…',
@@ -123,6 +127,7 @@ const DE = {
   'Transparent background': 'Transparenter Hintergrund',
   'Logo in the corner': 'Logo in der Ecke',
   'Capture PNG': 'PNG aufnehmen',
+  'Export model for sharing (GLB)': 'Modell zum Teilen exportieren (GLB)',
   'Export for iPhone AR (USDZ)': 'Für iPhone-AR exportieren (USDZ)',
   'Make a share link…': 'Link zum Teilen…',
   'Studio': 'Studio',

@@ -10,8 +10,15 @@ let nextId = 1;
 export function assignStableIds(modelRoot) {
   const index = new Map();
   (function walk(o, path) {
-    o.userData.sid = path;
-    index.set(path, o);
+    // A file exported from this tool carries its original ids in userData.
+    // Preferring those is what lets a rig built against the source model keep
+    // working after the model is re-exported as glTF for sharing.
+    const carried = typeof o.userData.sid === 'string' ? o.userData.sid : null;
+    // `carried` can legitimately be '', so test for null rather than falsiness.
+    const id = carried !== null && !index.has(carried) ? carried : path;
+
+    o.userData.sid = id;
+    index.set(id, o);
     o.children.forEach((c, i) => walk(c, path ? `${path}.${i}` : String(i)));
   })(modelRoot, '');
   return index;

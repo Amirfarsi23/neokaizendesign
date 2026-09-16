@@ -170,7 +170,11 @@ export function contentBounds(root, target = new THREE.Box3()) {
   target.makeEmpty();
   (function walk(object) {
     if (object.userData.excludeFromBounds) return;
-    if (object.isMesh && object.geometry) target.expandByObject(object);
+    // a geometry that came back from a file can be malformed; one bad mesh
+    // must not stop the bounds being measured
+    if (object.isMesh && object.geometry?.isBufferGeometry) {
+      try { target.expandByObject(object); } catch { /* skip this one */ }
+    }
     for (const child of object.children) walk(child);
   })(root);
   return target;

@@ -1021,6 +1021,18 @@ function loadProject(data, { announce = true } = {}) {
   setSelection([]);
 
   mounts.dissolve();                       // unwrap placements before rebuilding
+
+  // Re-establish the frame the rig was authored in BEFORE anything reads a
+  // root-local coordinate. Joints record their hinge lines relative to
+  // `viewer.root`, so a model that carries its orientation baked in has to be
+  // flattened first — otherwise every mount lands in the wrong place and the
+  // doors swing off into space.
+  if (data.transform && unbakeTransform(state.model)) {
+    studio.setTransform(data.transform);
+    scenePanel.syncTransform(studio.transform);
+    refreshRootInverse();
+  }
+
   const { loaded, skipped } = rig.fromJSON(data, state.sidIndex);
   const materials = materialPanel.fromJSON(data.materials ?? [], state.sidIndex);
   const lights = lightRig.fromJSON(data.lights ?? []);
@@ -1030,6 +1042,13 @@ function loadProject(data, { announce = true } = {}) {
   clipBox.fromJSON(data.section, modelBounds());
   $('chk-clip').checked = clipBox.active;
 
+  // A model exported from this tool stands upright on its own: the import
+  // correction is baked into its root node, which is what makes the file look
+  // right in Quick Look and every other viewer. Joints, however, record their
+  // hinge lines in `viewer.root`'s local frame, so replaying a rig needs that
+  // frame back exactly as it was when the rig was made. Undo the baked matrix
+  // and let the saved transform put it back on `viewer.root` instead — the
+  // orientation is identical, but the hinges land on the doors again.
   if (data.transform) {
     studio.setTransform(data.transform);
     scenePanel.syncTransform(studio.transform);
@@ -1080,6 +1099,27 @@ const $ = (id) => document.getElementById(id);
  * Measured off `root` rather than the model group, because rigging and moving
  * parts re-parents them out of it.
  */
+/**
+ * Flatten out the orientation an exported model carries in its own matrix, so
+ * the saved transform can be applied to `viewer.root` the way it was authored.
+ * Does nothing to a model that was never exported from here.
+ */
+function unbakeTransform(model) {
+  if (!model) return false;
+  let node = null;
+  model.traverse((o) => {
+    if (!node && o.userData?.bakedTransform) node = o;
+  });
+  if (!node) return false;
+
+  node.position.set(0, 0, 0);
+  node.quaternion.identity();
+  node.scale.setScalar(1);
+  node.updateMatrixWorld(true);
+  delete node.userData.bakedTransform;   // the matrix is flat now; don't re-export a stale claim
+  return true;
+}
+
 function modelBounds() {
   if (!state.model) return new THREE.Box3();
   const world = contentBounds(viewer.root);
@@ -1459,6 +1499,26 @@ $('ar-open').addEventListener('click', () => {
 });
 $('ar-lights').addEventListener('click', toggleInteriorLights);
 
+$('btn-glb').addEventListener('click', async () => {
+  if (!state.model) return hint('Load a model first');
+  const button = $('btn-glb');
+  button.disabled = true;
+  button.textContent = 'Exporting…';
+  try {
+    const blob = await studio.exportGLB();
+    // a short, plain filename: share URLs with spaces in them are miserable
+    download('kitchen.glb', blob);
+    hint(`Saved <b>kitchen.glb</b> (${Math.round(blob.size / 1024)} KB). `
+      + 'Upload it to <b>models/</b> next to this page, then use '
+      + '<b>Make a share link…</b>', true);
+  } catch (err) {
+    hint(`GLB export failed: ${err.message}`, true);
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Export model for sharing (GLB)';
+  }
+});
+
 $('btn-usdz').addEventListener('click', async () => {
   if (!state.model) return hint('Load a model first');
   const button = $('btn-usdz');
@@ -1570,46 +1630,100 @@ const sharedModel = params.get('m');
 if (sharedModel) openFromUrl(sharedModel, params.get('r'));
 
 /**
- * A share link is only useful if the two files behind it are actually on the
- * server. The button used to hand out a URL built from the local file name,
- * which 404s until you upload something — so it now checks first and says
- * plainly what is missing.
+ * Share panel: the link, and a QR code for it.
+ *
+ * Typing a URL into a Quest browser or a phone is miserable, so the code is the
+ * primary way in — point the headset or the camera at the screen. The encoder
+ * is fetched only when the panel is first opened.
  */
+let qrEncoder = null;
+
+async function drawQR(text) {
+  const canvas = $('share-qr');
+  try {
+    if (!qrEncoder) {
+      const mod = await import('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/+esm');
+      qrEncoder = mod.default;
+    }
+    // type 0 = pick the smallest version that fits; M tolerates a screen glare
+    const qr = qrEncoder(0, 'M');
+    qr.addData(text);
+    qr.make();
+
+    const count = qr.getModuleCount();
+    const size = canvas.width;
+    const scale = Math.floor(size / (count + 2));      // 1 module quiet zone
+    const offset = Math.floor((size - count * scale) / 2);
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#05060a';
+    for (let r = 0; r < count; r++) {
+      for (let c = 0; c < count; c++) {
+        if (qr.isDark(r, c)) {
+          ctx.fillRect(offset + c * scale, offset + r * scale, scale, scale);
+        }
+      }
+    }
+    canvas.hidden = false;
+    return true;
+  } catch {
+    canvas.hidden = true;
+    return false;
+  }
+}
+
+function shareURL() {
+  const base = location.origin + location.pathname;
+  return {
+    base,
+    modelPath: 'models/kitchen.glb',
+    rigPath: 'rigs/kitchen.rig.json',
+    url: `${base}?m=models/kitchen.glb&r=rigs/kitchen.rig.json&view=1`
+  };
+}
+
 $('btn-share').addEventListener('click', async () => {
   if (!state.model) return hint('Load a model first');
 
-  const base = location.origin + location.pathname;
-  const stem = (state.sourceName ?? 'design').replace(/\.[^.]+$/, '');
-  const modelPath = `models/${state.sourceName ?? 'design.glb'}`;
-  const rigPath = `rigs/${stem}.rig.json`;
-  const url = `${base}?m=${encodeURIComponent(modelPath)}`
-    + `&r=${encodeURIComponent(rigPath)}&view=1`;
+  const { base, modelPath, rigPath, url } = shareURL();
+  const card = $('share-card');
+  const status = $('share-status');
+
+  card.hidden = false;
+  $('share-qr').hidden = true;
+  $('share-url').textContent = url;
+  $('share-url').href = url;
+  status.textContent = 'Checking…';
 
   const exists = async (path) => {
     try {
-      const r = await fetch(new URL(path, base), { method: 'HEAD' });
-      return r.ok;
+      return (await fetch(new URL(path, base), { method: 'HEAD' })).ok;
     } catch {
       return false;
     }
   };
-
   const [hasModel, hasRig] = await Promise.all([exists(modelPath), exists(rigPath)]);
 
   if (hasModel && hasRig) {
-    navigator.clipboard?.writeText(url).catch(() => {});
-    hint(`Link is live and copied:<br><b>${url}</b>`, true);
-    return;
+    status.textContent = 'Scan with a phone or a headset.';
+    await drawQR(url);
+  } else {
+    const missing = [!hasModel && modelPath, !hasRig && rigPath].filter(Boolean);
+    status.textContent = `Not live yet — upload ${missing.join(' and ')} next to this page. `
+      + 'The code below points at where it will be.';
+    await drawQR(url);
   }
-
-  const missing = [
-    !hasModel ? `<b>${modelPath}</b> — upload your model there` : null,
-    !hasRig ? `<b>${rigPath}</b> — press <b>Export rig</b> and upload the file there` : null
-  ].filter(Boolean).join('<br>');
-
-  hint(`The link is not live yet. Two files have to sit next to this page:`
-    + `<br>${missing}<br>Then this link works:<br>${url}`, true);
 });
+
+$('share-copy').addEventListener('click', () => {
+  navigator.clipboard?.writeText(shareURL().url).catch(() => {});
+  $('share-copy').textContent = 'Copied';
+  setTimeout(() => { $('share-copy').textContent = 'Copy link'; }, 1400);
+});
+
+$('share-close').addEventListener('click', () => { $('share-card').hidden = true; });
 
 /* ------------------------------------------------- language and feedback -- */
 
@@ -1636,10 +1750,12 @@ $('btn-feedback').addEventListener('click', () => {
 
 // clicking anywhere else puts the card away
 addEventListener('pointerdown', (e) => {
-  const card = $('feedback-card');
-  if (card.hidden) return;
-  if (card.contains(e.target) || e.target.closest('#btn-feedback')) return;
-  card.hidden = true;
+  for (const [id, trigger] of [['feedback-card', '#btn-feedback'], ['share-card', '#btn-share']]) {
+    const card = $(id);
+    if (card.hidden) continue;
+    if (card.contains(e.target) || e.target.closest(trigger)) continue;
+    card.hidden = true;
+  }
 });
 
 // debug handle - handy from the browser console when something looks wrong
