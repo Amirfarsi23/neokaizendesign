@@ -207,3 +207,92 @@ a, button, input, textarea, select, .hamburger {
   .lb-prev { left: 2vw; } .lb-next { right: 2vw; }
   .lb-img { max-width: 94vw; }
 }
+
+/* ======================================================= Küchlkastl ======
+   The tool's own section. One idea carries it: the four steps are numbered
+   because they genuinely are a sequence, and the rule under the name is the
+   only place the two brand colours touch.
+   ======================================================================== */
+
+#kuechlkastl { padding: 7rem 0; }
+
+.tool-panel {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: start;
+}
+
+.tool-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 5.5rem); line-height: .92;
+  margin: .4rem 0 0; letter-spacing: .01em;
+}
+.tool-rule { width: min(320px, 70%); margin: 1.1rem 0 1.6rem; }
+
+.tool-lead {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem); line-height: 1.32;
+  color: var(--white); margin: 0 0 1rem; max-width: 34ch;
+}
+.tool-body, .tool-scope {
+  color: var(--muted); line-height: 1.7; margin: 0 0 1rem; max-width: 62ch;
+}
+.tool-scope { color: #8e9ab3; }
+
+.tool-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.6rem; }
+
+.tool-cta {
+  display: inline-block; padding: .85rem 1.6rem; border-radius: 2px;
+  background: var(--blue); color: #eaf4ff; text-decoration: none;
+  font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: .02em;
+  border: 1px solid var(--blue-lift);
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+.tool-cta:hover { background: var(--teal); border-color: var(--teal-lift); color: #00201c; }
+
+.tool-ghost {
+  display: inline-block; padding: .85rem 1.4rem; border-radius: 2px;
+  color: var(--teal); text-decoration: none; border: 1px solid var(--edge-live);
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  transition: border-color .2s ease, color .2s ease;
+}
+.tool-ghost:hover { border-color: var(--teal); color: var(--teal-lift); }
+
+/* the four steps — a real sequence, so they get real numbers */
+.tool-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.tool-steps li {
+  counter-increment: step; position: relative;
+  padding: 1.05rem 0 1.05rem 3.4rem;
+  border-top: 1px solid var(--border);
+}
+.tool-steps li:last-child { border-bottom: 1px solid var(--border); }
+.tool-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; left: 0; top: 1.05rem;
+  font-family: 'DM Mono', monospace; font-size: .8rem;
+  color: var(--blue-lift);
+}
+.tool-steps span {
+  display: block; font-family: 'Syne', sans-serif; font-weight: 600;
+  color: var(--white);
+}
+.tool-steps small { display: block; margin-top: .2rem; color: var(--muted); font-size: .82rem; }
+
+/* feedback: quiet, and clearly separate from the pitch above it */
+.tool-feedback {
+  margin-top: 3rem; padding: 1.5rem 1.7rem;
+  border-left: 2px solid var(--teal); background: rgba(0,168,150,.05);
+  display: flex; flex-wrap: wrap; gap: 1rem 2rem;
+  align-items: center; justify-content: space-between;
+}
+.tool-note { margin: 0; color: var(--muted); line-height: 1.65; max-width: 58ch; }
+.tool-mail {
+  font-family: 'DM Mono', monospace; color: var(--teal);
+  text-decoration: none; border-bottom: 1px solid var(--edge-live); padding-bottom: 2px;
+  white-space: nowrap;
+}
+.tool-mail:hover { color: var(--teal-lift); border-color: var(--teal); }
+
+@media (max-width: 860px) {
+  #kuechlkastl { padding: 4.5rem 0; }
+  .tool-panel { grid-template-columns: 1fr; gap: 2.2rem; }
+}

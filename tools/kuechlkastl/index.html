@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Küchlkastl — Türen und Auszüge im Browser bewegen</title>
+  <link rel="stylesheet" href="./src/style.css" />
+
+  <!-- No build step: bare specifiers are resolved by the browser. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+      "web-ifc": "https://cdn.jsdelivr.net/npm/web-ifc@0.0.57/web-ifc-api.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="wordmark"><span class="wm-light">Küchl</span><span class="wm-structure">kastl</span></span>
+      <span class="demo-tag" data-demo>Demo</span>
+    </div>
+
+    <div class="group">
+      <button id="btn-open" class="btn">Open model…</button>
+      <button id="btn-demo" class="btn ghost">Demo kitchen</button>
+      <input id="file-input" type="file" multiple hidden
+             accept=".ifc,.obj,.mtl,.fbx,.glb,.gltf,.stl,.ply,.dae,.bin,.png,.jpg,.jpeg" />
+      <input id="add-input" type="file" multiple hidden
+             accept=".ifc,.obj,.mtl,.fbx,.glb,.gltf,.stl,.ply,.dae,.bin,.png,.jpg,.jpeg" />
+    </div>
+
+    <div class="group">
+      <button id="btn-undo" class="btn ghost" title="Undo (Ctrl+Z)" disabled>&#8630;</button>
+      <button id="btn-redo" class="btn ghost" title="Redo (Ctrl+Shift+Z)" disabled>&#8631;</button>
+    </div>
+
+    <div class="group segmented" id="mode-switch">
+      <button class="seg active" data-mode="edit">Rig</button>
+      <button class="seg" data-mode="present">Play</button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="group">
+      <button id="btn-open-all" class="btn ghost">Open all</button>
+      <button id="btn-close-all" class="btn ghost">Close all</button>
+      <button id="btn-export" class="btn ghost">Export rig</button>
+      <button id="btn-import" class="btn ghost">Import rig</button>
+      <button id="btn-vr" class="btn ghost" hidden>VR</button>
+      <button id="btn-ar" class="btn ghost" hidden>AR</button>
+      <button id="btn-feedback" class="btn ghost" title="Tell us what is missing">Feedback</button>
+      <span class="lang-switch">
+        <button id="lang-de" class="lang">DE</button><button id="lang-en" class="lang">EN</button>
+      </span>
+      <input id="rig-input" type="file" accept=".json" hidden />
+    </div>
+  </header>
+
+  <main>
+    <div id="viewport">
+      <div id="dropzone" class="dropzone">
+        <div class="dz-inner">
+          <strong>Drop a model here</strong>
+          <span>IFC · OBJ (+MTL) · FBX · GLB/glTF · STL · PLY · DAE</span>
+          <span class="muted">or press “Demo kitchen” to try it right away</span>
+        </div>
+      </div>
+      <div id="gizmo-bar" class="gizmo-bar" hidden>
+        <button class="gz active" data-gizmo="translate" title="Move (G)">Move</button>
+        <button class="gz" data-gizmo="rotate" title="Rotate (R)">Rotate</button>
+        <button class="gz" data-gizmo="scale" title="Scale (S)">Scale</button>
+        <span class="gz-sep"></span>
+        <button id="gz-space" class="gz" title="World or local axes">World</button>
+        <button id="gz-snap" class="gz" title="Snap to 10 mm / 15 degrees">Snap</button>
+        <span class="gz-sep"></span>
+        <button id="gz-off" class="gz" title="Put the handles away (Esc)">Hide</button>
+      </div>
+      <div id="feedback-card" class="feedback-card" hidden>
+        <h3>Küchlkastl is a demo</h3>
+        <p>It is still being tested, and it is built for kitchens but works on
+           anything with doors, drawers or moving parts — cabinetry, fitted
+           furniture, shopfitting, whole interiors.</p>
+        <p>If something is missing or broken, tell us. That is what this is for.</p>
+        <a id="feedback-mail" href="#">info@neokaizendesign.com</a>
+      </div>
+      <img id="watermark" class="watermark" alt="" hidden />
+      <div id="hint" class="hint"></div>
+      <div id="loading" class="loading" hidden><div class="spinner"></div><span id="loading-text">Loading…</span></div>
+    </div>
+
+    <aside id="panel">
+      <nav class="tabs" id="panel-tabs">
+        <button class="tab active" data-tab="parts">Parts</button>
+        <button class="tab" data-tab="material">Material</button>
+        <button class="tab" data-tab="lights">Lights</button>
+        <button class="tab" data-tab="scene">Scene</button>
+      </nav>
+
+      <!-- ------------------------------------------------------- Parts -- -->
+      <div class="pane-body" data-pane="parts">
+        <section class="pane">
+          <h2>Add to the scene</h2>
+          <div class="row">
+            <button id="btn-add-object" class="btn">Furniture…</button>
+            <button id="btn-add-floor" class="btn tiny" data-surface="floor">Floor</button>
+            <button id="btn-add-wall" class="btn tiny" data-surface="wall">Wall</button>
+            <button id="btn-add-ceiling" class="btn tiny" data-surface="ceiling">Ceiling</button>
+          </div>
+          <div id="extras-list" class="joint-list"></div>
+          <p class="muted tip small">
+            Added objects land on the floor where you are looking. Move them with
+            <b>G</b>, scale with <b>S</b>, remove with <b>Delete</b>. They live for
+            this session only — they are not written into the saved project.
+          </p>
+        </section>
+
+        <section class="pane">
+          <h2>Selection</h2>
+          <div id="selection-info" class="muted small">Nothing selected.</div>
+          <div class="row">
+            <button id="btn-add-hinge" class="btn primary" disabled>Add hinge</button>
+            <button id="btn-add-slide" class="btn primary" disabled>Add drawer</button>
+          </div>
+          <div class="row">
+            <button id="btn-group" class="btn" title="Lock these parts together (Ctrl+G)" disabled>Group</button>
+            <button id="btn-ungroup" class="btn" title="Break the group apart (Ctrl+Shift+G)" disabled>Ungroup</button>
+          </div>
+          <div class="row">
+            <button id="btn-xray" class="btn" title="Ghost everything except the selection (X)">X-ray</button>
+            <button id="btn-hide" class="btn" title="Hide the selected parts (H)">Hide</button>
+            <button id="btn-unhide" class="btn" title="Show everything again (Shift+H)">Show all</button>
+          </div>
+          <label class="check small">
+            <input type="checkbox" id="chk-bbox-edges" />
+            Snap to bounding-box edges (for messy geometry)
+          </label>
+          <p class="muted tip small">
+            Click the same spot again to step <b>through</b> to the part behind it —
+            that is how you reach drawer sides and bases. <b>Shift + click</b> adds
+            each one to the selection, then <b>Group</b> locks them together.
+          </p>
+        </section>
+
+        <section class="pane" id="groups-pane" hidden>
+          <h2>Groups <span id="group-count" class="pill">0</span></h2>
+          <div id="group-list" class="joint-list"></div>
+        </section>
+
+        <section class="pane" id="transform-pane" hidden>
+          <h2>Transform <span id="transform-target" class="pill">none</span></h2>
+          <div class="xyz">
+            <label>X<input type="number" id="tf-px" step="0.01" /></label>
+            <label>Y<input type="number" id="tf-py" step="0.01" /></label>
+            <label>Z<input type="number" id="tf-pz" step="0.01" /></label>
+          </div>
+          <div class="xyz">
+            <label>RX<input type="number" id="tf-rx" step="5" /></label>
+            <label>RY<input type="number" id="tf-ry" step="5" /></label>
+            <label>RZ<input type="number" id="tf-rz" step="5" /></label>
+          </div>
+          <div class="row">
+            <button id="btn-transform-reset" class="btn ghost">Reset transform</button>
+          </div>
+          <p class="muted tip small">
+            Offsets are relative to where the part came in — the imported file's
+            own transform is never touched, so Reset always gets you back.
+          </p>
+        </section>
+
+        <section class="pane grow">
+          <h2>Motions <span id="joint-count" class="pill">0</span></h2>
+          <div id="joint-list" class="joint-list"></div>
+          <p id="joint-empty" class="muted small">
+            Select a door, press <em>Add hinge</em>, then click the edge it should
+            swing around.
+          </p>
+        </section>
+
+        <section class="pane">
+          <h2>Keys</h2>
+          <ul class="small muted keys">
+            <li><b>Shift + click</b> — add to selection</li>
+            <li><b>Alt + click</b> — ignore grouping, pick the raw part</li>
+            <li><b>Ctrl+G</b> — group · <b>Ctrl+Shift+G</b> — ungroup</li>
+            <li><b>Ctrl+Z</b> — undo · <b>Ctrl+Shift+Z</b> — redo</li>
+            <li><b>X</b> — x-ray · <b>H</b> — hide · <b>Shift+H</b> — show all</li>
+            <li><b>G / R / S</b> — move, rotate, scale handles</li>
+            <li><b>F</b> — frame selection · <b>Esc</b> — cancel</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- ---------------------------------------------------- Material -- -->
+      <div class="pane-body" data-pane="material" hidden>
+        <section class="pane">
+          <h2>Library</h2>
+          <select id="mat-category" class="field"></select>
+          <div id="swatch-grid" class="swatches"></div>
+          <div class="row">
+            <button id="btn-upload-tex" class="btn ghost">Use my own image…</button>
+            <input id="tex-input" type="file" accept="image/*" hidden />
+          </div>
+        </section>
+
+        <section class="pane grow">
+          <h2>Adjust <span id="mat-current" class="pill">none</span></h2>
+
+          <label class="ctl">
+            <span>Texture size <i id="mat-size-val">1.40 m</i></span>
+            <input type="range" id="mat-size" min="0.05" max="4" step="0.01" value="1.4" />
+          </label>
+
+          <label class="ctl">
+            <span>Rotation <i id="mat-rot-val">0°</i></span>
+            <input type="range" id="mat-rot" min="0" max="360" step="1" value="0" />
+          </label>
+
+          <label class="ctl">
+            <span>Roughness <i id="mat-rough-val">0.60</i></span>
+            <input type="range" id="mat-rough" min="0" max="1" step="0.01" value="0.6" />
+          </label>
+
+          <label class="ctl">
+            <span>Metalness <i id="mat-metal-val">0.00</i></span>
+            <input type="range" id="mat-metal" min="0" max="1" step="0.01" value="0" />
+          </label>
+
+          <label class="ctl inline">
+            <span>Tint</span>
+            <input type="color" id="mat-tint" value="#ffffff" />
+          </label>
+
+          <div class="row">
+            <button id="btn-mat-reset" class="btn ghost">Reset to original</button>
+          </div>
+          <p class="muted tip small">
+            Sizes are in real metres and UVs are re-projected from the model, so a
+            0.3 m parquet tile is 0.3 m on the floor whatever the file's own
+            unwrapping looked like.
+          </p>
+        </section>
+      </div>
+
+      <!-- ------------------------------------------------------ Lights -- -->
+      <div class="pane-body" data-pane="lights" hidden>
+        <section class="pane">
+          <h2>Place a light</h2>
+          <div class="row">
+            <button class="btn primary" data-light="point">Bulb</button>
+            <button class="btn primary" data-light="spot">Spot</button>
+            <button class="btn primary" data-light="strip">Strip</button>
+          </div>
+          <p id="light-hint" class="muted tip small">
+            Pick a type, then click the surface it shines from — the underside of
+            a wall unit for under-cabinet lighting, the ceiling for downlights.
+            The beam follows that surface's direction.
+          </p>
+          <label class="check small">
+            <input type="checkbox" id="chk-light-markers" checked />
+            Show light markers (never included in renders)
+          </label>
+        </section>
+
+        <section class="pane grow">
+          <h2>Lights <span id="light-count" class="pill">0</span></h2>
+          <div id="light-list" class="joint-list"></div>
+          <p id="light-empty" class="muted small">No interior lights yet.</p>
+        </section>
+      </div>
+
+      <!-- ------------------------------------------------------- Scene -- -->
+      <div class="pane-body" data-pane="scene" hidden>
+        <section class="pane">
+          <h2>Model orientation</h2>
+          <div class="row">
+            <button class="btn tiny" data-rot="x">X ±90°</button>
+            <button class="btn tiny" data-rot="y">Y ±90°</button>
+            <button class="btn tiny" data-rot="z">Z ±90°</button>
+            <button id="btn-rot-reset" class="btn tiny ghost">Reset</button>
+          </div>
+          <label class="ctl">
+            <span>Turntable <i id="rot-y-val">0°</i></span>
+            <input type="range" id="rot-y" min="0" max="360" step="1" value="0" />
+          </label>
+          <label class="ctl">
+            <span>Scale <i id="scale-val">1.00×</i></span>
+            <input type="range" id="model-scale" min="-3" max="3" step="0.01" value="0" />
+          </label>
+        </section>
+
+        <section class="pane">
+          <h2>Section box</h2>
+          <label class="check small">
+            <input type="checkbox" id="chk-clip" />
+            Cut the model down to a box you can drag
+          </label>
+          <div class="row">
+            <button id="btn-clip-fit" class="btn tiny">Fit to selection</button>
+            <button id="btn-clip-reset" class="btn tiny ghost">Whole model</button>
+          </div>
+          <p class="muted tip small">
+            Drag the coloured pads on each face to slide that side in or out.
+            Hidden geometry stays selectable only inside the box, so you can work
+            on one cupboard without the rest getting in the way.
+          </p>
+        </section>
+
+        <section class="pane">
+          <h2>Lighting</h2>
+          <select id="light-preset" class="field"></select>
+
+          <label class="ctl">
+            <span>Sun direction <i id="azimuth-val">38°</i></span>
+            <input type="range" id="azimuth" min="0" max="360" step="1" value="38" />
+          </label>
+          <label class="ctl">
+            <span>Sun height <i id="elevation-val">52°</i></span>
+            <input type="range" id="elevation" min="2" max="89" step="1" value="52" />
+          </label>
+          <label class="ctl">
+            <span>Sun strength <i id="sun-val">2.2</i></span>
+            <input type="range" id="sun" min="0" max="6" step="0.05" value="2.2" />
+          </label>
+          <label class="ctl">
+            <span>Ambient <i id="ambient-val">1.35</i></span>
+            <input type="range" id="ambient" min="0" max="4" step="0.05" value="1.35" />
+          </label>
+          <label class="ctl">
+            <span>Exposure <i id="exposure-val">1.05</i></span>
+            <input type="range" id="exposure" min="0.2" max="2.5" step="0.01" value="1.05" />
+          </label>
+          <label class="ctl inline">
+            <span>Background</span>
+            <input type="color" id="background" value="#0e1116" />
+          </label>
+          <label class="check small">
+            <input type="checkbox" id="chk-shadows" checked /> Shadows
+          </label>
+        </section>
+
+        <section class="pane">
+          <h2>Render</h2>
+          <label class="ctl inline">
+            <span>Resolution</span>
+            <select id="render-scale" class="field narrow">
+              <option value="1">1×</option>
+              <option value="2" selected>2×</option>
+              <option value="3">3×</option>
+              <option value="4">4×</option>
+            </select>
+          </label>
+          <label class="check small">
+            <input type="checkbox" id="chk-transparent" /> Transparent background
+          </label>
+          <label class="check small">
+            <input type="checkbox" id="chk-watermark" checked /> Logo in the corner
+          </label>
+          <div class="row">
+            <button id="btn-render" class="btn primary">Capture PNG</button>
+          </div>
+          <div class="row">
+            <button id="btn-usdz" class="btn ghost">Export for iPhone AR (USDZ)</button>
+          </div>
+          <div class="row">
+            <button id="btn-share" class="btn ghost">Make a share link…</button>
+          </div>
+          <p id="render-info" class="muted tip small">
+            Renders the current camera view. Orbit to frame the shot first —
+            the grid and selection outlines are left out of the image.
+          </p>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <div id="present-bar" class="present-bar" hidden>
+    <button id="pb-toggle" class="ar-btn wide">Open all</button>
+    <button id="pb-lights" class="ar-btn wide">Lights</button>
+    <button id="pb-ar" class="ar-btn wide">View in AR</button>
+  </div>
+
+  <div id="ar-overlay" class="ar-overlay" hidden>
+    <div class="ar-hint" id="ar-hint">Point at the floor, then tap to place</div>
+    <div class="ar-bar">
+      <button id="ar-smaller" class="ar-btn">−</button>
+      <span id="ar-scale" class="ar-scale">100%</span>
+      <button id="ar-bigger" class="ar-btn">+</button>
+      <button id="ar-lights" class="ar-btn wide">Lights</button>
+      <button id="ar-open" class="ar-btn wide">Open all</button>
+      <button id="ar-move" class="ar-btn wide">Move</button>
+      <button id="ar-exit" class="ar-btn wide">Exit</button>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

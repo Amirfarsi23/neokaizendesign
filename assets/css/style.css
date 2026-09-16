@@ -1,8 +1,21 @@
 :root{
-  --bg:#060810;--bg2:#0a0d1a;--bg3:#0e1222;
-  --gold:#c9a84c;--gold2:#e8c97a;
-  --white:#dde4ee;--muted:#5a6880;
-  --border:rgba(201,168,76,0.12);
+  /* Two colours, and they mean opposite halves of the same job.
+     Persian blue is structure - the model, the geometry, the plan.
+     Teal is light - the render, the surface, anything alive under the cursor.
+     The studio's whole pitch is structure becoming light, so the gradient
+     between them is the brand mark and appears nowhere else. */
+  --bg:#05060a;--bg2:#0a0e18;--bg3:#111726;
+
+  --blue:#1C39BB;--blue-lift:#4560e0;--blue-deep:#101f6b;
+  --teal:#00A896;--teal-lift:#3ad8c2;--teal-deep:#00594f;
+
+  --white:#dce4f0;--muted:#66748f;
+  --border:rgba(28,57,187,0.28);
+  --edge-live:rgba(0,168,150,0.30);
+
+  /* the old accent names stay pointed at the live colour, so every existing
+     rule keeps working while the structural ones move to blue below */
+  --gold:var(--teal);--gold2:var(--teal-lift);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -134,3 +147,39 @@ footer{position:relative;z-index:1;background:var(--bg);border-top:1px solid var
 .proj-thumbs a:hover img{opacity:1;}
 .footer-note{font-family:'DM Mono',monospace;font-size:.66rem;opacity:.35;margin-top:.4rem;}
 @media(max-width:640px){.proj-grid{grid-template-columns:1fr;}}
+
+
+/* ============================================================ palette 2026
+   Blue = structure. Teal = light. The wordmark is the one place they meet.
+   ========================================================================= */
+
+#topbar-bg { border-bottom: 1px solid var(--border); }
+.proj-card { border-color: var(--border); }
+.proj-card:hover { border-color: var(--teal); }
+
+/* the wordmark: Neo and Design in light, Kaizen in structure */
+#brand .wordmark { letter-spacing: .12em; }
+#brand .wm-light { color: var(--teal); }
+#brand .wm-structure { color: var(--blue-lift); }
+#brand:hover .wm-light { color: var(--teal-lift); }
+
+/* one gradient in the whole site, and it is the thing the studio does:
+   geometry on the left, light on the right */
+.rule-brand {
+  height: 2px; border: 0; margin: 0;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--teal) 100%);
+}
+
+a:hover, .nav a:hover { color: var(--teal-lift); }
+
+#navmenu a.is-tool { position: relative; color: var(--teal); }
+#navmenu a.is-tool::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--teal));
+  transform: scaleX(.35); transform-origin: left; transition: transform .25s ease;
+}
+#navmenu a.is-tool:hover::after { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  #navmenu a.is-tool::after { transition: none; }
+}
