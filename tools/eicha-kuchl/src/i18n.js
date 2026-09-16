@@ -14,6 +14,8 @@ const DE = {
     'Hinzugefügte Objekte landen dort auf dem Boden, wohin Sie schauen. Bewegen mit <b>G</b>, skalieren mit <b>S</b>, entfernen mit <b>Entf</b>. Sie bestehen nur für diese Sitzung und werden nicht mitgespeichert.',
   'Select a door, press Add hinge, then click the edge it should swing around.':
     'Tür auswählen, <em>Scharnier</em> drücken, dann die Kante anklicken, um die sie schwingen soll.',
+  'Contact us': 'Kontakt',
+  'Eicha Kuchl is a demo': 'Eicha Kuchl ist eine Demo',
   /* toolbar */
   'Open model…': 'Modell öffnen…',
   'Demo kitchen': 'Demo-Küche',
@@ -168,7 +170,7 @@ const DE = {
 };
 
 const LANGS = { de: DE, en: null };
-const STORE = 'kuechlkastl:lang';
+const STORE = 'eicha-kuchl:lang';
 
 let current = 'en';
 

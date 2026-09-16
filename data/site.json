@@ -18,8 +18,8 @@
       "href": "#services"
     },
     {
-      "label": "Küchlkastl",
-      "href": "tools/kuechlkastl/",
+      "label": "Tools",
+      "href": "tools/eicha-kuchl/",
       "tool": true
     },
     {
@@ -87,15 +87,15 @@
     ]
   },
   "tool": {
-    "name": "Küchlkastl",
-    "href": "tools/kuechlkastl/",
+    "name": "Eicha Kuchl",
+    "href": "tools/eicha-kuchl/",
     "kicker": "Werkzeug",
     "headline": "Türen aufmachen, bevor die Küche steht",
     "body": "Laden Sie Ihr Modell — IFC, OBJ, FBX, glTF. Klicken Sie eine Tür an, klicken Sie die Kante an, um die sie schwingen soll, fertig. Schubladen, Klappen, Licht, Material. Danach schicken Sie Ihrem Kunden einen Link: am Rechner, in VR, oder als AR mitten im eigenen Wohnzimmer.",
     "scope": "Gebaut für Küchen, nicht darauf beschränkt. Alles mit Türen, Schubladen oder beweglichen Teilen funktioniert: Schränke, Einbaumöbel, Ladenbau, ganze Innenräume.",
-    "note": "Küchlkastl ist eine Demo und wird noch getestet. Wenn Ihnen etwas fehlt oder etwas nicht funktioniert, schreiben Sie uns — genau dafür ist sie da.",
-    "cta": "Küchlkastl öffnen",
+    "note": "Eicha Kuchl ist eine Demo und wird noch getestet. Wenn Ihnen etwas fehlt oder etwas nicht funktioniert, schreiben Sie uns — genau dafür ist sie da.",
+    "cta": "Eicha Kuchl öffnen",
     "feedback_cta": "Rückmeldung zum Werkzeug",
-    "feedback_subject": "Küchlkastl — Rückmeldung"
+    "feedback_subject": "Eicha Kuchl — Rückmeldung"
   }
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Küchlkastl — Türen und Auszüge im Browser bewegen</title>
+  <title>Eicha Kuchl — Türen und Auszüge im Browser bewegen</title>
   <link rel="stylesheet" href="./src/style.css" />
 
   <!-- No build step: bare specifiers are resolved by the browser. -->
@@ -21,7 +21,7 @@
   <header class="topbar">
     <div class="brand">
       <span class="dot"></span>
-      <span class="wordmark"><span class="wm-light">Küchl</span><span class="wm-structure">kastl</span></span>
+      <span class="wordmark"><span class="wm-light">Eicha</span> <span class="wm-structure">Kuchl</span></span>
       <span class="demo-tag" data-demo>Demo</span>
     </div>
 
@@ -53,7 +53,7 @@
       <button id="btn-import" class="btn ghost">Import rig</button>
       <button id="btn-vr" class="btn ghost" hidden>VR</button>
       <button id="btn-ar" class="btn ghost" hidden>AR</button>
-      <button id="btn-feedback" class="btn ghost" title="Tell us what is missing">Feedback</button>
+      <button id="btn-feedback" class="btn ghost" title="Tell us what is missing">Contact us</button>
       <span class="lang-switch">
         <button id="lang-de" class="lang">DE</button><button id="lang-en" class="lang">EN</button>
       </span>
@@ -81,7 +81,7 @@
         <button id="gz-off" class="gz" title="Put the handles away (Esc)">Hide</button>
       </div>
       <div id="feedback-card" class="feedback-card" hidden>
-        <h3>Küchlkastl is a demo</h3>
+        <h3>Eicha Kuchl is a demo</h3>
         <p>It is still being tested, and it is built for kitchens but works on
            anything with doors, drawers or moving parts — cabinetry, fitted
            furniture, shopfitting, whole interiors.</p>
@@ -357,9 +357,6 @@
           <label class="check small">
             <input type="checkbox" id="chk-transparent" /> Transparent background
           </label>
-          <label class="check small">
-            <input type="checkbox" id="chk-watermark" checked /> Logo in the corner
-          </label>
           <div class="row">
             <button id="btn-render" class="btn primary">Capture PNG</button>
           </div>
@@ -381,6 +378,7 @@
   <div id="present-bar" class="present-bar" hidden>
     <button id="pb-toggle" class="ar-btn wide">Open all</button>
     <button id="pb-lights" class="ar-btn wide">Lights</button>
+    <button id="pb-vr" class="ar-btn wide">View in VR</button>
     <button id="pb-ar" class="ar-btn wide">View in AR</button>
   </div>
 

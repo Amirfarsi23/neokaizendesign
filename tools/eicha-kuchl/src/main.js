@@ -906,6 +906,15 @@ async function addFiles(files) {
 function addSurface(kind) {
   if (!state.model) return hint('Load a model first');
   const object = buildSurface(kind, modelBounds(), rig.unitsPerMetre);
+
+  // Extras hang off `root`, and root carries the model's orientation fix. A
+  // floor built in root space would tip over with a Z-up model that has been
+  // rotated upright, so cancel that rotation: floors and ceilings stay level
+  // and walls stay upright no matter how the import was corrected.
+  viewer.root.updateMatrixWorld(true);
+  const rootSpin = new THREE.Quaternion();
+  viewer.root.getWorldQuaternion(rootSpin);
+  object.quaternion.copy(rootSpin.invert());
   const added = extras.add(object, object.children[0].name, state.sidIndex, { ground: kind === 'floor' });
   setSelection([added]);
   setGizmoMode('translate');
@@ -1283,8 +1292,9 @@ $('btn-clip-reset').addEventListener('click', () => {
   hint('Section box reset to the whole model');
 });
 
+// The logo is part of the deliverable, not a preference — it stays on screen
+// and in every exported render.
 watermark.attach($('watermark'));
-$('chk-watermark').addEventListener('change', (e) => watermark.setEnabled(e.target.checked));
 
 $('chk-bbox-edges').addEventListener('change', () => {
   if (state.tool === 'axis') enterAxisMode(state.pendingType);
@@ -1355,8 +1365,8 @@ async function refreshVrStatus() {
   button.title = vrStatus.ok ? 'Walk around the model in a headset' : vrStatus.reason;
 }
 
-refreshVrStatus();
-VR.onAvailabilityChange(refreshVrStatus);
+refreshVrStatus().then(() => { if (presenting) refreshPresentBar(); });
+VR.onAvailabilityChange(() => refreshVrStatus().then(refreshPresentBar));
 
 $('btn-vr').addEventListener('click', async () => {
   await refreshVrStatus();                 // a headset may have arrived since load
@@ -1407,7 +1417,7 @@ async function refreshArStatus() {
   button.hidden = false;
   button.title = arStatus.ok ? 'Place the design in a real room' : arStatus.reason;
 }
-refreshArStatus();
+refreshArStatus().then(() => { if (presenting) refreshPresentBar(); });
 
 $('btn-ar').addEventListener('click', async () => {
   await refreshArStatus();
@@ -1497,7 +1507,9 @@ function refreshPresentBar() {
   const anyOpen = rig.joints.some((j) => j.isOpen);
   $('pb-toggle').textContent = anyOpen ? 'Close all' : 'Open all';
   $('pb-lights').hidden = lightRig.lights.length === 0;
+  // one link, three ways in: the bar shows whichever this device can do
   $('pb-ar').hidden = !arStatus.ok;
+  $('pb-vr').hidden = !vrStatus.ok;
 }
 
 $('pb-toggle').addEventListener('click', () => {
@@ -1507,6 +1519,7 @@ $('pb-toggle').addEventListener('click', () => {
 
 $('pb-lights').addEventListener('click', toggleInteriorLights);
 $('pb-ar').addEventListener('click', () => $('btn-ar').click());
+$('pb-vr').addEventListener('click', () => $('btn-vr').click());
 
 function toggleInteriorLights() {
   const on = lightRig.lights.some((l) => l.intensity > 0);
@@ -1556,16 +1569,46 @@ if (presenting) enterPresentationMode();
 const sharedModel = params.get('m');
 if (sharedModel) openFromUrl(sharedModel, params.get('r'));
 
-$('btn-share').addEventListener('click', () => {
+/**
+ * A share link is only useful if the two files behind it are actually on the
+ * server. The button used to hand out a URL built from the local file name,
+ * which 404s until you upload something — so it now checks first and says
+ * plainly what is missing.
+ */
+$('btn-share').addEventListener('click', async () => {
   if (!state.model) return hint('Load a model first');
+
   const base = location.origin + location.pathname;
   const stem = (state.sourceName ?? 'design').replace(/\.[^.]+$/, '');
-  const url = `${base}?m=models/${encodeURIComponent(state.sourceName ?? 'design.glb')}`
-    + `&r=rigs/${encodeURIComponent(stem + '.rig.json')}&view=1`;
+  const modelPath = `models/${state.sourceName ?? 'design.glb'}`;
+  const rigPath = `rigs/${stem}.rig.json`;
+  const url = `${base}?m=${encodeURIComponent(modelPath)}`
+    + `&r=${encodeURIComponent(rigPath)}&view=1`;
 
-  navigator.clipboard?.writeText(url).catch(() => {});
-  hint(`Upload the model to <b>models/</b> and <b>Export rig</b> to <b>rigs/</b>, `
-    + `then share:<br><b>${url}</b><br>(copied to the clipboard)`, true);
+  const exists = async (path) => {
+    try {
+      const r = await fetch(new URL(path, base), { method: 'HEAD' });
+      return r.ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const [hasModel, hasRig] = await Promise.all([exists(modelPath), exists(rigPath)]);
+
+  if (hasModel && hasRig) {
+    navigator.clipboard?.writeText(url).catch(() => {});
+    hint(`Link is live and copied:<br><b>${url}</b>`, true);
+    return;
+  }
+
+  const missing = [
+    !hasModel ? `<b>${modelPath}</b> — upload your model there` : null,
+    !hasRig ? `<b>${rigPath}</b> — press <b>Export rig</b> and upload the file there` : null
+  ].filter(Boolean).join('<br>');
+
+  hint(`The link is not live yet. Two files have to sit next to this page:`
+    + `<br>${missing}<br>Then this link works:<br>${url}`, true);
 });
 
 /* ------------------------------------------------- language and feedback -- */
@@ -1584,7 +1627,7 @@ applyLanguage(storedLanguage());
 
 const FEEDBACK_TO = 'info@neokaizendesign.com';
 $('feedback-mail').href = `mailto:${FEEDBACK_TO}`
-  + '?subject=' + encodeURIComponent('Küchlkastl — Rückmeldung / feedback');
+  + '?subject=' + encodeURIComponent('Eicha Kuchl — Rückmeldung / feedback');
 
 $('btn-feedback').addEventListener('click', () => {
   const card = $('feedback-card');
