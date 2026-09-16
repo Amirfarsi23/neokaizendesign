@@ -183,6 +183,48 @@ export class Studio {
   }
 
   /**
+   * Export the scene as a single binary glTF.
+   *
+   * This is the format to share: a 35 MB OBJ becomes a few MB of GLB, parses in
+   * a fraction of the time, and carries its materials in one file instead of a
+   * .mtl plus loose textures. Doors are exported closed so the rig's angles
+   * still mean what they say.
+   */
+  async exportGLB() {
+    const { GLTFExporter } = await import('three/addons/exporters/GLTFExporter.js');
+
+    const v = this.viewer;
+    const hidden = [v.grid, v.shadowCatcher, v.overlay, v.lightMarkers].filter(Boolean);
+    const was = hidden.map((o) => o.visible);
+    for (const o of hidden) o.visible = false;
+
+    // GLTFExporter copies userData verbatim into each node's `extras`, and ours
+    // holds live references — an original BufferGeometry, materials, the Joint
+    // itself. Those survive as plain JSON and corrupt the mesh on re-import.
+    // Ship only the stable id, so a rig made against the source file still
+    // matches the exported GLB.
+    const stashed = stashUserData(v.root);
+
+    try {
+      // The export bakes `root`'s matrix — including the import correction that
+      // stands a Z-up model upright — into the file, which is what makes the
+      // GLB sit the right way up in Quick Look and every other viewer. Record
+      // that, so re-opening it here alongside its rig flattens the baked
+      // orientation instead of rotating the kitchen a second time.
+      v.root.userData.bakedTransform = { ...this.transform };
+
+      const buffer = await new Promise((resolve, reject) => {
+        new GLTFExporter().parse(v.root, resolve, reject, { binary: true });
+      });
+      return new Blob([buffer], { type: 'model/gltf-binary' });
+    } finally {
+      delete v.root.userData.bakedTransform;   // live scene keeps none of this
+      restoreUserData(stashed);
+      hidden.forEach((o, i) => { o.visible = was[i]; });
+    }
+  }
+
+  /**
    * Export the scene as USDZ — the format Apple Quick Look reads, and the only
    * way to get AR onto an iPhone without a native app. Static: Quick Look can
    * place and scale it, but cannot open a door.
@@ -196,10 +238,21 @@ export class Studio {
     const was = hidden.map((o) => o.visible);
     for (const o of hidden) o.visible = false;
 
+    // USDZExporter only understands MeshStandardMaterial and silently skips
+    // everything else — and an OBJ's .mtl arrives as MeshPhongMaterial, which
+    // is how you end up with a valid but empty 1 KB file. Stand in for the
+    // duration of the export, then put the originals back.
+    const swapped = standInWithStandard(v.root);
+
     try {
       const arraybuffer = await exporter.parseAsync(v.root);
-      return new Blob([arraybuffer], { type: 'model/vnd.usdz+zip' });
+      const blob = new Blob([arraybuffer], { type: 'model/vnd.usdz+zip' });
+      if (blob.size < 8 * 1024) {
+        throw new Error('nothing exportable was found in the scene');
+      }
+      return blob;
     } finally {
+      restoreMaterials(swapped);
       hidden.forEach((o, i) => { o.visible = was[i]; });
     }
   }
@@ -262,4 +315,81 @@ export class Studio {
 
     return { blob, width, height };
   }
+}
+
+
+/* ------------------------------------------------- material stand-ins -- */
+
+/**
+ * Replace anything that is not a MeshStandardMaterial with one that carries the
+ * same colour, texture and transparency. Returns what to put back afterwards.
+ */
+function standInWithStandard(root) {
+  const swapped = [];
+
+  const convert = (m) => {
+    const std = new THREE.MeshStandardMaterial({
+      color: m.color ? m.color.clone() : new THREE.Color(0xcccccc),
+      map: m.map ?? null,
+      normalMap: m.normalMap ?? null,
+      transparent: Boolean(m.transparent),
+      opacity: m.opacity ?? 1,
+      side: m.side ?? THREE.FrontSide,
+      // Phong's shininess is roughly the inverse of roughness
+      roughness: m.roughness ?? (m.shininess !== undefined
+        ? THREE.MathUtils.clamp(1 - m.shininess / 100, 0.15, 1)
+        : 0.7),
+      metalness: m.metalness ?? 0
+    });
+    if (m.map) std.map.colorSpace = THREE.SRGBColorSpace;
+    return std;
+  };
+
+  root.traverse((o) => {
+    if (!o.isMesh || !o.material) return;
+    const list = Array.isArray(o.material) ? o.material : [o.material];
+    if (list.every((m) => m?.isMeshStandardMaterial)) return;
+
+    swapped.push({ mesh: o, original: o.material });
+    o.material = Array.isArray(o.material)
+      ? o.material.map((m) => (m?.isMeshStandardMaterial ? m : convert(m)))
+      : convert(o.material);
+  });
+
+  return swapped;
+}
+
+function restoreMaterials(swapped) {
+  for (const { mesh, original } of swapped) {
+    const stand = mesh.material;
+    mesh.material = original;
+    for (const m of Array.isArray(stand) ? stand : [stand]) {
+      if (m && !m.isMeshStandardMaterial) continue;
+      if (Array.isArray(original) ? !original.includes(m) : original !== m) m?.dispose();
+    }
+  }
+}
+
+
+/* ------------------------------------------------------ export hygiene -- */
+
+/** Keys that are plain data and worth carrying into an exported file. */
+const PORTABLE = new Set(['sid', 'selectionRoot', 'bakedTransform']);
+
+function stashUserData(root) {
+  const stashed = [];
+  root.traverse((o) => {
+    if (!o.userData || !Object.keys(o.userData).length) return;
+    stashed.push({ object: o, original: o.userData });
+    const clean = {};
+    for (const key of PORTABLE) {
+      if (o.userData[key] !== undefined) clean[key] = o.userData[key];
+    }
+    o.userData = clean;
+  });
+  return stashed;
+}
+
+function restoreUserData(stashed) {
+  for (const { object, original } of stashed) object.userData = original;
 }

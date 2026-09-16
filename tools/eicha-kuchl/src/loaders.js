@@ -146,13 +146,37 @@ async function loadOBJ(main, files, manager, onProgress) {
 }
 
 /** Shared fix-ups: shadows, sane materials, colour space. */
+/**
+ * Keys this tool is happy to read back out of a file. Everything else in
+ * `userData` is internal bookkeeping — and a glTF exported from an earlier
+ * build of this tool can carry dead copies of it in each node's `extras`,
+ * including a JSON husk where a BufferGeometry used to be. Restoring one of
+ * those as a geometry takes the whole viewer down, so nothing but the
+ * allowlist is allowed in from a file.
+ */
+const IMPORTABLE_USERDATA = new Set([
+  'sid', 'selectionRoot', 'expressID', 'name', 'bakedTransform'
+]);
+
+function scrubUserData(object) {
+  object.traverse((o) => {
+    if (!o.userData) return;
+    for (const key of Object.keys(o.userData)) {
+      if (!IMPORTABLE_USERDATA.has(key)) delete o.userData[key];
+    }
+  });
+}
+
 function normalize(object, sourceName) {
   object.name ||= sourceName;
+  scrubUserData(object);
   object.traverse((o) => {
     if (!o.isMesh) return;
     o.castShadow = true;
     o.receiveShadow = true;
-    if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();
+    if (o.geometry?.attributes?.position && !o.geometry.attributes.normal) {
+      o.geometry.computeVertexNormals();
+    }
     const mats = Array.isArray(o.material) ? o.material : [o.material];
     for (const m of mats) {
       if (!m) continue;

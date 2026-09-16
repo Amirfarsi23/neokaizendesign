@@ -353,3 +353,19 @@ input[type=range] { accent-color: var(--teal); }
   border-bottom: 1px solid rgba(0,168,150,.35); padding-bottom: 1px;
 }
 .feedback-card a:hover { color: var(--teal-lift); }
+
+
+/* -------------------------------------------------------- share panel -- */
+.share-card { width: min(300px, calc(100vw - 28px)); text-align: center; }
+.share-qr {
+  display: block; margin: 10px auto; width: 230px; height: 230px;
+  background: #fff; border-radius: 6px; padding: 8px;
+  image-rendering: pixelated;          /* keep the modules crisp when scaled */
+}
+.share-qr[hidden] { display: none !important; }
+.share-url {
+  display: block; font-size: 11px; word-break: break-all; margin-bottom: 10px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+}
+.share-card .row { justify-content: center; }
+.share-card .row .btn { flex: 0 0 auto; }

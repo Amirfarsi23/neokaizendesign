@@ -80,6 +80,16 @@
         <span class="gz-sep"></span>
         <button id="gz-off" class="gz" title="Put the handles away (Esc)">Hide</button>
       </div>
+      <div id="share-card" class="feedback-card share-card" hidden>
+        <h3>Open on a phone or headset</h3>
+        <p id="share-status">Checking…</p>
+        <canvas id="share-qr" class="share-qr" width="230" height="230"></canvas>
+        <a id="share-url" class="share-url" href="#" target="_blank" rel="noopener"></a>
+        <div class="row">
+          <button id="share-copy" class="btn tiny">Copy link</button>
+          <button id="share-close" class="btn tiny ghost">Close</button>
+        </div>
+      </div>
       <div id="feedback-card" class="feedback-card" hidden>
         <h3>Eicha Kuchl is a demo</h3>
         <p>It is still being tested, and it is built for kitchens but works on
@@ -359,6 +369,9 @@
           </label>
           <div class="row">
             <button id="btn-render" class="btn primary">Capture PNG</button>
+          </div>
+          <div class="row">
+            <button id="btn-glb" class="btn ghost">Export model for sharing (GLB)</button>
           </div>
           <div class="row">
             <button id="btn-usdz" class="btn ghost">Export for iPhone AR (USDZ)</button>
