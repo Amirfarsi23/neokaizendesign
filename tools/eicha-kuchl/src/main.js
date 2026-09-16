@@ -1627,7 +1627,16 @@ async function openFromUrl(modelUrl, rigUrl) {
 if (presenting) enterPresentationMode();
 
 const sharedModel = params.get('m');
-if (sharedModel) openFromUrl(sharedModel, params.get('r'));
+if (sharedModel) {
+  openFromUrl(sharedModel, params.get('r'));
+} else if (presenting) {
+  // Present mode hides the toolbar and the drop zone, so a phone arriving here
+  // without a shared design has nothing to look at and no way to load one — an
+  // empty black screen with a dead "Open all". Show the demo kitchen instead,
+  // which is what someone opening the tool from the menu wants to see anyway.
+  install(buildDemoKitchen(), 'demo-kitchen');
+  refreshPresentBar();
+}
 
 /**
  * Share panel: the link, and a QR code for it.

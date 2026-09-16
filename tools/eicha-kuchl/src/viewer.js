@@ -190,6 +190,10 @@ export class Viewer {
     if (this.renderer.xr?.isPresenting) return;   // the headset owns the size
     const { clientWidth: w, clientHeight: h } = this.container;
     if (!w || !h) return;
+    // Re-assert the pixel ratio: it is not fixed for the life of the page —
+    // dragging the window to a display with different scaling changes it, and
+    // a stale ratio renders soft.
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
@@ -228,12 +232,25 @@ export class Viewer {
     const box = target?.isBox3 ? target.clone() : contentBounds(target ?? this.root);
     if (box.isEmpty()) return;
 
+    // Framing depends on the aspect ratio, and ResizeObserver is asynchronous —
+    // so entering presentation mode (which hides the side panel) leaves a stale
+    // narrow aspect behind for a frame or two, and the model ends up sized for
+    // a 65px viewport. Measure now rather than trust the last observation.
+    this.resize();
+
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const radius = Math.max(size.length() * 0.5, 0.15);
 
+    // Fit the bounding sphere in both directions: on a portrait phone the
+    // horizontal field of view is much narrower than the vertical one, and
+    // fitting only the vertical leaves the model hanging off the sides.
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
-    const dist = (radius / Math.sin(fov / 2)) * factor;
+    const hFov = 2 * Math.atan(Math.tan(fov / 2) * (this.camera.aspect || 1));
+    const dist = Math.max(
+      radius / Math.sin(fov / 2),
+      radius / Math.sin(hFov / 2)
+    ) * factor;
 
     const dir = this.camera.position.clone().sub(this.controls.target);
     if (dir.lengthSq() < 1e-6) dir.set(1, 0.75, 1);

@@ -67,7 +67,7 @@ body { display: flex; flex-direction: column; }
 /* ---------- layout ---------- */
 main { flex: 1; display: flex; min-height: 0; }
 #viewport { flex: 1; position: relative; min-width: 0; }
-#viewport canvas { display: block; }
+#viewport canvas { display: block; width: 100%; height: 100%; }
 
 #panel {
   width: 310px; flex: 0 0 310px;
