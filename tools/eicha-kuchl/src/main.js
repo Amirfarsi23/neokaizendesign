@@ -1460,6 +1460,9 @@ async function refreshArStatus() {
 refreshArStatus().then(() => { if (presenting) refreshPresentBar(); });
 
 $('btn-ar').addEventListener('click', async () => {
+  // Checked before any await: Safari only honours a Quick Look hand-off made
+  // inside the tap's own call stack.
+  if (arStatus.ios && quickLookUrl()) return openQuickLook(quickLookUrl());
   await refreshArStatus();
   if (!arStatus.ok) {
     hint(arStatus.reason, true);
@@ -1547,6 +1550,34 @@ $('btn-usdz').addEventListener('click', async () => {
  *   ?edit=1                               force the editor on a phone
  */
 const params = new URLSearchParams(location.search);
+
+/** The demo kitchen, pre-exported and hosted next to this page. */
+const DEMO = {
+  glb: 'demo/demo-kitchen.glb',
+  rig: 'demo/demo-kitchen.rig.json',
+  usdz: 'demo/demo-kitchen.usdz'
+};
+
+const isDemo = () => /^demo-kitchen(\.glb)?$/.test(state.sourceName ?? '');
+
+/**
+ * The USDZ an iPhone should open for what is on screen. iOS has no WebXR, so
+ * Apple's Quick Look is its only AR — static, but real. A shared design can
+ * name its own file with `&u=`.
+ */
+function quickLookUrl() {
+  return isDemo() ? DEMO.usdz : params.get('u');
+}
+
+function openQuickLook(url) {
+  const a = document.createElement('a');
+  a.rel = 'ar';
+  a.href = new URL(url, location.href).href;
+  a.appendChild(document.createElement('img'));   // Safari requires an <img> child
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
 const isHandheld = matchMedia('(pointer: coarse)').matches && innerWidth < 900;
 const presenting = params.get('view') === '1'
   || (isHandheld && params.get('edit') !== '1');
@@ -1568,7 +1599,7 @@ function refreshPresentBar() {
   $('pb-toggle').textContent = anyOpen ? 'Close all' : 'Open all';
   $('pb-lights').hidden = lightRig.lights.length === 0;
   // one link, three ways in: the bar shows whichever this device can do
-  $('pb-ar').hidden = !arStatus.ok;
+  $('pb-ar').hidden = !(arStatus.ok || (arStatus.ios && quickLookUrl()));
   $('pb-vr').hidden = !vrStatus.ok;
 }
 
@@ -1578,7 +1609,10 @@ $('pb-toggle').addEventListener('click', () => {
 });
 
 $('pb-lights').addEventListener('click', toggleInteriorLights);
-$('pb-ar').addEventListener('click', () => $('btn-ar').click());
+$('pb-ar').addEventListener('click', () => {
+  if (!arStatus.ok && arStatus.ios && quickLookUrl()) return openQuickLook(quickLookUrl());
+  $('btn-ar').click();
+});
 $('pb-vr').addEventListener('click', () => $('btn-vr').click());
 
 function toggleInteriorLights() {
@@ -1685,12 +1719,10 @@ async function drawQR(text) {
 
 function shareURL() {
   const base = location.origin + location.pathname;
-  return {
-    base,
-    modelPath: 'models/kitchen.glb',
-    rigPath: 'rigs/kitchen.rig.json',
-    url: `${base}?m=models/kitchen.glb&r=rigs/kitchen.rig.json&view=1`
-  };
+  const [modelPath, rigPath] = isDemo()
+    ? [DEMO.glb, DEMO.rig]
+    : ['models/kitchen.glb', 'rigs/kitchen.rig.json'];
+  return { base, modelPath, rigPath, url: `${base}?m=${modelPath}&r=${rigPath}&view=1` };
 }
 
 $('btn-share').addEventListener('click', async () => {
