@@ -223,6 +223,17 @@ not something the code can paper over:
 | **Open a door** | **yes** | no |
 | **Toggle the lights** | **yes** | no |
 
+On a phone the **View in AR** button picks the route by itself: WebXR on
+Android, Quick Look on iPhone. Quick Look needs a USDZ at a real URL, so the
+iPhone button only appears when there is one — the hosted demo
+(`demo/demo-kitchen.usdz`), or a shared design that names its own file with
+`&u=path/to/design.usdz`.
+
+`demo/` holds the demo kitchen pre-exported from this tool — GLB (211 KB), rig
+and USDZ (382 KB). The share button and its QR code point at these whenever
+the demo is loaded, so the public link works without hosting a client model.
+Re-export them if `src/demo.js` changes.
+
 **Android** runs the real thing: hit-test finds the floor, you tap to place, and
 a `dom-overlay` control bar gives you scale, a lights toggle, open/close all,
 re-place and exit. Tapping a door or drawer opens it.

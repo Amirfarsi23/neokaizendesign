@@ -1,0 +1,497 @@
+{
+  "format": "kitchen-motion-rig",
+  "version": 1,
+  "source": "demo-kitchen",
+  "joints": [
+    {
+      "id": "j1",
+      "type": "hinge",
+      "name": "Base door left",
+      "sids": [
+        "3.2"
+      ],
+      "origin": [
+        -1.647,
+        0.51,
+        0.2925
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "min": 0,
+      "max": 100,
+      "value": 0,
+      "mount": {
+        "position": [
+          -1.647,
+          0.51,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j2",
+      "type": "slide",
+      "name": "Drawer 3",
+      "sids": [
+        "4.2"
+      ],
+      "origin": [
+        -0.7,
+        0.271,
+        0.2925
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "min": 0,
+      "max": 0.45,
+      "value": 0,
+      "mount": {
+        "position": [
+          -0.7,
+          0.271,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j3",
+      "type": "slide",
+      "name": "Drawer 2",
+      "sids": [
+        "4.3"
+      ],
+      "origin": [
+        -0.7,
+        0.51,
+        0.2925
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "min": 0,
+      "max": 0.45,
+      "value": 0,
+      "mount": {
+        "position": [
+          -0.7,
+          0.51,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j4",
+      "type": "slide",
+      "name": "Drawer 1",
+      "sids": [
+        "4.4"
+      ],
+      "origin": [
+        -0.7,
+        0.749,
+        0.2925
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "min": 0,
+      "max": 0.45,
+      "value": 0,
+      "mount": {
+        "position": [
+          -0.7,
+          0.749,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j5",
+      "type": "hinge",
+      "name": "Oven door",
+      "sids": [
+        "5.3"
+      ],
+      "origin": [
+        -0.05,
+        0.21,
+        0.2925
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "min": 0,
+      "max": 90,
+      "value": 0,
+      "mount": {
+        "position": [
+          -0.05,
+          0.21,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j6",
+      "type": "hinge",
+      "name": "Sink door left",
+      "sids": [
+        "6.2"
+      ],
+      "origin": [
+        0.303,
+        0.51,
+        0.2925
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "min": 0,
+      "max": 100,
+      "value": 0,
+      "mount": {
+        "position": [
+          0.303,
+          0.51,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j7",
+      "type": "hinge",
+      "name": "Sink door right",
+      "sids": [
+        "6.3"
+      ],
+      "origin": [
+        0.897,
+        0.51,
+        0.2925
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "min": 0,
+      "max": 100,
+      "value": 0,
+      "mount": {
+        "position": [
+          0.897,
+          0.51,
+          0.2925
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j8",
+      "type": "hinge",
+      "name": "Wall door left",
+      "sids": [
+        "7.1"
+      ],
+      "origin": [
+        -1.647,
+        1.8,
+        0.0425
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "min": 0,
+      "max": 105,
+      "value": 0,
+      "mount": {
+        "position": [
+          -1.647,
+          1.8,
+          0.0425
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j9",
+      "type": "hinge",
+      "name": "Wall door right",
+      "sids": [
+        "8.1"
+      ],
+      "origin": [
+        -0.403,
+        1.8,
+        0.0425
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "min": 0,
+      "max": 105,
+      "value": 0,
+      "mount": {
+        "position": [
+          -0.403,
+          1.8,
+          0.0425
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j10",
+      "type": "hinge",
+      "name": "Wall door left",
+      "sids": [
+        "9.1"
+      ],
+      "origin": [
+        0.303,
+        1.8,
+        0.0425
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "min": 0,
+      "max": 105,
+      "value": 0,
+      "mount": {
+        "position": [
+          0.303,
+          1.8,
+          0.0425
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j11",
+      "type": "slide",
+      "name": "Fridge drawer",
+      "sids": [
+        "10.1"
+      ],
+      "origin": [
+        1.42,
+        0.28,
+        0.0115
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "min": 0,
+      "max": 0.3,
+      "value": 0,
+      "mount": {
+        "position": [
+          1.42,
+          0.28,
+          0.0115
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j12",
+      "type": "hinge",
+      "name": "Fridge door",
+      "sids": [
+        "10.2"
+      ],
+      "origin": [
+        1.745,
+        0.95,
+        0.3065
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "min": 0,
+      "max": 115,
+      "value": 0,
+      "mount": {
+        "position": [
+          1.745,
+          0.95,
+          0.3065
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "materials": [],
+  "groups": [],
+  "placements": [],
+  "lights": [],
+  "hidden": [],
+  "lighting": {
+    "preset": "studio",
+    "azimuth": 38,
+    "elevation": 52,
+    "sun": 2.2,
+    "ambient": 1.35,
+    "exposure": 1.05,
+    "shadows": true,
+    "background": "#0e1116"
+  },
+  "transform": {
+    "rx": 0,
+    "ry": 0,
+    "rz": 0,
+    "scale": 1
+  },
+  "section": null
+}
