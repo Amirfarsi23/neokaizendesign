@@ -1,0 +1,8 @@
+# Netlify response headers.
+# Apple Quick Look expects USDZ with its registered type; Netlify's default for
+# unknown extensions is application/octet-stream.
+/tools/eicha-kuchl/demo/demo-kitchen.usdz
+  Content-Type: model/vnd.usdz+zip
+
+/tools/eicha-kuchl/demo/demo-kitchen.glb
+  Content-Type: model/gltf-binary
