@@ -785,6 +785,7 @@ function boxOf(objects) {
 /* -------------------------------------------------------------- loading -- */
 
 function install(object, sourceName) {
+  $('load-error').hidden = true;
   exitAxisMode();
   rig.clear();
   setSelection([]);
@@ -1632,6 +1633,23 @@ function toggleInteriorLights() {
   }
 }
 
+/**
+ * A headset or phone opening a shared link has no console and, in presentation
+ * mode, no panel — so a failure has to be stated on the screen itself.
+ */
+function showLoadError(modelUrl, err) {
+  const missing = /^\d{3} /.test(err.message) || /fetch/i.test(err.message);
+  $('load-error-title').textContent = missing
+    ? 'This design is not on the server'
+    : 'This design could not be opened';
+  $('load-error-text').innerHTML = missing
+    ? `Nothing is hosted at <b>${modelUrl}</b>. A shared link only points at files `
+      + 'on the website — the design itself has to be uploaded there first.'
+    : err.message;
+  $('load-error').hidden = false;
+  hint('');
+}
+
 /** Load a model (and optionally a rig) straight from URLs. */
 async function openFromUrl(modelUrl, rigUrl) {
   try {
@@ -1652,7 +1670,7 @@ async function openFromUrl(modelUrl, rigUrl) {
     hint('');
   } catch (err) {
     console.error(err);
-    hint(`Could not open the shared design: ${err.message}`, true);
+    showLoadError(modelUrl, err);
   } finally {
     loading(null);
   }
@@ -1719,9 +1737,13 @@ async function drawQR(text) {
 
 function shareURL() {
   const base = location.origin + location.pathname;
+  const stem = (state.sourceName ?? 'design')
+    .replace(/\.[^.]+$/, '')
+    .replace(/[^A-Za-z0-9._-]+/g, '-')
+    .toLowerCase();
   const [modelPath, rigPath] = isDemo()
     ? [DEMO.glb, DEMO.rig]
-    : ['models/kitchen.glb', 'rigs/kitchen.rig.json'];
+    : [`models/${stem}.glb`, `rigs/${stem}.rig.json`];
   return { base, modelPath, rigPath, url: `${base}?m=${modelPath}&r=${rigPath}&view=1` };
 }
 
@@ -1750,12 +1772,20 @@ $('btn-share').addEventListener('click', async () => {
   if (hasModel && hasRig) {
     status.textContent = 'Scan with a phone or a headset.';
     await drawQR(url);
-  } else {
-    const missing = [!hasModel && modelPath, !hasRig && rigPath].filter(Boolean);
-    status.textContent = `Not live yet — upload ${missing.join(' and ')} next to this page. `
-      + 'The code below points at where it will be.';
-    await drawQR(url);
+    return;
   }
+
+  // Your model never leaves this browser — there is nothing to upload it to.
+  // A code for a link that 404s just wastes a trip to the headset, so say what
+  // is missing instead of drawing one.
+  $('share-qr').hidden = true;
+  $('share-url').textContent = '';
+  $('share-url').removeAttribute('href');
+  const missing = [!hasModel && modelPath, !hasRig && rigPath].filter(Boolean);
+  status.innerHTML = 'This design is only in your browser, so a headset cannot reach it. '
+    + `Export <b>GLB</b> and <b>rig</b> from the Scene tab, put them on this site as `
+    + `<b>${missing.join('</b> and <b>')}</b>, then press this button again. `
+    + 'The demo kitchen is already hosted and shares straight away.';
 });
 
 $('share-copy').addEventListener('click', () => {

@@ -369,3 +369,13 @@ input[type=range] { accent-color: var(--teal); }
 }
 .share-card .row { justify-content: center; }
 .share-card .row .btn { flex: 0 0 auto; }
+
+/* A shared link that cannot load must say so where it will be seen: on a
+   headset or a phone there is no console and no side panel to fall back on. */
+.load-error {
+  right: auto; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 32px)); text-align: center;
+  border-left: 1px solid var(--line); border-top: 2px solid var(--teal);
+}
+.load-error h3 { margin: 0 0 6px; }
+.load-error p { margin: 0; overflow-wrap: anywhere; }
