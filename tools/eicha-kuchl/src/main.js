@@ -983,8 +983,25 @@ function countMeshes(object) {
 
 const storageKey = () => `kitchen-motion:${state.sourceName}:${state.meshCount}`;
 
+/**
+ * Which frame this design's coordinates are in.
+ *
+ * Joints record their hinge lines relative to `viewer.root`, so what that
+ * frame contains matters. A model exported from here carries the import
+ * correction inside its own matrix; opening it with a rig flattens that out
+ * and puts the rotation on root instead. Both are legitimate, and they are
+ * different frames — so a design has to say which one it was authored in, or
+ * replaying it rotates the model and throws every hinge off its door.
+ */
+function authoringFrame() {
+  let baked = false;
+  state.model?.traverse((o) => { if (o.userData?.bakedTransform) baked = true; });
+  return baked ? 'baked' : 'root';
+}
+
 function projectJSON() {
   return {
+    frame: authoringFrame(),
     ...rig.toJSON({ source: state.sourceName }),
     materials: materialPanel.toJSON(),
     groups: groups.toJSON(),
@@ -1059,7 +1076,10 @@ function loadProject(data, { announce = true } = {}) {
   // `viewer.root`, so a model that carries its orientation baked in has to be
   // flattened first — otherwise every mount lands in the wrong place and the
   // doors swing off into space.
-  if (data.transform && unbakeTransform(state.model)) {
+  // Older rigs predate this field; they were all authored against a flattened
+  // model, so treating a missing value as 'root' keeps them working.
+  const authoredIn = data.frame ?? 'root';
+  if (data.transform && authoredIn === 'root' && unbakeTransform(state.model)) {
     studio.setTransform(data.transform);
     scenePanel.syncTransform(studio.transform);
     refreshRootInverse();
@@ -1081,7 +1101,9 @@ function loadProject(data, { announce = true } = {}) {
   // frame back exactly as it was when the rig was made. Undo the baked matrix
   // and let the saved transform put it back on `viewer.root` instead — the
   // orientation is identical, but the hinges land on the doors again.
-  if (data.transform) {
+  // A design authored on a baked model must leave that matrix alone: the
+  // rotation it needs is already inside the file.
+  if (data.transform && authoredIn === 'root') {
     studio.setTransform(data.transform);
     scenePanel.syncTransform(studio.transform);
   }
