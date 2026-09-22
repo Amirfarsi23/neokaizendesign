@@ -15,6 +15,11 @@ const DE = {
   'Select a door, press Add hinge, then click the edge it should swing around.':
     'Tür auswählen, <em>Scharnier</em> drücken, dann die Kante anklicken, um die sie schwingen soll.',
   'Contact us': 'Kontakt',
+  'Loading the kitchen…': 'Küche wird geladen…',
+  'Doors, drawers, materials and light — try all of it.':
+    'Türen, Auszüge, Materialien und Licht — probieren Sie alles aus.',
+  'Want your own design in here? Press “Contact us”.':
+    'Ihr eigenes Projekt hier sehen? Auf <em>Kontakt</em> drücken.',
   'Open on a phone or headset': 'Auf Handy oder Headset öffnen',
   'Copy link': 'Link kopieren',
   'Close': 'Schließen',

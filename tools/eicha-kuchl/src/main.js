@@ -1403,13 +1403,22 @@ async function refreshVrStatus() {
   const button = $('btn-vr');
   button.hidden = false;
   button.classList.toggle('ghost', !vrStatus.ok);
-  button.title = vrStatus.ok ? 'Walk around the model in a headset' : vrStatus.reason;
+  button.title = vrStatus.ok
+    ? 'Walk around the model in a headset'
+    : `${vrStatus.reason} We can also arrange a VR viewing — press Contact us.`;
 }
 
 refreshVrStatus().then(() => { if (presenting) refreshPresentBar(); });
 VR.onAvailabilityChange(() => refreshVrStatus().then(refreshPresentBar));
 
 $('btn-vr').addEventListener('click', async () => {
+  // No headset here: the useful next step is a conversation, not an error.
+  if (!vrStatus.ok && !STUDIO) {
+    hint(`${vrStatus.reason} We are happy to show your design in VR — press `
+      + '<b>Contact us</b>.', true);
+    showContact();
+    return;
+  }
   await refreshVrStatus();                 // a headset may have arrived since load
   if (!vrStatus.ok) {
     hint(vrStatus.reason, true);
@@ -1456,7 +1465,9 @@ async function refreshArStatus() {
   arStatus = await AR.diagnose();
   const button = $('btn-ar');
   button.hidden = false;
-  button.title = arStatus.ok ? 'Place the design in a real room' : arStatus.reason;
+  button.title = arStatus.ok
+    ? 'Place the design in a real room'
+    : `${arStatus.reason} We can also put your project in AR — press Contact us.`;
 }
 refreshArStatus().then(() => { if (presenting) refreshPresentBar(); });
 
@@ -1466,6 +1477,13 @@ $('btn-ar').addEventListener('click', async () => {
   if (arStatus.ios && quickLookUrl()) return openQuickLook(quickLookUrl());
   await refreshArStatus();
   if (!arStatus.ok) {
+    if (!STUDIO) {
+      // Putting a design in AR means publishing it here, which we do for you.
+      hint(`${arStatus.reason} We are happy to put your design in AR — press `
+        + '<b>Contact us</b>.', true);
+      showContact();
+      return;
+    }
     hint(arStatus.reason, true);
     if (arStatus.code === 'ios') showTab('scene');
     return;
@@ -1552,14 +1570,21 @@ $('btn-usdz').addEventListener('click', async () => {
  */
 const params = new URLSearchParams(location.search);
 
-/** The demo kitchen, pre-exported and hosted next to this page. */
+/**
+ * The design this page opens with: the studio's own kitchen, hosted next to
+ * the tool. Visitors can load anything they like on top of it — but a headset
+ * can only reach a design that is hosted here, which is a studio job, so that
+ * route asks them to get in touch.
+ */
 const DEMO = {
-  glb: 'demo/demo-kitchen.glb',
-  rig: 'demo/demo-kitchen.rig.json',
-  usdz: 'demo/demo-kitchen.usdz'
+  glb: 'models/kitchen-test.glb',
+  rig: null,                       // deliberately bare — visitors rig it themselves
+  usdz: 'models/kitchen-test.usdz'
 };
 
-const isDemo = () => /^demo-kitchen(\.glb)?$/.test(state.sourceName ?? '');
+const STUDIO = params.get('studio') === '1';
+
+const isDemo = () => /^(kitchen-test|demo-kitchen)(\.glb)?$/.test(state.sourceName ?? '');
 
 /**
  * The USDZ an iPhone should open for what is on screen. iOS has no WebXR, so
@@ -1697,18 +1722,17 @@ async function openFromUrl(modelUrl, rigUrl) {
   }
 }
 
+$('btn-demo').hidden = !STUDIO;        // the built-in demo is a studio shortcut
+
 if (presenting) enterPresentationMode();
 
 const sharedModel = params.get('m');
 if (sharedModel) {
   openFromUrl(sharedModel, params.get('r'));
-} else if (presenting) {
-  // Present mode hides the toolbar and the drop zone, so a phone arriving here
-  // without a shared design has nothing to look at and no way to load one — an
-  // empty black screen with a dead "Open all". Show the demo kitchen instead,
-  // which is what someone opening the tool from the menu wants to see anyway.
-  install(buildDemoKitchen(), 'demo-kitchen');
-  refreshPresentBar();
+} else {
+  // Nothing asked for in particular: show the studio's kitchen. Arriving with
+  // an empty scene and a locked file picker would leave nothing to look at.
+  openFromUrl(DEMO.glb, DEMO.rig);
 }
 
 /**
@@ -1762,7 +1786,10 @@ function shareURL() {
   const [modelPath, rigPath] = isDemo()
     ? [DEMO.glb, DEMO.rig]
     : [`models/${stem}.glb`, `rigs/${stem}.rig.json`];
-  return { base, modelPath, rigPath, url: `${base}?m=${modelPath}&r=${rigPath}&view=1` };
+  const url = `${base}?m=${modelPath}`
+    + (rigPath ? `&r=${rigPath}` : '')
+    + '&view=1';
+  return { base, modelPath, rigPath, url };
 }
 
 $('btn-share').addEventListener('click', async () => {
@@ -1785,7 +1812,10 @@ $('btn-share').addEventListener('click', async () => {
       return false;
     }
   };
-  const [hasModel, hasRig] = await Promise.all([exists(modelPath), exists(rigPath)]);
+  const [hasModel, hasRig] = await Promise.all([
+    exists(modelPath),
+    rigPath ? exists(rigPath) : false
+  ]);
 
   // A rig is optional: without one the design still opens, the doors just do
   // not move. Only a missing model makes the link worthless.
@@ -1807,10 +1837,14 @@ $('btn-share').addEventListener('click', async () => {
   $('share-qr').hidden = true;
   $('share-url').textContent = '';
   $('share-url').removeAttribute('href');
-  status.innerHTML = 'This design is only in your browser, so a headset cannot reach it. '
-    + `Export <b>GLB</b> from the Scene tab and put it on this site as `
-    + `<b>${modelPath}</b>, then press this button again. `
-    + 'The demo kitchen is already hosted and shares straight away.';
+  status.innerHTML = STUDIO
+    ? 'This design is only in your browser, so a headset cannot reach it. '
+      + `Export <b>GLB</b> from the Scene tab and put it on this site as `
+      + `<b>${modelPath}</b>, then press this button again.`
+    : 'A headset can only open a design that is published here, and your own '
+      + 'model lives only in this browser. We are glad to put your project in '
+      + `VR — write to us at <a href="mailto:${FEEDBACK_TO}">${FEEDBACK_TO}</a>. `
+      + 'The kitchen this page opens with is published, so it works straight away.';
 });
 
 $('share-copy').addEventListener('click', () => {
@@ -1838,6 +1872,10 @@ applyLanguage(storedLanguage());
 const FEEDBACK_TO = 'info@neokaizendesign.com';
 $('feedback-mail').href = `mailto:${FEEDBACK_TO}`
   + '?subject=' + encodeURIComponent('Eicha Kuchl — Rückmeldung / feedback');
+
+function showContact() {
+  $('feedback-card').hidden = false;
+}
 
 $('btn-feedback').addEventListener('click', () => {
   const card = $('feedback-card');
