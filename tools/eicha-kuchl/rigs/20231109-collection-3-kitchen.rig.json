@@ -1,0 +1,134 @@
+{
+  "format": "kitchen-motion-rig",
+  "version": 1,
+  "source": "20231109-Collection-3- Kitchen-Terrazzo - 3D-Ansicht - PRESENTATION.obj",
+  "joints": [
+    {
+      "id": "j1",
+      "type": "hinge",
+      "name": "Typ1:10",
+      "sids": [
+        "320"
+      ],
+      "origin": [
+        -1.147,
+        5.222,
+        0.653895
+      ],
+      "axis": [
+        0,
+        0,
+        -1
+      ],
+      "min": 0,
+      "max": 85,
+      "value": 85,
+      "mount": {
+        "position": [
+          -1.147,
+          5.222,
+          0.653895
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "j2",
+      "type": "hinge",
+      "name": "Unterschrank einfach:4",
+      "sids": [
+        "366"
+      ],
+      "origin": [
+        -0.7,
+        5,
+        -1.11866
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "min": 0,
+      "max": 85,
+      "value": 85,
+      "mount": {
+        "position": [
+          -0.7,
+          5,
+          -1.11866
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "materials": [
+    {
+      "defId": "coated-pine",
+      "settings": {
+        "size": 2,
+        "rotation": 0,
+        "roughness": 0.55,
+        "metalness": 0,
+        "tint": "#ffffff"
+      },
+      "sids": [
+        "366"
+      ]
+    },
+    {
+      "defId": "coated-pine",
+      "settings": {
+        "size": 2,
+        "rotation": 0,
+        "roughness": 0.55,
+        "metalness": 0,
+        "tint": "#ffffff"
+      },
+      "sids": [
+        "320"
+      ]
+    }
+  ],
+  "groups": [],
+  "placements": [],
+  "lights": [],
+  "hidden": [],
+  "lighting": {
+    "preset": "studio",
+    "azimuth": 38,
+    "elevation": 52,
+    "sun": 2.2,
+    "ambient": 1.35,
+    "exposure": 1.05,
+    "shadows": true,
+    "background": "#0e1116"
+  },
+  "transform": {
+    "rx": 270,
+    "ry": 0,
+    "rz": 0,
+    "scale": 1
+  },
+  "section": null
+}

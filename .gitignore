@@ -4,10 +4,5 @@ __pycache__/
 .DS_Store
 venv/
 
-# Local test models for the Eicha Kuchl tool. The share link needs these served
-# somewhere; they are kept out of the repo so a 32 MB client model does not end
-# up permanent and public in the history. Drop the ignore when a demo model is
-# ready to publish.
-tools/eicha-kuchl/models/
-tools/eicha-kuchl/rigs/
+# Working copies that should never reach the repo.
 *.bak
