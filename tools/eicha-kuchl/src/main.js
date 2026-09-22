@@ -1266,7 +1266,7 @@ $('btn-close-all').addEventListener('click', () => rig.closeAll());
 
 $('btn-export').addEventListener('click', () => {
   if (!state.model) return hint('Load a model first');
-  download(`${(state.sourceName ?? 'project').replace(/\.[^.]+$/, '')}.rig.json`,
+  download(`${hostedStem()}.rig.json`,
     JSON.stringify(projectJSON(), null, 2));
 });
 
@@ -1511,7 +1511,7 @@ $('btn-glb').addEventListener('click', async () => {
   try {
     const blob = await studio.exportGLB();
     // a short, plain filename: share URLs with spaces in them are miserable
-    download('kitchen.glb', blob);
+    download(`${hostedStem()}.glb`, blob);
     hint(`Saved <b>kitchen.glb</b> (${Math.round(blob.size / 1024)} KB). `
       + 'Upload it to <b>models/</b> next to this page, then use '
       + '<b>Make a share link…</b>', true);
@@ -1530,7 +1530,7 @@ $('btn-usdz').addEventListener('click', async () => {
   button.textContent = 'Exporting…';
   try {
     const blob = await studio.exportUSDZ();
-    download(`${(state.sourceName ?? 'design').replace(/\.[^.]+$/, '')}.usdz`, blob);
+    download(`${hostedStem()}.usdz`, blob);
     hint('USDZ saved — put it on your website and link it with '
       + '<b>&lt;a rel="ar" href="…usdz"&gt;</b> for iPhone AR', true);
   } catch (err) {
@@ -1566,6 +1566,27 @@ const isDemo = () => /^demo-kitchen(\.glb)?$/.test(state.sourceName ?? '');
  * Apple's Quick Look is its only AR — static, but real. A shared design can
  * name its own file with `&u=`.
  */
+/**
+ * A short, predictable file name for this design — CAD exports carry names like
+ * "20231109-Collection-3- Kitchen-Terrazzo - 3D-Ansicht - PRESENTATION.obj",
+ * which make miserable URLs. The export buttons and the share panel both use
+ * this, so exported files drop straight into the paths the panel names.
+ */
+function hostedStem() {
+  const words = (state.sourceName ?? 'design')
+    .replace(/\.[^.]+$/, '')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+
+  const kept = [];
+  for (const word of words) {
+    if (kept.join('-').length + word.length + 1 > 32) break;
+    kept.push(word);
+  }
+  return kept.join('-') || 'design';
+}
+
 function quickLookUrl() {
   return isDemo() ? DEMO.usdz : params.get('u');
 }
@@ -1737,10 +1758,7 @@ async function drawQR(text) {
 
 function shareURL() {
   const base = location.origin + location.pathname;
-  const stem = (state.sourceName ?? 'design')
-    .replace(/\.[^.]+$/, '')
-    .replace(/[^A-Za-z0-9._-]+/g, '-')
-    .toLowerCase();
+  const stem = hostedStem();
   const [modelPath, rigPath] = isDemo()
     ? [DEMO.glb, DEMO.rig]
     : [`models/${stem}.glb`, `rigs/${stem}.rig.json`];
