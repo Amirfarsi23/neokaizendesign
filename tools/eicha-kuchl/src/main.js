@@ -1787,9 +1787,17 @@ $('btn-share').addEventListener('click', async () => {
   };
   const [hasModel, hasRig] = await Promise.all([exists(modelPath), exists(rigPath)]);
 
-  if (hasModel && hasRig) {
-    status.textContent = 'Scan with a phone or a headset.';
-    await drawQR(url);
+  // A rig is optional: without one the design still opens, the doors just do
+  // not move. Only a missing model makes the link worthless.
+  if (hasModel) {
+    const link = hasRig ? url : `${base}?m=${modelPath}&view=1`;
+    status.textContent = hasRig
+      ? 'Scan with a phone or a headset.'
+      : 'Scan with a phone or a headset. No rig is on the site yet, so the doors '
+        + 'will not move — press Export rig to include them.';
+    $('share-url').textContent = link;
+    $('share-url').href = link;
+    await drawQR(link);
     return;
   }
 
@@ -1799,10 +1807,9 @@ $('btn-share').addEventListener('click', async () => {
   $('share-qr').hidden = true;
   $('share-url').textContent = '';
   $('share-url').removeAttribute('href');
-  const missing = [!hasModel && modelPath, !hasRig && rigPath].filter(Boolean);
   status.innerHTML = 'This design is only in your browser, so a headset cannot reach it. '
-    + `Export <b>GLB</b> and <b>rig</b> from the Scene tab, put them on this site as `
-    + `<b>${missing.join('</b> and <b>')}</b>, then press this button again. `
+    + `Export <b>GLB</b> from the Scene tab and put it on this site as `
+    + `<b>${modelPath}</b>, then press this button again. `
     + 'The demo kitchen is already hosted and shares straight away.';
 });
 

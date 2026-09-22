@@ -210,6 +210,27 @@ Two things worth knowing:
   file — so a rig built against the original OBJ still fits the GLB you share.
   Re-exporting from CAD instead renumbers the nodes and orphans the rig.
 
+## Any model in the headset, without publishing
+
+`python vr-server.py` serves this folder from your PC over https, so a headset
+on the same wifi can open any model you have locally — no export to a website,
+no commit, nothing public.
+
+Https matters: WebXR refuses to start on a plain http page, so
+`http://192.168.x.x` would show the model but leave the VR button dead. The
+script generates a certificate naming your PC and serves with it. The headset
+warns that it is not trusted — that is expected for your own machine; choose
+Advanced and continue.
+
+Anything the tool exports to your Downloads folder is filed into `models/` and
+`rigs/` automatically, so exporting a GLB and its rig is enough to make the
+share button produce a working QR code.
+
+Two things that bite: Windows Firewall may block the port the first time (allow
+Python on private networks), and both devices must be on the same wifi. If the
+certificate is refused outright, a tunnel such as ngrok gives a publicly trusted
+https URL to the same local server instead.
+
 ## AR on a phone
 
 Press **AR**. What you get depends entirely on the phone, and the split is
