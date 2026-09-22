@@ -6,3 +6,9 @@ venv/
 
 # Working copies that should never reach the repo.
 *.bak
+
+# Source renders. build.py lists .tif in BAD_EXT and never publishes them, so
+# uploading ~870 MB of them on every deploy served nobody. They stay on disk;
+# keep your own backup, because git no longer holds a copy.
+*.tif
+*.tiff
