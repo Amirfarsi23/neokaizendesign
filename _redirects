@@ -2,3 +2,7 @@
 # 200 = serve the new file at the old address, no extra copy of the bytes.
 /tools/eicha-kuchl/models/kitchen.glb     /tools/eicha-kuchl/models/20231109-collection-3-kitchen.glb     200
 /tools/eicha-kuchl/rigs/kitchen.rig.json  /tools/eicha-kuchl/rigs/20231109-collection-3-kitchen.rig.json  200
+
+# Short addresses, because typing a long URL inside a headset is miserable.
+/vr    /tools/eicha-kuchl/?m=models/kitchen-test.glb&r=rigs/kitchen-test.rig.json&view=1    302
+/demo  /tools/eicha-kuchl/?m=demo/demo-kitchen.glb&r=demo/demo-kitchen.rig.json&view=1      302
