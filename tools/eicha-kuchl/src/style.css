@@ -379,3 +379,6 @@ input[type=range] { accent-color: var(--teal); }
 }
 .load-error h3 { margin: 0 0 6px; }
 .load-error p { margin: 0; overflow-wrap: anywhere; }
+
+/* the parts library is a long list of small buttons; let it wrap */
+.row.wrap { flex-wrap: wrap; gap: 6px; }

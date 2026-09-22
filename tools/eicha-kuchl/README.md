@@ -210,6 +210,19 @@ Two things worth knowing:
   file — so a rig built against the original OBJ still fits the GLB you share.
   Re-exporting from CAD instead renumbers the nodes and orphans the rig.
 
+## Adding cabinetry and appliances
+
+An imported CAD kitchen is often only carcasses: no handles, no drawer boxes,
+no appliances. The Parts tab offers a cabinet, drawers, a wall unit, a stove, a
+fridge, a dishwasher and a handle, built by `src/parts.js` — the same
+construction as the demo kitchen, one piece at a time.
+
+Each piece carries its own hinge and runner tags, so it arrives already able to
+open: adding a fridge gives you a door that swings and a salad drawer that
+pulls out, with no rigging by hand. Pieces are scaled by the model's
+units-per-metre, so a millimetre-authored kitchen gets a fridge of the right
+size.
+
 ## Any model in the headset, without publishing
 
 `python vr-server.py` serves this folder from your PC over https, so a headset

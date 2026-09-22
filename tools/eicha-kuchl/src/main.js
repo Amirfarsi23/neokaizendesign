@@ -5,7 +5,7 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 import { Viewer } from './viewer.js';
 import { loadModel, loadModelFromUrl, SUPPORTED } from './loaders.js';
-import { buildDemoKitchen } from './demo.js';
+import { buildDemoKitchen, buildPart } from './parts.js';
 import { Rig, Joint, assignStableIds, guessUnitsPerMetre } from './motion.js';
 import { collectEdges, pickEdge, resolveSelection, makeEdgeOverlay } from './picking.js';
 import { Panel, hint, loading, download } from './ui.js';
@@ -904,6 +904,36 @@ async function addFiles(files) {
   }
 }
 
+/**
+ * Add a piece of cabinetry or an appliance from the built-in library.
+ *
+ * The pieces carry their own hinge and runner tags, so a fridge arrives with a
+ * door that opens and a drawer unit with drawers that pull out — rigging a
+ * freshly imported CAD model by hand is the slow part of this tool.
+ */
+function addPart(kind) {
+  if (!state.model) return hint('Load a model first');
+
+  const object = buildPart(kind, rig.unitsPerMetre);
+
+  // Extras live under `root`, which carries the import's orientation fix; undo
+  // it so a fridge stands up in a model that was rotated upright.
+  viewer.root.updateMatrixWorld(true);
+  const rootSpin = new THREE.Quaternion();
+  viewer.root.getWorldQuaternion(rootSpin);
+  object.quaternion.copy(rootSpin.invert());
+
+  const added = extras.add(object, object.name, state.sidIndex);
+  const joints = applyPresetJoints(added);
+
+  setSelection([added]);
+  setGizmoMode('translate');
+  renderPanel();
+  hint(joints
+    ? `<b>${added.name}</b> added with <b>${joints}</b> moving parts — <b>G</b> to move it`
+    : `<b>${added.name}</b> added — <b>G</b> to move it`);
+}
+
 function addSurface(kind) {
   if (!state.model) return hint('Load a model first');
   const object = buildSurface(kind, modelBounds(), rig.unitsPerMetre);
@@ -1215,6 +1245,10 @@ $('btn-add-object').addEventListener('click', () => $('add-input').click());
 $('add-input').addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; });
 for (const button of document.querySelectorAll('[data-surface]')) {
   button.addEventListener('click', () => addSurface(button.dataset.surface));
+}
+
+for (const button of document.querySelectorAll('[data-part]')) {
+  button.addEventListener('click', () => addPart(button.dataset.part));
 }
 
 extras.onChange = () => {

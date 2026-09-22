@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
 /**
- * A demonstration kitchen with real construction: hollow carcasses, shelves,
- * drawer boxes with sides and bases, an oven and a fridge.
+ * Kitchen construction: hollow carcasses, shelves, drawer boxes with sides and
+ * bases, an oven and a fridge — assembled into a demonstration kitchen, and
+ * offered piece by piece through `PARTS` for adding to an imported model.
  *
  * Every door and drawer carries a `demoJoint` tag describing how it should
  * move, so the kitchen arrives already rigged — open it in Play mode and
@@ -372,6 +373,97 @@ function fridge(x) {
 
   door.userData.demoJoint = {
     type: 'hinge', axis: [0, 1, 0], point: [x + w / 2, y, doorZ], min: 0, max: 115
+  };
+  unit.add(door);
+
+  return unit;
+}
+
+/* -------------------------------------------------------------- library -- */
+
+/**
+ * The same construction, offered one piece at a time.
+ *
+ * An imported CAD kitchen is often just carcasses: no handles, no drawer
+ * boxes, no appliances. These fill that in. Each piece is built at the origin
+ * and keeps its `demoJoint` tags, so it arrives already able to open.
+ */
+export const PARTS = {
+  base: { label: 'Cabinet', build: () => baseDoorUnit(0, 0.6, 'left') },
+  drawers: { label: 'Drawers', build: () => drawerUnit(0, 0.6) },
+  wall: { label: 'Wall unit', build: () => wallUnit(0, 0.6, 'left') },
+  oven: { label: 'Stove', build: () => ovenUnit(0, 0.6) },
+  fridge: { label: 'Fridge', build: () => fridge(0) },
+  dishwasher: { label: 'Dishwasher', build: () => dishwasher(0, 0.6) },
+  handle: { label: 'Handle', build: () => handle(0.3, true, 'Handle') }
+};
+
+/**
+ * Build one library piece, standing on its own at the origin.
+ *
+ * @param {string} kind        a key of PARTS
+ * @param {number} unitScale   model units per metre, so a millimetre-authored
+ *                             kitchen gets a fridge of the right size
+ */
+export function buildPart(kind, unitScale = 1) {
+  const part = PARTS[kind];
+  if (!part) throw new Error(`Unknown part: ${kind}`);
+
+  M = materials();                       // the builders share one palette
+  const object = part.build();
+  object.name = part.label;
+
+  // Centre it on x and z and sit it on the ground, so it lands where the
+  // viewer is looking rather than wherever it sat in the demo layout.
+  const box = new THREE.Box3().setFromObject(object);
+  const centre = box.getCenter(new THREE.Vector3());
+  for (const child of object.children) {
+    child.position.x -= centre.x;
+    child.position.z -= centre.z;
+    child.position.y -= box.min.y;
+  }
+
+  if (unitScale !== 1) object.scale.setScalar(unitScale);
+
+  object.traverse((o) => {
+    if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
+  });
+  return object;
+}
+
+/** A dishwasher: a panelled front on a hinge, with a pull-out basket. */
+function dishwasher(x, w) {
+  const unit = new THREE.Group();
+  unit.name = 'Dishwasher';
+  unit.add(plinth(x, w));
+
+  const body = carcass(w - 0.02, CARCASS_H, DEPTH - 0.06, { shelves: 0, name: 'Dishwasher body' });
+  body.position.set(x, PLINTH + CARCASS_H / 2, Z_BACK + (DEPTH - 0.06) / 2);
+  unit.add(body);
+
+  const basket = drawerBox(w - 0.09, 0.2, DEPTH - 0.16, 'Dishwasher basket');
+  basket.position.set(x, PLINTH + 0.22, Z_BACK + (DEPTH - 0.16) / 2);
+  basket.userData.demoJoint = {
+    type: 'slide', axis: [0, 0, 1], point: [x, PLINTH + 0.22, Z_BACK], min: 0, max: 0.4
+  };
+  unit.add(basket);
+
+  // the front drops forward from its bottom edge, like an oven door
+  const frontZ = Z_BACK + DEPTH - FRONT_T / 2;
+  const door = new THREE.Group();
+  door.name = 'Dishwasher door';
+  door.userData.selectionRoot = true;
+
+  const leaf = box(w - GAP * 2, CARCASS_H - 0.02, FRONT_T, M.door, 'Dishwasher front');
+  leaf.position.set(x, PLINTH + CARCASS_H / 2, frontZ);
+  door.add(leaf);
+
+  const grip = handle(w * 0.5, true, 'Dishwasher handle');
+  grip.position.set(x, PLINTH + CARCASS_H - 0.06, frontZ + 0.02);
+  door.add(grip);
+
+  door.userData.demoJoint = {
+    type: 'hinge', axis: [1, 0, 0], point: [x, PLINTH, frontZ], min: 0, max: 90
   };
   unit.add(door);
 
