@@ -53,12 +53,20 @@ def main():
     ap.add_argument('model', nargs='?', help='GLB to publish (default: newest in Downloads)')
     ap.add_argument('--rig', help='rig JSON (default: newest in Downloads)')
     ap.add_argument('--dry-run', action='store_true')
+    ap.add_argument('--rig-only', action='store_true',
+                    help='publish just the rig: your hinges, materials and '
+                         'lights, without re-uploading the 30 MB model')
     args = ap.parse_args()
 
     model = Path(args.model) if args.model else newest('*.glb')
     rig = Path(args.rig) if args.rig else newest('*.rig.json')
 
-    if not model or not model.is_file():
+    if args.rig_only:
+        if not rig or not rig.is_file():
+            sys.exit('No rig found. Press "Export rig" in the tool first.')
+        model = Path(tidy(rig.name)[:-len('.rig.json')] + '.glb')   # names only
+
+    if not model or (not args.rig_only and not model.is_file()):
         sys.exit('No GLB found. Export one from the tool first (Scene tab).')
 
     model_name = tidy(model.name)
@@ -68,10 +76,15 @@ def main():
         rig = None
     rig_name = tidy(rig.name) if rig else None
 
-    print('  model: %s  (%.1f MB)' % (model.name, model.stat().st_size / 1048576))
+    if args.rig_only:
+        print('  model: %s  (already published, not re-uploaded)' % model.name)
+    else:
+        print('  model: %s  (%.1f MB)' % (model.name, model.stat().st_size / 1048576))
     print('  rig:   %s' % (rig.name if rig else 'none - doors will not move'))
 
-    targets = [(model, TOOL / 'models' / model_name)]
+    # Re-uploading an unchanged 30 MB model wastes a deploy, and re-exporting
+    # it after texturing bakes those textures in permanently.
+    targets = [] if args.rig_only else [(model, TOOL / 'models' / model_name)]
     if rig:
         targets.append((rig, TOOL / 'rigs' / rig_name))
 
@@ -94,7 +107,8 @@ def main():
         print('\n  Already published and unchanged — nothing to do.')
     else:
         commit = run('git', 'commit', '-m',
-                     'Publish %s for headset and phone viewing' % stem)
+                     'Publish %s%s for headset and phone viewing'
+                     % (stem, ' rig' if args.rig_only else ''))
         if commit.returncode:
             sys.exit('git commit failed:\n' + commit.stdout + commit.stderr)
         push = run('git', 'push')
@@ -106,7 +120,8 @@ def main():
 
     print('\n  Waiting for the site to publish...', end='', flush=True)
     import urllib.request, urllib.error
-    check = SITE + 'models/' + urllib.parse.quote(model_name)
+    check = SITE + ('rigs/' + urllib.parse.quote(rig_name) if args.rig_only
+                    else 'models/' + urllib.parse.quote(model_name))
     for _ in range(60):
         try:
             with urllib.request.urlopen(check, timeout=20) as r:

@@ -1,33 +1,33 @@
 {
   "format": "kitchen-motion-rig",
   "version": 1,
-  "source": "Kitchen_test.obj",
+  "source": "kitchen-test.glb",
   "joints": [
     {
       "id": "j1",
       "type": "hinge",
-      "name": "Typ1:5",
+      "name": "Typ110",
       "sids": [
-        "315"
+        "320"
       ],
       "origin": [
-        0.053,
-        5.2,
-        0.653895
+        -1.147,
+        2.233355,
+        -2.3
       ],
       "axis": [
         0,
-        0,
-        -1
+        -1,
+        0
       ],
       "min": 0,
       "max": 85,
       "value": 85,
       "mount": {
         "position": [
-          0.053,
-          5.2,
-          0.653895
+          -1.147,
+          2.233355,
+          -2.3
         ],
         "quaternion": [
           0,
@@ -54,20 +54,20 @@
         "tint": "#ffffff"
       },
       "sids": [
-        "310"
+        "320"
       ]
     },
     {
-      "defId": "coated-pine",
+      "defId": "hinoki-planks",
       "settings": {
         "size": 2,
         "rotation": 0,
-        "roughness": 0.55,
+        "roughness": 0.62,
         "metalness": 0,
         "tint": "#ffffff"
       },
       "sids": [
-        "315"
+        "310"
       ]
     }
   ],
@@ -86,7 +86,7 @@
     "background": "#0e1116"
   },
   "transform": {
-    "rx": 270,
+    "rx": 0,
     "ry": 0,
     "rz": 0,
     "scale": 1
