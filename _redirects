@@ -1,0 +1,4 @@
+# Keep already-printed QR codes and shared links working after a file rename.
+# 200 = serve the new file at the old address, no extra copy of the bytes.
+/tools/eicha-kuchl/models/kitchen.glb     /tools/eicha-kuchl/models/20231109-collection-3-kitchen.glb     200
+/tools/eicha-kuchl/rigs/kitchen.rig.json  /tools/eicha-kuchl/rigs/20231109-collection-3-kitchen.rig.json  200
