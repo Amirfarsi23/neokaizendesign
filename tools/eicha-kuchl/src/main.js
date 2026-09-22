@@ -6,6 +6,7 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { Viewer } from './viewer.js';
 import { loadModel, loadModelFromUrl, SUPPORTED } from './loaders.js';
 import { buildPart } from './parts.js';
+import { packDesign, unpackDesign, canCarry, QR_COMFORTABLE } from './carry.js';
 import { Rig, Joint, assignStableIds, guessUnitsPerMetre } from './motion.js';
 import { collectEdges, pickEdge, resolveSelection, makeEdgeOverlay } from './picking.js';
 import { Panel, hint, loading, download } from './ui.js';
@@ -1102,6 +1103,12 @@ function loadProject(data, { announce = true } = {}) {
 }
 
 /** Is there an autosave for this model that actually contains something? */
+/** Is there anything worth carrying in a link? */
+function hasWork(d = projectJSON()) {
+  return Boolean(d.joints?.length || d.materials?.length || d.lights?.length
+    || d.groups?.length || d.placements?.length || d.hidden?.length);
+}
+
 function hasSavedWork() {
   try {
     const raw = localStorage.getItem(storageKey());
@@ -1758,7 +1765,14 @@ async function openFromUrl(modelUrl, rigUrl) {
     const { object, name } = await loadModelFromUrl(modelUrl, (msg) => loading(msg));
     install(object, name);
 
-    if (rigUrl) {
+    // A design carried in the link beats a rig file: it is what the sender had
+    // on screen, and it costs no second request.
+    if (carriedDesign) {
+      loading('Opening the shared design…');
+      const data = await unpackDesign(carriedDesign);
+      history.silently(() => loadProject(data, { announce: false }));
+      history.reset();
+    } else if (rigUrl) {
       loading('Loading the rig…');
       const response = await fetch(rigUrl);
       if (!response.ok) throw new Error(`${response.status} fetching the rig`);
@@ -1780,6 +1794,7 @@ async function openFromUrl(modelUrl, rigUrl) {
 if (presenting) enterPresentationMode();
 
 const sharedModel = params.get('m');
+const carriedDesign = params.get('d');
 if (sharedModel) {
   openFromUrl(sharedModel, params.get('r'));
 } else {
@@ -1869,16 +1884,43 @@ $('btn-share').addEventListener('click', async () => {
     rigPath ? exists(rigPath) : false
   ]);
 
-  // A rig is optional: without one the design still opens, the doors just do
-  // not move. Only a missing model makes the link worthless.
   if (hasModel) {
-    const link = hasRig ? url : `${base}?m=${modelPath}&view=1`;
-    status.textContent = hasRig
-      ? 'Scan with a phone or a headset.'
-      : 'Scan with a phone or a headset. No rig is on the site yet, so the doors '
-        + 'will not move — press Export rig to include them.';
+    // The model is hosted, so only the work on top of it needs to travel — and
+    // that is small enough to ride along in the address. Nothing is uploaded:
+    // whoever scans this gets exactly what is on screen right now.
+    let link = hasRig ? url : `${base}?m=${modelPath}&view=1`;
+    let carried = false;
+
+    if (canCarry() && hasWork()) {
+      try {
+        const packed = await packDesign(projectJSON());
+        const withDesign = `${base}?m=${modelPath}&d=${packed}&view=1`;
+        if (withDesign.length <= QR_COMFORTABLE) {
+          link = withDesign;
+          carried = true;
+        } else {
+          link = withDesign;          // too dense to scan, still fine to copy
+          carried = 'long';
+        }
+      } catch (err) {
+        console.error('could not pack the design', err);
+      }
+    }
+
     $('share-url').textContent = link;
     $('share-url').href = link;
+
+    if (carried === 'long') {
+      $('share-qr').hidden = true;
+      status.innerHTML = 'This design is too detailed for a scannable code. '
+        + 'Press <b>Copy link</b> and send it to the headset or phone instead — '
+        + 'the link carries everything.';
+      return;
+    }
+
+    status.textContent = carried
+      ? 'Scan with a phone or a headset — your changes travel with the code.'
+      : 'Scan with a phone or a headset.';
     await drawQR(link);
     return;
   }
