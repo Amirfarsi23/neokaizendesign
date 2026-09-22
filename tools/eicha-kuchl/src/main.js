@@ -5,7 +5,7 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 import { Viewer } from './viewer.js';
 import { loadModel, loadModelFromUrl, SUPPORTED } from './loaders.js';
-import { buildDemoKitchen, buildPart } from './parts.js';
+import { buildPart } from './parts.js';
 import { Rig, Joint, assignStableIds, guessUnitsPerMetre } from './motion.js';
 import { collectEdges, pickEdge, resolveSelection, makeEdgeOverlay } from './picking.js';
 import { Panel, hint, loading, download } from './ui.js';
@@ -1204,12 +1204,15 @@ scenePanel.syncLighting(studio.lighting);
 $('btn-open').addEventListener('click', () => $('file-input').click());
 $('file-input').addEventListener('change', (e) => { openFiles(e.target.files); e.target.value = ''; });
 
-$('btn-demo').addEventListener('click', () => {
-  install(buildDemoKitchen(), 'demo-kitchen');
-  hint(rig.joints.length
-    ? `Demo kitchen — <b>${rig.joints.length}</b> doors and drawers already rigged. Switch to <b>Play</b> and click them.`
-    : 'Click a door, press <b>Add hinge</b>, then click its vertical edge');
-});
+for (const button of document.querySelectorAll('[data-demo]')) {
+  button.addEventListener('click', () => openDemo(button.dataset.demo));
+}
+
+/** Load one of the published demos, with its rig if it has one. */
+function openDemo(id) {
+  const demo = DEMOS.find((d) => d.id === id);
+  if (demo) openFromUrl(demo.glb, demo.rig);
+}
 
 for (const button of document.querySelectorAll('[data-gizmo]')) {
   button.addEventListener('click', () => setGizmoMode(button.dataset.gizmo));
@@ -1610,15 +1613,33 @@ const params = new URLSearchParams(location.search);
  * can only reach a design that is hosted here, which is a studio job, so that
  * route asks them to get in touch.
  */
-const DEMO = {
-  glb: 'models/kitchen-test.glb',
-  rig: null,                       // deliberately bare — visitors rig it themselves
-  usdz: 'models/kitchen-test.usdz'
-};
+const DEMOS = [
+  {
+    id: '1',
+    label: 'Demo 1',
+    file: 'kitchen-test.glb',
+    glb: 'models/kitchen-test.glb',
+    rig: null,                     // deliberately bare — visitors rig it themselves
+    usdz: null
+  },
+  {
+    id: '2',
+    label: 'Demo 2',
+    file: 'demo-kitchen.glb',
+    glb: 'demo/demo-kitchen.glb',
+    rig: 'demo/demo-kitchen.rig.json',
+    usdz: 'demo/demo-kitchen.usdz'
+  }
+];
+
+/** Which published demo is on screen, if any. */
+function currentDemo(source = state.sourceName ?? '') {
+  return DEMOS.find((d) => d.file === source || d.file === `${source}.glb`) ?? null;
+}
 
 const STUDIO = params.get('studio') === '1';
 
-const isDemo = () => /^(kitchen-test|demo-kitchen)(\.glb)?$/.test(state.sourceName ?? '');
+const isDemo = () => currentDemo() !== null;
 
 /**
  * The USDZ an iPhone should open for what is on screen. iOS has no WebXR, so
@@ -1647,7 +1668,7 @@ function hostedStem() {
 }
 
 function quickLookUrl() {
-  return isDemo() ? DEMO.usdz : params.get('u');
+  return currentDemo()?.usdz ?? params.get('u');
 }
 
 function openQuickLook(url) {
@@ -1756,17 +1777,13 @@ async function openFromUrl(modelUrl, rigUrl) {
   }
 }
 
-$('btn-demo').hidden = !STUDIO;        // the built-in demo is a studio shortcut
-
 if (presenting) enterPresentationMode();
 
 const sharedModel = params.get('m');
 if (sharedModel) {
   openFromUrl(sharedModel, params.get('r'));
 } else {
-  // Nothing asked for in particular: show the studio's kitchen. Arriving with
-  // an empty scene and a locked file picker would leave nothing to look at.
-  openFromUrl(DEMO.glb, DEMO.rig);
+  openDemo('1');          // nothing asked for: open on the studio's own kitchen
 }
 
 /**
@@ -1817,8 +1834,9 @@ async function drawQR(text) {
 function shareURL() {
   const base = location.origin + location.pathname;
   const stem = hostedStem();
-  const [modelPath, rigPath] = isDemo()
-    ? [DEMO.glb, DEMO.rig]
+  const demo = currentDemo();
+  const [modelPath, rigPath] = demo
+    ? [demo.glb, demo.rig]
     : [`models/${stem}.glb`, `rigs/${stem}.rig.json`];
   const url = `${base}?m=${modelPath}`
     + (rigPath ? `&r=${rigPath}` : '')
