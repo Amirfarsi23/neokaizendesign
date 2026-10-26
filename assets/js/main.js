@@ -51,3 +51,75 @@ if (contactForm) {
     window.location.href = href;
   });
 }
+
+/* ===========================================================
+   Menü: durch die Geschichte fliegen statt springen
+
+   Die Abschnitte liegen hinter dem Scroller, also hinter der ganzen
+   Bildfolge. Ein normaler Anker springt dorthin und der Besucher sieht nie,
+   dass dazwischen etwas liegt. Stattdessen scrollen wir in fester Zeit
+   dorthin: die Bilder ziehen sichtbar vorbei, und am Ende steht man am Ziel.
+   =========================================================== */
+(function () {
+  // Read at click time: the setting can change without a reload.
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  let running = null;
+
+  function flyTo(target) {
+    const root = document.documentElement;
+    const from = scrollY;
+    const to = Math.round(target.getBoundingClientRect().top + scrollY);
+    const distance = to - from;
+    if (!distance) return;
+
+    // Long hops through the story get more time, but never so much that it
+    // feels like waiting; a short hop between two sections stays brisk.
+    const screens = Math.abs(distance) / innerHeight;
+    const duration = Math.min(2400, 420 + screens * 70);
+
+    // The CSS smooth-scroll would fight this animation for the same property.
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+
+    const start = performance.now();
+    if (running) cancelAnimationFrame(running);
+
+    (function step(now) {
+      const t = Math.min(1, (now - start) / duration);
+      scrollTo(0, from + distance * easeInOut(t));
+      if (t < 1) {
+        running = requestAnimationFrame(step);
+      } else {
+        running = null;
+        root.style.scrollBehavior = previous;
+      }
+    })(start);
+  }
+
+  addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const id = link.getAttribute('href').slice(1);
+    const target = id && document.getElementById(id);
+    if (!target) return;                       // "#" or a missing section
+
+    e.preventDefault();
+    history.pushState(null, '', '#' + id);     // keep the address bar honest
+    if (reduced()) target.scrollIntoView();    // no flight for those who opted out
+    else flyTo(target);
+  });
+
+  // A wheel or touch during the flight means the visitor wants control back.
+  for (const kind of ['wheel', 'touchstart', 'keydown']) {
+    addEventListener(kind, () => {
+      if (running) {
+        cancelAnimationFrame(running);
+        running = null;
+        document.documentElement.style.scrollBehavior = '';
+      }
+    }, { passive: true });
+  }
+})();
