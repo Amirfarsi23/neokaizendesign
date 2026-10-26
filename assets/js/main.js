@@ -63,7 +63,10 @@ if (contactForm) {
 (function () {
   // Read at click time: the setting can change without a reload.
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  // Gentle curve on purpose. A cubic ease spends the middle of the trip at
+  // enormous speed, which turns the frames into a blur — the opposite of the
+  // point. This one keeps the pass-through closer to an even pace.
+  const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
   let running = null;
 
@@ -77,7 +80,7 @@ if (contactForm) {
     // Long hops through the story get more time, but never so much that it
     // feels like waiting; a short hop between two sections stays brisk.
     const screens = Math.abs(distance) / innerHeight;
-    const duration = Math.min(2400, 420 + screens * 70);
+    const duration = Math.min(3600, 900 + screens * 60);
 
     // The CSS smooth-scroll would fight this animation for the same property.
     const previous = root.style.scrollBehavior;

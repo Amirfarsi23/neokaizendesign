@@ -21,6 +21,7 @@ if hasattr(sys.stdout, "reconfigure"):
 ROOT      = Path(__file__).parent
 DATA      = ROOT / "data"
 TEMPLATES = ROOT / "templates"
+ASSETS    = ROOT / "assets"
 IMG       = ROOT / "assets" / "img" / "projects"
 IMG_ALT   = ROOT / "images" / "Projects"
 VIDEOS    = ROOT / "data" / "videos"
@@ -214,7 +215,16 @@ def build():
     videos   = prepare_videos()
     scroll   = load("scroll.json")
 
+    # GitHub Pages serves assets with max-age=600, so without a changing query
+    # a visitor keeps the old CSS and JS for ten minutes after a deploy — long
+    # enough to look like the change never happened.
+    stamp = max(
+        (f.stat().st_mtime for f in list(ASSETS.rglob("*.css")) + list(ASSETS.rglob("*.js"))),
+        default=0,
+    )
+
     html = env.get_template("index.html").render(
+        asset_v=int(stamp),
         site=site,
         services=services,
         projects=projects,

@@ -6,8 +6,8 @@
    =========================================================== */
 
 :root {
-  --story-len:   3000vh;  /* Desktop — 3000 schnell · 5000 mittel · 8000 langsam */
-  --story-len-m: 2000vh;  /* Handy   — etwa 2/3 vom Desktop-Wert */
+  --story-len:   1800vh;  /* Desktop — 3000 schnell · 5000 mittel · 8000 langsam */
+  --story-len-m: 1300vh;  /* Handy   — etwa 2/3 vom Desktop-Wert */
 }
 
 /* --- fixierte Marke + Menü (Position kommt aus dem JS) --- */
