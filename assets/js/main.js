@@ -80,7 +80,14 @@ if (contactForm) {
     // Long hops through the story get more time, but never so much that it
     // feels like waiting; a short hop between two sections stays brisk.
     const screens = Math.abs(distance) / innerHeight;
-    const duration = Math.min(3600, 900 + screens * 60);
+    // Someone who asked for less motion still gets a scroll rather than a
+    // jump — just a brief one. Jumping is what makes the story invisible.
+    // Tuned against the shortened story: the whole page is now about eleven
+    // screens, so the per-screen term has to be generous or the flight is over
+    // before the frames register.
+    const duration = reduced()
+      ? Math.min(1800, 600 + screens * 60)
+      : Math.min(3600, 1200 + screens * 120);
 
     // The CSS smooth-scroll would fight this animation for the same property.
     const previous = root.style.scrollBehavior;
@@ -111,8 +118,7 @@ if (contactForm) {
 
     e.preventDefault();
     history.pushState(null, '', '#' + id);     // keep the address bar honest
-    if (reduced()) target.scrollIntoView();    // no flight for those who opted out
-    else flyTo(target);
+    flyTo(target);
   });
 
   // A wheel or touch during the flight means the visitor wants control back.
