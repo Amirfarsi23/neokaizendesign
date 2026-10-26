@@ -13,7 +13,7 @@ const DE = {
   'Added objects land on the floor where you are looking. Move them with G, scale with S, remove with Delete. They live for this session only — they are not written into the saved project.':
     'Hinzugefügte Objekte landen dort auf dem Boden, wohin Sie schauen. Bewegen mit <b>G</b>, skalieren mit <b>S</b>, entfernen mit <b>Entf</b>. Sie bestehen nur für diese Sitzung und werden nicht mitgespeichert.',
   'Select a door, press Add hinge, then click the edge it should swing around.':
-    'Tür auswählen, <em>Scharnier</em> drücken, dann die Kante anklicken, um die sie schwingen soll.',
+    'Tür auswählen, auf <em>Scharnier setzen</em> klicken, dann die Kante anklicken, um die sie schwingen soll.',
   'Contact us': 'Kontakt',
   'Cabinet': 'Schrank',
   'Drawers': 'Auszüge',
@@ -26,11 +26,11 @@ const DE = {
   'Doors, drawers, materials and light — try all of it.':
     'Türen, Auszüge, Materialien und Licht — probieren Sie alles aus.',
   'Want your own design in here? Press “Contact us”.':
-    'Ihr eigenes Projekt hier sehen? Auf <em>Kontakt</em> drücken.',
+    'Ihr eigenes Projekt hier sehen? Auf <em>Kontakt</em> klicken.',
   'Open on a phone or headset': 'Auf Handy oder Headset öffnen',
   'Copy link': 'Link kopieren',
   'Close': 'Schließen',
-  'Checking…': 'Prüfe…',
+  'Checking…': 'Wird geprüft…',
   'Eicha Kuchl is a demo': 'Eicha Kuchl ist eine Demo',
   /* toolbar */
   'Open model…': 'Modell öffnen…',
@@ -39,8 +39,8 @@ const DE = {
   'Play': 'Vorführen',
   'Open all': 'Alle öffnen',
   'Close all': 'Alle schließen',
-  'Export rig': 'Mechanik speichern',
-  'Import rig': 'Mechanik laden',
+  'Export rig': 'Bewegungen exportieren',
+  'Import rig': 'Bewegungen importieren',
 
   /* tabs */
   'Parts': 'Teile',
@@ -58,26 +58,26 @@ const DE = {
   /* selection */
   'Selection': 'Auswahl',
   'Nothing selected.': 'Nichts ausgewählt.',
-  'Add hinge': 'Scharnier',
-  'Add drawer': 'Auszug',
+  'Add hinge': 'Scharnier setzen',
+  'Add drawer': 'Auszug setzen',
   'Group': 'Gruppieren',
-  'Ungroup': 'Gruppe lösen',
-  'X-ray': 'Durchsicht',
+  'Ungroup': 'Gruppe auflösen',
+  'X-ray': 'Röntgen',
   'Hide': 'Ausblenden',
-  'Show all': 'Alle zeigen',
+  'Show all': 'Alle anzeigen',
   'Snap to bounding-box edges (for messy geometry)':
-    'An Hüllkörper-Kanten fangen (bei unsauberer Geometrie)',
+    'An Hüllkörper-Kanten einrasten (bei unsauberer Geometrie)',
 
   /* motions */
   'Motions': 'Bewegungen',
   'Groups': 'Gruppen',
   'Transform': 'Transformation',
   'Reset transform': 'Transformation zurücksetzen',
-  'Keys': 'Tasten',
+  'Keys': 'Tastenkürzel',
   'Delete': 'Löschen',
-  'Select': 'Wählen',
+  'Select': 'Auswählen',
   'Remove': 'Entfernen',
-  'Test': 'Test',
+  'Test': 'Testen',
   'Flip': 'Umkehren',
 
   /* material */
@@ -87,25 +87,25 @@ const DE = {
   'Texture size': 'Texturgröße',
   'Rotation': 'Drehung',
   'Roughness': 'Rauheit',
-  'Metalness': 'Metallgrad',
-  'Tint': 'Farbton',
+  'Metalness': 'Metallanteil',
+  'Tint': 'Einfärbung',
   'Reset to original': 'Auf Original zurücksetzen',
-  'none': 'keins',
+  'none': 'nichts',
   'Wood': 'Holz',
-  'Stone & tile': 'Stein & Fliese',
+  'Stone & tile': 'Stein & Fliesen',
   'Fabric': 'Stoff',
   'Wallpaper': 'Tapete',
   'Metal': 'Metall',
-  'Paint': 'Farbe',
+  'Paint': 'Lack',
   'Custom': 'Eigene',
 
   /* lights */
   'Place a light': 'Licht setzen',
-  'Bulb': 'Birne',
+  'Bulb': 'Glühbirne',
   'Spot': 'Strahler',
-  'Strip': 'Leiste',
+  'Strip': 'Lichtleiste',
   'Show light markers (never included in renders)':
-    'Lichtmarkierungen zeigen (nie im Rendering)',
+    'Lichtmarkierungen zeigen (erscheinen nie im Rendering)',
   'No interior lights yet.': 'Noch keine Innenbeleuchtung.',
   'Brightness': 'Helligkeit',
   'Cone angle': 'Kegelwinkel',
@@ -114,12 +114,13 @@ const DE = {
   'Length': 'Länge',
   'Depth': 'Tiefe',
   'Shadow': 'Schatten',
-  'Move': 'Bewegen',
+  'Move': 'Verschieben',
 
   /* scene */
   'Model orientation': 'Modellausrichtung',
   'Turntable': 'Drehteller',
-  'Scale': 'Maßstab',
+  'Scale': 'Skalieren',
+  'Model scale': 'Maßstab',
   'Reset': 'Zurücksetzen',
   'Section box': 'Schnittbox',
   'Cut the model down to a box you can drag':
@@ -138,7 +139,7 @@ const DE = {
   'Resolution': 'Auflösung',
   'Transparent background': 'Transparenter Hintergrund',
   'Logo in the corner': 'Logo in der Ecke',
-  'Capture PNG': 'PNG aufnehmen',
+  'Capture PNG': 'Als PNG speichern',
   'Export model for sharing (GLB)': 'Modell zum Teilen exportieren (GLB)',
   'Export for iPhone AR (USDZ)': 'Für iPhone-AR exportieren (USDZ)',
   'Make a share link…': 'Link zum Teilen…',
@@ -151,13 +152,13 @@ const DE = {
   'Rotate': 'Drehen',
   'World': 'Welt',
   'Local': 'Lokal',
-  'Snap': 'Raster',
+  'Snap': 'Einrasten',
 
   /* drop zone */
   'Drop a model here': 'Modell hier ablegen',
   'or press “Demo kitchen” to try it right away':
     'oder „Demo-Küche“ drücken, um sofort loszulegen',
-  'Loading…': 'Lädt…',
+  'Loading…': 'Wird geladen…',
 
   /* AR bar */
   'Lights on': 'Licht an',
@@ -167,13 +168,9 @@ const DE = {
   'Point at the floor, then tap to place':
     'Auf den Boden richten, dann tippen zum Platzieren',
   'Tap a door or drawer to open it':
-    'Auf Tür oder Schublade tippen, um sie zu öffnen',
+    'Auf Tür oder Auszug tippen zum Öffnen',
 
   /* longer prose */
-  'Added objects land on the floor where you are looking. Move them with G, scale with S, remove with Delete. They live for this session only — they are not written into the saved project.':
-    'Hinzugefügte Objekte landen dort auf dem Boden, wohin Sie schauen. Bewegen mit G, skalieren mit S, entfernen mit Entf. Sie bestehen nur für diese Sitzung und werden nicht mitgespeichert.',
-  'Select a door, press Add hinge, then click the edge it should swing around.':
-    'Tür auswählen, Scharnier drücken, dann die Kante anklicken, um die sie schwingen soll.',
   'Sizes are in real metres and UVs are re-projected from the model, so a 0.3 m parquet tile is 0.3 m on the floor whatever the file\'s own unwrapping looked like.':
     'Größen sind echte Meter. Die UVs werden neu projiziert — eine 0,3-m-Parkettdiele ist auf dem Boden auch 0,3 m, egal wie die Datei abgewickelt war.',
   'Drag the coloured pads on each face to slide that side in or out. Hidden geometry stays selectable only inside the box, so you can work on one cupboard without the rest getting in the way.':
@@ -183,7 +180,46 @@ const DE = {
   'Offsets are relative to where the part came in — the imported file\'s own transform is never touched, so Reset always gets you back.':
     'Verschiebungen sind relativ zur Importlage. Die Transformation der Datei bleibt unangetastet, Zurücksetzen bringt Sie also immer zurück.',
   'Pick a type, then click the surface it shines from — the underside of a wall unit for under-cabinet lighting, the ceiling for downlights. The beam follows that surface\'s direction.':
-    'Typ wählen, dann die Fläche anklicken, von der das Licht ausgeht — die Unterseite eines Hängeschranks für Unterbaulicht, die Decke für Einbaustrahler. Der Strahl folgt der Flächenrichtung.'
+    'Typ wählen, dann die Fläche anklicken, von der das Licht ausgeht — die Unterseite eines Hängeschranks für Unterbaulicht, die Decke für Einbaustrahler. Der Strahl folgt der Flächenrichtung.',
+  /* tooltips */
+  'Move (G)': 'Verschieben (G)',
+  'Rotate (R)': 'Drehen (R)',
+  'Scale (S)': 'Skalieren (S)',
+  'Snap to 10 mm / 15 degrees': 'Auf 10 mm / 15 Grad einrasten',
+  'World or local axes': 'Welt- oder lokale Achsen',
+  'Put the handles away (Esc)': 'Griffe ausblenden (Esc)',
+  'Undo (Ctrl+Z)': 'Rückgängig (Strg+Z)',
+  'Redo (Ctrl+Shift+Z)': 'Wiederholen (Strg+Umschalt+Z)',
+  'Lock these parts together (Ctrl+G)': 'Teile zusammenfassen (Strg+G)',
+  'Break the group apart (Ctrl+Shift+G)': 'Gruppe auflösen (Strg+Umschalt+G)',
+  'Ghost everything except the selection (X)':
+    'Alles außer der Auswahl durchsichtig machen (X)',
+  'Hide the selected parts (H)': 'Ausgewählte Teile ausblenden (H)',
+  'Show everything again (Shift+H)': 'Alles wieder einblenden (Umschalt+H)',
+  'Tell us what is missing': 'Sagen Sie uns, was fehlt',
+
+  /* keyboard legend */
+  'Shift + click — add to selection':
+    '<b>Umschalt + Klick</b> — zur Auswahl hinzufügen',
+  'Alt + click — ignore grouping, pick the raw part':
+    '<b>Alt + Klick</b> — Gruppierung ignorieren, Einzelteil wählen',
+  'Ctrl+G — group · Ctrl+Shift+G — ungroup':
+    '<b>Strg+G</b> — gruppieren · <b>Strg+Umschalt+G</b> — Gruppe lösen',
+  'Ctrl+Z — undo · Ctrl+Shift+Z — redo':
+    '<b>Strg+Z</b> — rückgängig · <b>Strg+Umschalt+Z</b> — wiederholen',
+  'X — x-ray · H — hide · Shift+H — show all':
+    '<b>X</b> — Röntgen · <b>H</b> — ausblenden · <b>Umschalt+H</b> — alle anzeigen',
+  'G / R / S — move, rotate, scale handles':
+    '<b>G / R / S</b> — Verschieben, Drehen, Skalieren',
+  'F — frame selection · Esc — cancel':
+    '<b>F</b> — Auswahl einpassen · <b>Esc</b> — abbrechen',
+
+  /* strays the audit turned up */
+  'View in VR': 'In VR ansehen',
+  'This design is not on the server': 'Dieses Projekt liegt nicht auf dem Server',
+  'This design could not be opened': 'Dieses Projekt konnte nicht geöffnet werden',
+  'If something is missing or broken, tell us. That is what this is for.':
+    'Wenn etwas fehlt oder nicht funktioniert, sagen Sie es uns. Genau dafür ist das hier da.'
 };
 
 const LANGS = { de: DE, en: null };
@@ -262,7 +298,11 @@ function walk(root, onText, onTitle) {
     if (hasText && !el.querySelector('[id]')) {
       const original = el.dataset.enHtml ?? el.innerHTML;
       if (el.dataset.enHtml === undefined) el.dataset.enHtml = original;
-      const key = collapse(el.textContent);
+      // Key off the English stashed on the first visit, never the live text:
+      // the inline <em> inside gets translated by the pass below, so by the
+      // second run the live text is half-German and matches nothing.
+      if (el.dataset.enText === undefined) el.dataset.enText = collapse(el.textContent);
+      const key = el.dataset.enText;
       const replacement = dict?.[key];
       if (replacement !== undefined) {
         el.innerHTML = replacement;

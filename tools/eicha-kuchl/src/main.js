@@ -345,6 +345,20 @@ rig.onChange = () => { mounts.prune(); renderPanel(); refreshGizmo(); commit('mo
 function renderPanel() {
   panel.render(rig.joints, rig.unitsPerMetre);
   updateSelectionInfo();
+  retranslate();
+}
+
+/**
+ * Re-apply the chosen language to freshly rendered markup.
+ *
+ * The dictionary is applied by walking the DOM, so anything JavaScript writes
+ * afterwards comes out in English — the motions list, the extras list, the
+ * empty-state lines. Running the walk again after a render is idempotent: it
+ * stashes the English original on each node the first time, so repeating it
+ * never compounds.
+ */
+function retranslate() {
+  if (language() !== 'en') setLanguage(language());
 }
 
 function setSelection(objects, note = '') {
@@ -1316,6 +1330,7 @@ extras.onChange = () => {
     row.appendChild(head);
     list.appendChild(row);
   }
+  retranslate();
 };
 
 $('btn-add-hinge').addEventListener('click', () => enterAxisMode('hinge'));
