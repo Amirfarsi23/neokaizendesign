@@ -23,8 +23,16 @@
 
   <div class="proj-pile">
     {%- for im in p.images %}
-    <img class="pile-img" src="{{ p.dir }}{{ im.file }}" alt="{{ im.caption or p.title }}"
-         data-i="{{ loop.index0 }}" loading="lazy">
+    {% set src = p.dir ~ im.file %}
+    <picture>
+      {%- if has_webp(src) %}
+      {# srcset's own micro-syntax splits on whitespace, so a literal space in
+         a filename (unlike in a plain src/href) has to be escaped here. #}
+      <source srcset="{{ (src|replace('.jpg', '.webp'))|replace(' ', '%20') }}" type="image/webp">
+      {%- endif %}
+      <img class="pile-img" src="{{ src }}" alt="{{ im.caption or p.title }}"
+           data-i="{{ loop.index0 }}" loading="lazy">
+    </picture>
     {%- endfor %}
   </div>
 </article>

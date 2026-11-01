@@ -120,6 +120,12 @@ def prepare_projects(meta):
     for folder, web in folders:
         files = [f for f in folder.iterdir() if f.is_file()]
         imgs  = sorted(f.name for f in files if f.suffix.lower() in IMAGE_EXT)
+        # .webp/.avif siblings that convert.py / optimize-jpgs.py write next to
+        # a .jpg are the same photo, not a second one — drop them from the
+        # count whenever a same-stem .jpg/.jpeg/.png is also present.
+        stems_with_original = {Path(n).stem for n in imgs if Path(n).suffix.lower() not in {".webp", ".avif"}}
+        imgs = [n for n in imgs
+                if Path(n).suffix.lower() not in {".webp", ".avif"} or Path(n).stem not in stems_with_original]
         bad   = sorted(f.name for f in files if f.suffix.lower() in BAD_EXT)
         other = sorted(f.name for f in files
                        if f.suffix.lower() not in IMAGE_EXT
@@ -208,6 +214,10 @@ def build():
         trim_blocks=True,
         lstrip_blocks=True,
     )
+    # convert.py / optimize-jpgs.py write a .webp next to every .jpg; templates
+    # use this to offer it via <picture>, falling back to the .jpg untouched
+    # for any image that has no webp sibling yet.
+    env.globals["has_webp"] = lambda web_path: (ROOT / web_path).with_suffix(".webp").exists()
 
     site     = load("site.json")
     services = load("services.json")
