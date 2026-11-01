@@ -1787,10 +1787,18 @@ function showLoadError(modelUrl, err) {
   $('load-error-title').textContent = missing
     ? 'This design is not on the server'
     : 'This design could not be opened';
-  $('load-error-text').innerHTML = missing
-    ? `Nothing is hosted at <b>${modelUrl}</b>. A shared link only points at files `
-      + 'on the website — the design itself has to be uploaded there first.'
-    : err.message;
+  const textEl = $('load-error-text');
+  textEl.textContent = '';
+  if (missing) {
+    // modelUrl comes from the ?m= link and is never trusted as HTML.
+    textEl.append(
+      'Nothing is hosted at ',
+      Object.assign(document.createElement('b'), { textContent: modelUrl }),
+      '. A shared link only points at files on the website — the design itself has to be uploaded there first.',
+    );
+  } else {
+    textEl.textContent = err.message;
+  }
   $('load-error').hidden = false;
   hint('');
 }
