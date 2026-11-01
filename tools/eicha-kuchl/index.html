@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Eicha Kuchl — Türen und Auszüge im Browser bewegen</title>
-  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="./src/style.css?v=1793540324" />
 
   <!-- No build step: bare specifiers are resolved by the browser. -->
   <script type="importmap">
@@ -422,6 +422,9 @@
     </div>
   </div>
 
-  <script type="module" src="./src/main.js"></script>
+  <!-- GitHub Pages serves this with max-age=600, so bump ?v= on every deploy
+       that changes src/*.js or src/style.css, or a visitor keeps the old
+       version for up to ten minutes after a fix ships. -->
+  <script type="module" src="./src/main.js?v=1793540324"></script>
 </body>
 </html>
