@@ -65,7 +65,6 @@ a, button, input, textarea, select, .hamburger {
   padding: 0; cursor: pointer; transition: transform .2s ease, background .2s ease;
 }
 .yt-play svg { width: 20px; height: 20px; fill: var(--gold2, #e8c97a); margin-left: 3px; }
-.yt-facade:hover .yt-play { transform: scale(1.08); background: rgba(201,168,76,.25); }
 .yt-facade.playing .yt-thumb,
 .yt-facade.playing .yt-play { display: none; }
 .yt-facade iframe { width: 100%; height: 100%; border: 0; display: block; }
@@ -117,7 +116,6 @@ a, button, input, textarea, select, .hamburger {
   transform: translateY(10px);
 }
 #to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-#to-top:hover { background: rgba(201,168,76,.18); }
 #to-top svg { width: 17px; height: 17px; stroke: var(--gold2, #e8c97a); fill: none; stroke-width: 2; }
 @media (max-width: 700px) { #to-top { right: 16px; bottom: 16px; width: 44px; height: 44px; } }
 
@@ -187,10 +185,6 @@ a, button, input, textarea, select, .hamburger {
   display: flex; align-items: center; justify-content: center;
   transition: background .2s ease, border-color .2s ease;
 }
-.lb-nav:hover, .lb-close:hover {
-  background: rgba(201,168,76,.2);
-  border-color: rgba(201,168,76,.6);
-}
 .lb-nav { top: 50%; transform: translateY(-50%); width: 52px; height: 52px; font-size: 1.9rem; line-height: 1; }
 .lb-prev { left: 3vw; }
 .lb-next { right: 3vw; }
@@ -247,7 +241,6 @@ a, button, input, textarea, select, .hamburger {
   border: 1px solid var(--blue-lift);
   transition: background .2s ease, border-color .2s ease, color .2s ease;
 }
-.tool-cta:hover { background: var(--teal); border-color: var(--teal-lift); color: #00201c; }
 
 .tool-ghost {
   display: inline-block; padding: .85rem 1.4rem; border-radius: 2px;
@@ -255,7 +248,6 @@ a, button, input, textarea, select, .hamburger {
   font-family: 'Syne', sans-serif; font-weight: 600;
   transition: border-color .2s ease, color .2s ease;
 }
-.tool-ghost:hover { border-color: var(--teal); color: var(--teal-lift); }
 
 /* the four steps — a real sequence, so they get real numbers */
 .tool-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
@@ -290,9 +282,112 @@ a, button, input, textarea, select, .hamburger {
   text-decoration: none; border-bottom: 1px solid var(--edge-live); padding-bottom: 2px;
   white-space: nowrap;
 }
-.tool-mail:hover { color: var(--teal-lift); border-color: var(--teal); }
 
 @media (max-width: 860px) {
   #kuechlkastl { padding: 4.5rem 0; }
   .tool-panel { grid-template-columns: 1fr; gap: 2.2rem; }
+}
+
+/* ===========================================================
+   Projekte: Einladung statt Liste
+
+   Die Bilder stehen im Raum (projekte/). Hier dreht sich nur eine
+   kleine Fassung davon — genug, um zu zeigen, was hinter dem Knopf
+   liegt, ohne die Arbeit schon zu verraten.
+   =========================================================== */
+.room-invite {
+  display: grid; grid-template-columns: 1.3fr .7fr; gap: clamp(1.4rem, 3.5vw, 3rem);
+  align-items: center;
+  border: 1px solid var(--border); background: var(--bg2);
+  padding: clamp(1.1rem, 2.6vw, 2rem);
+}
+
+.room-preview {
+  position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden;
+  border: 1px solid var(--border); background: var(--bg);
+  text-decoration: none;
+  transition: border-color .25s ease, transform 160ms cubic-bezier(.23,1,.32,1);
+}
+/* Auch eine Fläche von 500 Pixeln ist ein Knopf: sie muss auf den
+   Druck antworten. Nur dort, wo wirklich ein Zeiger existiert. */
+.room-preview:active { transform: scale(.99); }
+
+.room-preview-poster {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  /* Steht nur da, solange kein Canvas läuft: bei "weniger Bewegung",
+     ohne WebGL, oder bis die ersten Texturen da sind. Also sichtbar
+     genug, um allein zu funktionieren — der Canvas deckt es ohnehin ab. */
+  object-fit: cover; opacity: .8; filter: blur(1.5px);
+}
+.room-preview-stage { position: absolute; inset: 0; display: block; }
+.room-preview-stage canvas { display: block; width: 100%; height: 100%; }
+
+/* derselbe Linsenrand wie im Raum, nur schwächer */
+.room-preview::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 48%, rgba(5,6,10,.8) 100%);
+}
+.room-preview-tag {
+  position: absolute; left: .9rem; bottom: .75rem; z-index: 2;
+  font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--teal);
+}
+
+.room-note {
+  color: var(--muted); line-height: 1.7; margin: 0; max-width: 32ch;
+  font-size: .95rem;
+}
+
+@media (max-width: 900px) {
+  .room-invite { grid-template-columns: 1fr; gap: 1.6rem; }
+  .room-preview { aspect-ratio: 4 / 3; }
+}
+
+/* ===========================================================
+   Hover gibt es nur dort, wo ein Zeiger existiert.
+
+   Ein Finger kann nicht schweben. Tippt jemand auf dem Handy auf eine
+   Karte, setzt der Browser :hover und lässt es stehen, bis irgendwo
+   anders getippt wird — die Karte bleibt angehoben, der Link bleibt
+   hell. Darum stehen alle Hover-Regeln hier drin.
+   =========================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .yt-facade:hover .yt-play { transform: scale(1.08); background: rgba(201,168,76,.25); }
+  #to-top:hover { background: rgba(201,168,76,.18); }
+  .lb-nav:hover, .lb-close:hover {
+  background: rgba(201,168,76,.2);
+  border-color: rgba(201,168,76,.6);
+  }
+  .tool-cta:hover { background: var(--teal); border-color: var(--teal-lift); color: #00201c; }
+  .tool-ghost:hover { border-color: var(--teal); color: var(--teal-lift); }
+  .tool-mail:hover { color: var(--teal-lift); border-color: var(--teal); }
+  .room-preview:hover { border-color: var(--teal); }
+}
+
+/* ===========================================================
+   KaizenManager — Plattform in den Leistungen
+   =========================================================== */
+.mgr-panel {
+  display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: clamp(1.4rem, 3.5vw, 3.2rem); align-items: center;
+  margin-top: clamp(2.2rem, 5vw, 4rem);
+  border: 1px solid var(--border); background: var(--bg2);
+  padding: clamp(1.1rem, 2.6vw, 2.2rem);
+}
+.mgr-video { margin: 0; }
+.mgr-player {
+  display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  background: var(--bg); border: 1px solid var(--border);
+}
+.mgr-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: .95;
+  letter-spacing: .01em; margin: .35rem 0 0;
+}
+.mgr-rule { width: min(260px, 60%); margin: 1rem 0 1.3rem; }
+.mgr-copy .tool-lead { max-width: 30ch; }
+.mgr-copy .tool-body { max-width: 54ch; }
+
+@media (max-width: 900px) {
+  .mgr-panel { grid-template-columns: 1fr; gap: 1.5rem; }
 }

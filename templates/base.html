@@ -2,7 +2,11 @@
 <html lang="{{ site.lang }}">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{# viewport-fit=cover lässt die Seite unter die Notch laufen; erst dadurch
+   liefert env(safe-area-inset-*) überhaupt Werte. interactive-widget sorgt
+   dafür, dass die Tastatur unter Android das Layout verkleinert statt es
+   zu überdecken. #}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>{{ site.title }}</title>
 <meta name="description" content="{{ site.description }}">
 <link rel="canonical" href="{{ site.url }}">
@@ -45,6 +49,19 @@
 <link rel="stylesheet" href="assets/css/scroll.css?v={{ asset_v }}">
 <link rel="stylesheet" href="assets/css/pieces.css?v={{ asset_v }}">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+{% if preview %}
+{# Nur eine Landkarte für den Namen "three" — hier wird noch nichts geladen.
+   Dieselbe Fassung wie in projekte/ und in Eicha Kuchl, damit der Browser
+   die Datei nur einmal holt. #}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+{% endif %}
 </head>
 <body>
 
@@ -57,6 +74,12 @@
     <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
     <span class="wordmark"><span class="wm-light">NEO</span><span class="wm-structure">KAIZEN</span> <span class="wm-light">DESIGN</span></span>
   </a>
+  {# Nur am Telefon sichtbar. Der Knopf steht bewusst außerhalb von
+     #navmenu: das Menü wird von scroll.js durch die Eingangssequenz
+     bewegt, der Knopf soll stillstehen. #}
+  <button id="nav-toggle" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menü öffnen">
+    <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span></span>
+  </button>
   <ul id="navmenu">
     {%- for item in site.nav %}
     {%- if item.href != '#videos' or videos %}
@@ -76,6 +99,24 @@ window.NKD_CAPTIONS = {{ scroll.captions|tojson }};
   <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
 </button>
 
+{% if preview %}
+<script>
+window.NKD_PREVIEW = {{ preview|tojson }};
+/* three.js wiegt mehr als der halbe Rest der Seite. Also wird es erst
+   geholt, wenn die Vorschau wirklich ins Bild kommt — und gar nicht, wenn
+   jemand weniger Bewegung eingestellt hat. */
+(function () {
+  const stage = document.querySelector('.room-preview-stage');
+  if (!stage || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    io.disconnect();
+    import('./assets/js/room-preview.js?v={{ asset_v }}').catch(() => {});
+  }, { rootMargin: '200px' });
+  io.observe(stage);
+})();
+</script>
+{% endif %}
 <script src="assets/js/scroll.js?v={{ asset_v }}"></script>
 <script src="assets/js/pieces.js?v={{ asset_v }}"></script>
 <script src="assets/js/main.js?v={{ asset_v }}"></script>

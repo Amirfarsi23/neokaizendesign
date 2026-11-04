@@ -26,6 +26,7 @@ IMG       = ROOT / "assets" / "img" / "projects"
 IMG_ALT   = ROOT / "images" / "Projects"
 VIDEOS    = ROOT / "data" / "videos"
 OUT       = ROOT / "index.html"
+OUT_XR    = ROOT / "projekte" / "index.html"
 
 IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"}
 # Formate, die ein Browser NICHT anzeigen kann — werden gemeldet
@@ -51,7 +52,7 @@ def youtube_id(value):
     return value if re.fullmatch(r"[\w-]{11}", value) else ""
 
 
-TXT_KEY_RE = re.compile(r"^(Title|Type|Client|Year|Tags|YouTube)\s*:\s*(.*)$", re.IGNORECASE)
+TXT_KEY_RE = re.compile(r"^(Title|Type|Client|Year|Location|Tags|YouTube)\s*:\s*(.*)$", re.IGNORECASE)
 
 
 def parse_info_txt(path):
@@ -62,7 +63,8 @@ def parse_info_txt(path):
         Free-text description, one or more paragraphs.
 
     Optional header lines (any order, before the description) let you
-    also set:  Type:  Client:  Year:  Tags: (comma-separated)  YouTube: (link or ID)
+    also set:  Type:  Client:  Year:  Location:  Tags: (comma-separated)
+    YouTube: (link or ID)
     Anything left out just stays empty — same as before.
     """
     lines = path.read_text(encoding="utf-8").splitlines()
@@ -163,6 +165,7 @@ def prepare_projects(meta):
             "client":  m.get("client",  ""),
             "year":    m.get("year",    ""),
             "type":    m.get("type",    ""),
+            "location": m.get("location", ""),
             "summary_paragraphs": m.get("summary_paragraphs", []),
             "tags":    m.get("tags",    []),
             "dir":     web,
@@ -207,6 +210,72 @@ def prepare_videos():
     return videos
 
 
+def room_title(title):
+    """
+    A folder without an info.txt is called "1". On a card next to the number
+    that is merely terse; floating a metre in front of someone's face it looks
+    like a bug. Until the info.txt is filled in, say "Projekt 01".
+    """
+    return f"Projekt {int(title):02d}" if str(title).isdigit() else title
+
+
+def picture(web_path, caption=""):
+    """
+    One image for the JavaScript side: the original, plus the .webp sibling
+    where convert.py has written one. Paths stay relative to the site root;
+    each page prefixes its own way back.
+    """
+    webp = (ROOT / web_path).with_suffix(".webp")
+    return {
+        "src":     web_path,
+        "webp":    str(Path(web_path).with_suffix(".webp")).replace("\\", "/") if webp.exists() else "",
+        "caption": caption,
+    }
+
+
+def gallery_payload(projects):
+    """
+    Everything the 3D room needs, as plain data. It lives one folder deep
+    (projekte/index.html), so every path is given relative to the site root
+    and the page prefixes it with "../" itself.
+    A .webp sibling is offered where convert.py has written one — the room
+    loads a lot of pictures at once, so the smaller file matters more here
+    than anywhere else on the site.
+    """
+    return {
+        "base": "../",
+        "hint": "Scrollen dreht den Raum · Projekt anklicken",
+        "projects": [
+            {
+                "slug":   p["slug"],
+                "index":  i,
+                "title":  room_title(p["title"]),
+                "type":   p["type"],
+                "client": p["client"],
+                "year":   p["year"],
+                "location": p["location"],
+                "tags":   p["tags"],
+                "text":   p["summary_paragraphs"],
+                "cover":  picture(p["dir"] + p["cover"], room_title(p["title"])),
+                "images": [picture(p["dir"] + im["file"], im["caption"]) for im in p["images"]],
+            }
+            for i, p in enumerate(projects, start=1)
+        ],
+    }
+
+
+def preview_payload(projects):
+    """
+    The miniature of the room on the home page: nothing but the covers.
+    It turns slowly and cannot be touched, so it needs no titles, no
+    captions and no second-level images.
+    """
+    return {
+        "base": "",
+        "covers": [picture(p["dir"] + p["cover"], p["title"]) for p in projects],
+    }
+
+
 def build():
     env = Environment(
         loader=FileSystemLoader(TEMPLATES),
@@ -218,6 +287,7 @@ def build():
     # use this to offer it via <picture>, falling back to the .jpg untouched
     # for any image that has no webp sibling yet.
     env.globals["has_webp"] = lambda web_path: (ROOT / web_path).with_suffix(".webp").exists()
+    env.globals["room_title"] = room_title
 
     site     = load("site.json")
     services = load("services.json")
@@ -240,12 +310,27 @@ def build():
         projects=projects,
         videos=videos,
         scroll=scroll,
+        preview=preview_payload(projects),
         year=date.today().year,
     )
 
     OUT.write_text(html, encoding="utf-8")
+
+    gallery = gallery_payload(projects)
+    room = env.get_template("projekte.html").render(
+        asset_v=int(stamp),
+        site=site,
+        projects=projects,
+        gallery=gallery,
+        year=date.today().year,
+    )
+    OUT_XR.parent.mkdir(exist_ok=True)
+    OUT_XR.write_text(room, encoding="utf-8")
+
+    shots = sum(len(p["images"]) for p in gallery["projects"])
     print(f"built index.html  —  {len(scroll['frames'])} Frames, {len(projects)} Projekte, "
           f"{len(videos)} Video(s), {len(services)} Leistungen")
+    print(f"built projekte/index.html  —  {len(gallery['projects'])} Tafeln, {shots} Bilder im Raum")
 
 
 def watched_files():

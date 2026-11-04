@@ -7,7 +7,7 @@
   "nav": [
     {
       "label": "Projekte",
-      "href": "#projects"
+      "href": "projekte/"
     },
     {
       "label": "Videos",
@@ -97,5 +97,18 @@
     "cta": "Eicha Kuchl öffnen",
     "feedback_cta": "Rückmeldung zum Werkzeug",
     "feedback_subject": "Eicha Kuchl — Rückmeldung"
+  },
+  "manager": {
+    "kicker": "Plattform",
+    "name": "KaizenManager",
+    "lead": "KaizenManager macht Ihr Team auf der Baustelle schneller.",
+    "paragraphs": [
+      "Laden Sie Ihr IFC-Modell hoch, und jedes Bauteil erscheint in einer Web-Plattform – mit allem, was Ihr Team zur Projektsteuerung braucht, und Sie entscheiden, wer was sehen darf. Vergeben Sie Labels für jedes Bauteil, in den Kategorien, mit denen Ihr Projekt arbeitet.",
+      "Auf der Baustelle macht der Bauleiter ein Foto oder spricht eine Notiz ins Handy, und sie hängt sofort am richtigen Bauteil – Baustelle und Büro arbeiten an einer Sache statt an zwei Versionen davon.",
+      "Und wenn jemand im Team eine Frage hat, muss niemand suchen: Die Plattform liest Ihr Modell und antwortet im Chat – was eine Wand kostet, wann sie dran ist, was dazu gemeldet wurde und von wem."
+    ],
+    "video": "assets/video/kaizenmanager.mp4",
+    "poster": "assets/video/kaizenmanager.jpg",
+    "poster_webp": "assets/video/kaizenmanager.webp"
   }
 }

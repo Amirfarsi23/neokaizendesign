@@ -92,6 +92,15 @@
   measure();
   addEventListener('resize', () => { measure(); setLens(); });
 
+  /* Gemessen wird beim Start — da ist Syne meist noch nicht geladen, und
+     die Ersatzschrift ist schmaler. Alle Positionen stammten dann von
+     einer Breite, die es gleich darauf nicht mehr gab: am Telefon lief
+     der Schriftzug deshalb rechts aus dem Bild. Nach dem Laden der
+     Schriften noch einmal messen. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { measure(); setLens(); });
+  }
+
   /* beim Neuladen immer oben starten */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   addEventListener('load', () => scrollTo(0, 0));

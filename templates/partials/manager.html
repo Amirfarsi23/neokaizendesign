@@ -1,0 +1,29 @@
+{# KaizenManager — Plattform-Abschnitt innerhalb der Leistungen.
+   Das Video ist stumm und ohne Ton gedreht; es läuft als Schleife und
+   startet erst, wenn der Abschnitt im Bild ist (siehe main.js). #}
+<div class="mgr-panel reveal">
+
+  <figure class="mgr-video">
+    <video
+      class="mgr-player"
+      poster="{{ site.manager.poster }}?v={{ asset_v }}"
+      muted loop playsinline preload="none"
+      aria-label="KaizenManager: Aufnahme der Oberfläche">
+      <source src="{{ site.manager.video }}?v={{ asset_v }}" type="video/mp4">
+    </video>
+  </figure>
+
+  <div class="mgr-copy">
+    <p class="section-label">{{ site.manager.kicker }}</p>
+    <h3 class="mgr-name">
+      <span class="wm-light">Kaizen</span><span class="wm-structure">Manager</span>
+    </h3>
+    <hr class="rule-brand mgr-rule">
+
+    <p class="tool-lead">{{ site.manager.lead }}</p>
+    {% for para in site.manager.paragraphs %}
+    <p class="tool-body">{{ para }}</p>
+    {% endfor %}
+  </div>
+
+</div>

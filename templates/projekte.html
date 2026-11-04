@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Projekte im Raum — {{ site.company }}</title>
+<meta name="description" content="Die Projekte von {{ site.company }} als begehbarer Raum: Tafeln schweben um Sie herum, wie durch eine Brille gesehen. Mit WebXR auch in VR.">
+<link rel="canonical" href="{{ site.url }}projekte/">
+<meta name="theme-color" content="#05060a">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.company }}">
+<meta property="og:url" content="{{ site.url }}projekte/">
+<meta property="og:title" content="Projekte im Raum — {{ site.company }}">
+<meta property="og:description" content="Ausgewählte Arbeiten als begehbarer Raum — am Rechner, am Handy und in VR.">
+<meta property="og:image" content="{{ site.url }}assets/img/brand/og-image.jpg">
+<meta property="og:locale" content="de_DE">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/gallery3d.css?v={{ asset_v }}">
+<link rel="icon" type="image/png" href="../assets/img/brand/favicon.png">
+</head>
+<body>
+
+<div id="xr-stage"></div>
+<div id="xr-lens" aria-hidden="true"></div>
+<p id="xr-loading">Umgebung wird geladen …</p>
+
+<div id="xr-hud">
+  <div class="xr-top">
+    <a class="xr-brand" href="../">
+      <img src="../assets/img/brand/logo-64.png" alt="">
+      <span><span class="wm-light">NEO</span><span class="wm-structure">KAIZEN</span></span>
+    </a>
+    <a class="xr-exit" href="../#projects">Zur Seite</a>
+  </div>
+
+  <aside id="xr-panel">
+    <h2 id="xr-title"></h2>
+    <p id="xr-meta"></p>
+    <div id="xr-text"></div>
+    <div id="xr-tags"></div>
+    <button type="button" id="xr-back">Zurück in den Raum</button>
+  </aside>
+
+  <div class="xr-bottom">
+    <p id="xr-hint"></p>
+    <div id="xr-vr" hidden></div>
+  </div>
+</div>
+
+{# Ohne WebGL — und für Suchmaschinen, die kein Canvas lesen — bleibt eine
+   ganz normale Liste übrig. #}
+<div id="xr-fallback">
+  <h1>Ausgewählte Arbeiten</h1>
+  <p>Ihr Gerät kann den 3D-Raum nicht darstellen. Hier sind dieselben Projekte als Übersicht —
+     die vollständigen Beschreibungen stehen <a href="../#projects" style="color:var(--teal)">auf der Startseite</a>.</p>
+  <div class="xr-fb-grid">
+    {%- for p in projects %}
+    <a href="../#projects">
+      <img src="../{{ p.dir }}{{ p.cover }}" alt="{{ room_title(p.title) }}" loading="lazy">
+      <span>{{ room_title(p.title) }}</span>
+    </a>
+    {%- endfor %}
+  </div>
+</div>
+
+<noscript>
+  <style>#xr-fallback{display:block;}#xr-loading,#xr-hud{display:none;}</style>
+</noscript>
+
+<script>
+window.NKD_GALLERY = {{ gallery|tojson }};
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="../assets/js/gallery3d.js?v={{ asset_v }}"></script>
+<script>
+/* Ein Browser ohne Modul-Unterstützung führt das obige Script nie aus —
+   dann bleibt die Ladezeile stehen. Also nach fünf Sekunden umschalten. */
+setTimeout(function () {
+  if (!document.querySelector('#xr-stage canvas')) document.body.classList.add('xr-failed');
+}, 5000);
+</script>
+</body>
+</html>

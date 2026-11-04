@@ -132,3 +132,68 @@ if (contactForm) {
     }, { passive: true });
   }
 })();
+
+/* ===========================================================
+   Menü am Telefon
+
+   Sechs Punkte passen nicht nebeneinander auf ein Handy, ohne auf
+   Schriftgrößen zu schrumpfen, die man weder lesen noch treffen kann.
+   Also: ein Knopf, ein ganzseitiges Menü, Zeilen mit 56px Höhe.
+   =========================================================== */
+(function () {
+  const toggle = document.getElementById('nav-toggle');
+  const menu   = document.getElementById('navmenu');
+  if (!toggle || !menu) return;
+
+  function setOpen(open) {
+    menu.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    // Hinter dem offenen Menü soll die Seite nicht mitwandern.
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  toggle.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Ein angetippter Punkt schließt das Menü; den Flug dorthin
+  // übernimmt der Anker-Handler weiter oben.
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('a')) setOpen(false);
+  });
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
+  });
+
+  // Wird aus dem Handyformat gedreht, gehört das Menü wieder in die Leiste.
+  addEventListener('resize', () => {
+    if (innerWidth > 700 && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
+  });
+})();
+
+/* ===========================================================
+   KaizenManager: das Video läuft nur, wenn es jemand sieht
+
+   28 Sekunden Schleife ohne Ton. Außerhalb des Bildes kostet sie nur
+   Akku, und geladen wird sie erst, wenn der Abschnitt näher kommt —
+   auf dem Handy zählt jedes Megabyte.
+   =========================================================== */
+(function () {
+  const video = document.querySelector('.mgr-player');
+  if (!video) return;
+  // Weniger Bewegung: das Standbild aus dem poster-Attribut bleibt stehen.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        video.preload = 'auto';
+        video.play().catch(() => {});   // z. B. Datensparmodus — Standbild bleibt
+      } else {
+        video.pause();
+      }
+    }
+  }, { threshold: 0.25 }).observe(video);
+})();

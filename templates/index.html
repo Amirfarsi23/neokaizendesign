@@ -12,10 +12,27 @@
       <p class="section-label">Projekte</p>
       <h2>AUSGEWÄHLTE<br>ARBEITEN</h2>
     </div>
-    <div class="proj-list">
-      {%- for p in projects %}
-      {% set num = loop.index %}{% include "partials/project_card.html" %}
-      {%- endfor %}
+
+    {# Die Bilder liegen bewusst nicht hier. Wer durch eine Liste scrollt,
+       sieht Bilder; wer in den Raum geht, steht darin — und genau das ist
+       die Arbeit, die wir verkaufen. Also lädt dieser Abschnitt ein. #}
+    <div class="room-invite reveal">
+      {# Der Raum zeigt sich selbst: dieselben Tafeln, dieselbe Drehung, nur
+         klein und ohne Bedienung. Geladen wird er erst, wenn er ins Bild
+         kommt — bis dahin liegt hier nur ein Standbild. #}
+      <a class="room-preview" href="projekte/" aria-label="Projekte im Raum ansehen">
+        <img class="room-preview-poster" src="{{ projects[0].dir }}{{ projects[0].cover }}"
+             alt="" loading="lazy" decoding="async">
+        <span class="room-preview-stage"></span>
+        <span class="room-preview-tag">Vorschau</span>
+      </a>
+
+      <div class="room-invite-copy">
+        <p class="room-note">Am Rechner, am Handy — und mit einer Brille mittendrin.</p>
+        <div class="tool-actions">
+          <a class="tool-cta" href="projekte/">Im Raum ansehen</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -49,6 +66,10 @@
       {% set num = loop.index %}{% include "partials/service_card.html" %}
       {%- endfor %}
     </div>
+
+    {% if site.manager %}
+    {% include "partials/manager.html" %}
+    {% endif %}
   </div>
 </section>
 

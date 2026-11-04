@@ -1,0 +1,156 @@
+/* ===========================================================
+   NeoKaizen — Projektraum
+
+   Eigene Seite, eigene Regeln: style.css blendet den Cursor aus und
+   legt ein Raster über alles — beides stört hier. Die Farben sind
+   dieselben, damit der Raum zur Seite gehört.
+   =========================================================== */
+
+:root{
+  --bg:#05060a;--bg2:#0a0e18;
+  --blue:#1C39BB;--teal:#00A896;--teal-lift:#3ad8c2;
+  --white:#dce4f0;--muted:#66748f;
+  --border:rgba(28,57,187,0.28);
+
+  /* Die eingebauten CSS-Kurven sind zu brav. Diese beiden haben den
+     Zug, den eine Bewegung braucht, damit sie gewollt aussieht. */
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--bg);color:var(--white);
+  font-family:'Syne',sans-serif;
+  overflow:hidden;                      /* der Raum scrollt, nicht die Seite */
+  overscroll-behavior:none;
+}
+
+/* ---------- Bühne ---------- */
+#xr-stage{position:fixed;inset:0;z-index:0;touch-action:none;}
+#xr-stage canvas{display:block;}
+
+/* ---------- Linse: der ganze Brillen-Eindruck steckt hier ---------- */
+#xr-lens{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 78% 78% at 50% 50%, transparent 62%, rgba(5,6,10,.3) 88%, rgba(5,6,10,.72) 100%),
+    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(0,168,150,.03), transparent 70%);
+}
+/* Der Lichtsaum war als Ahnung gedacht und wurde ein Ring. Eine Linse
+   sieht man nicht, man sieht durch sie hindurch. */
+#xr-lens::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  box-shadow:0 0 10vmin 2vmin rgba(28,57,187,.035) inset;
+}
+
+/* ---------- Kopfzeile ---------- */
+#xr-hud{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 450ms var(--ease-out);}
+#xr-hud.is-ready{opacity:1;}
+#xr-hud a,#xr-hud button{pointer-events:auto;}
+
+.xr-top{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:1.4rem clamp(1rem,4vw,2.6rem);
+}
+.xr-brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--white);}
+.xr-brand img{width:28px;height:28px;}
+.xr-brand span{font-family:'Syne',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:.06em;}
+.xr-brand .wm-light{color:var(--teal);}
+.xr-brand .wm-structure{color:var(--white);}
+
+.xr-exit{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;border:1px solid var(--border);
+  padding:.55rem 1.1rem;transition:color .25s,border-color .25s;
+}
+
+/* ---------- Fußzeile: Hinweis, Ladezeile, VR ---------- */
+.xr-bottom{
+  position:absolute;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:1.4rem clamp(1rem,4vw,2.6rem);
+}
+#xr-hint,#xr-loading{
+  font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);
+}
+#xr-loading{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
+  color:var(--teal);letter-spacing:.22em;
+}
+
+/* three.js liefert den VR-Knopf mit eigenem Inline-Stil — hier wird er
+   zurechtgerückt, damit er wie der Rest der Seite aussieht. */
+#xr-vr{position:relative;}
+#xr-vr button{
+  position:static !important;width:auto !important;
+  padding:.6rem 1.3rem !important;margin:0 !important;
+  background:rgba(0,168,150,.1) !important;border:1px solid var(--teal) !important;
+  color:var(--teal) !important;font-family:'DM Mono',monospace !important;
+  font-size:.66rem !important;letter-spacing:.18em !important;text-transform:uppercase !important;
+  opacity:1 !important;transform:none !important;
+}
+
+/* ---------- Projekttafel ---------- */
+#xr-panel{
+  position:absolute;left:0;top:0;bottom:0;width:min(27rem,82vw);
+  padding:5.5rem clamp(1.2rem,3vw,2.4rem) 5rem;
+  background:linear-gradient(to right,rgba(5,6,10,.93),rgba(5,6,10,.75) 70%,transparent);
+  display:flex;flex-direction:column;gap:.9rem;justify-content:center;
+  transform:translateX(-102%);transition:transform 240ms var(--ease-out);
+  pointer-events:none;
+}
+#xr-panel.is-open{transform:none;transition:transform 420ms var(--ease-drawer);}
+#xr-panel.is-open *{pointer-events:auto;}
+#xr-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:.95;}
+#xr-meta{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);}
+#xr-text p{font-size:.9rem;line-height:1.8;color:var(--muted);margin-bottom:.7rem;}
+#xr-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+.xr-tag{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.2rem .6rem;border:1px solid var(--border);color:var(--muted);
+}
+#xr-back{
+  align-self:flex-start;margin-top:.6rem;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  background:none;border:1px solid var(--teal);color:var(--teal);padding:.6rem 1.2rem;
+  transition:background .25s ease,transform 160ms var(--ease-out);
+}
+#xr-back:active{transform:scale(.97);}
+
+/* Ein Finger kennt kein Hover: auf dem Handy bleibt der Zustand sonst
+   nach dem Antippen kleben. */
+@media (hover:hover) and (pointer:fine){
+  .xr-exit:hover{color:var(--teal);border-color:var(--teal);}
+  #xr-vr button:hover{background:rgba(0,168,150,.2) !important;}
+  #xr-back:hover{background:rgba(0,168,150,.15);}
+}
+
+/* ---------- Wenn WebGL fehlt ---------- */
+#xr-fallback{
+  display:none;position:fixed;inset:0;z-index:5;overflow:auto;
+  background:var(--bg);padding:clamp(2rem,6vw,5rem);
+}
+body.xr-failed #xr-fallback{display:block;}
+body.xr-failed #xr-hud,body.xr-failed #xr-lens,body.xr-failed #xr-loading{display:none;}
+#xr-fallback h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.4rem);margin-bottom:.6rem;}
+#xr-fallback p{color:var(--muted);font-size:.9rem;line-height:1.8;max-width:46ch;margin-bottom:2rem;}
+.xr-fb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);}
+.xr-fb-grid a{background:var(--bg);padding:0;text-decoration:none;color:var(--white);display:block;}
+.xr-fb-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;opacity:.8;}
+.xr-fb-grid span{display:block;padding:.9rem 1rem;font-size:.85rem;}
+
+/* ---------- Klein und schmal ---------- */
+@media (max-width:760px){
+  #xr-panel{
+    width:100%;top:auto;height:auto;max-height:62vh;overflow:auto;
+    padding:1.6rem 1.3rem 5.2rem;justify-content:flex-start;
+    background:linear-gradient(to top,rgba(5,6,10,.96),rgba(5,6,10,.9) 70%,transparent);
+    transform:translateY(102%);
+  }
+  .xr-brand span{display:none;}
+  .xr-bottom{flex-direction:row-reverse;}
+  #xr-hint{font-size:.58rem;letter-spacing:.1em;}
+}

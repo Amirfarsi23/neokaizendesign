@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>NeoKaizen Design — Visualisierung, VR &amp; AR</title>
 <meta name="description" content="3D-Design, 360°-Rundgänge, VR und AR für Bauträger, Innenarchitektur, Küchen- und Gartenplanung.">
 <link rel="canonical" href="https://neokaizendesign.com/">
@@ -41,10 +41,18 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=1793539268">
-<link rel="stylesheet" href="assets/css/scroll.css?v=1793539268">
-<link rel="stylesheet" href="assets/css/pieces.css?v=1793539268">
+<link rel="stylesheet" href="assets/css/style.css?v=1793780458">
+<link rel="stylesheet" href="assets/css/scroll.css?v=1793780458">
+<link rel="stylesheet" href="assets/css/pieces.css?v=1793780458">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -57,7 +65,10 @@
     <img src="assets/img/brand/logo-64.png" alt="" class="brand-mark">
     <span class="wordmark"><span class="wm-light">NEO</span><span class="wm-structure">KAIZEN</span> <span class="wm-light">DESIGN</span></span>
   </a>
-  <ul id="navmenu">    <li><a href="#projects">Projekte</a></li>    <li><a href="#videos">Videos</a></li>    <li><a href="#services">Leistungen</a></li>    <li><a href="tools/eicha-kuchl/" class="is-tool">Tools</a></li>    <li><a href="#about">Über uns</a></li>    <li><a href="#contact">Kontakt</a></li>  </ul>
+  <button id="nav-toggle" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menü öffnen">
+    <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span></span>
+  </button>
+  <ul id="navmenu">    <li><a href="projekte/">Projekte</a></li>    <li><a href="#videos">Videos</a></li>    <li><a href="#services">Leistungen</a></li>    <li><a href="tools/eicha-kuchl/" class="is-tool">Tools</a></li>    <li><a href="#about">Über uns</a></li>    <li><a href="#contact">Kontakt</a></li>  </ul>
 </nav>
 
 
@@ -119,141 +130,22 @@ loading="lazy">
       <p class="section-label">Projekte</p>
       <h2>AUSGEWÄHLTE<br>ARBEITEN</h2>
     </div>
-    <div class="proj-list"><article class="proj" data-slug="1">
-  <div class="proj-info">
-    <span class="proj-idx">01</span>
-    <h3 class="proj-title">1</h3>
-    <span class="proj-count">5 Bilder</span>
 
-  </div>
+    <div class="room-invite reveal">
+      <a class="room-preview" href="projekte/" aria-label="Projekte im Raum ansehen">
+        <img class="room-preview-poster" src="images/Projects/1/2.jpg"
+             alt="" loading="lazy" decoding="async">
+        <span class="room-preview-stage"></span>
+        <span class="room-preview-tag">Vorschau</span>
+      </a>
 
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/1/1.webp" type="image/webp">      <img class="pile-img" src="images/Projects/1/1.jpg" alt="1"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/1/2.webp" type="image/webp">      <img class="pile-img" src="images/Projects/1/2.jpg" alt="1"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/1/c1.webp" type="image/webp">      <img class="pile-img" src="images/Projects/1/c1.jpg" alt="1"
-           data-i="2" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/1/c16.webp" type="image/webp">      <img class="pile-img" src="images/Projects/1/c16.jpg" alt="1"
-           data-i="3" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/1/c2.webp" type="image/webp">      <img class="pile-img" src="images/Projects/1/c2.jpg" alt="1"
-           data-i="4" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="2">
-  <div class="proj-info">
-    <span class="proj-idx">02</span>
-    <h3 class="proj-title">2</h3>
-    <span class="proj-count">2 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/2/c03%20kitchen%20.webp" type="image/webp">      <img class="pile-img" src="images/Projects/2/c03 kitchen .jpg" alt="2"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/2/c06%20finall%20edite%20color.webp" type="image/webp">      <img class="pile-img" src="images/Projects/2/c06 finall edite color.jpg" alt="2"
-           data-i="1" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="3">
-  <div class="proj-info">
-    <span class="proj-idx">03</span>
-    <h3 class="proj-title">3</h3>
-    <span class="proj-count">3 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/3/c12.webp" type="image/webp">      <img class="pile-img" src="images/Projects/3/c12.jpg" alt="3"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/3/c16%20finall.webp" type="image/webp">      <img class="pile-img" src="images/Projects/3/c16 finall.jpg" alt="3"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/3/c17.webp" type="image/webp">      <img class="pile-img" src="images/Projects/3/c17.jpg" alt="3"
-           data-i="2" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="4">
-  <div class="proj-info">
-    <span class="proj-idx">04</span>
-    <h3 class="proj-title">4</h3>
-    <span class="proj-count">5 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/4/c06.webp" type="image/webp">      <img class="pile-img" src="images/Projects/4/c06.jpg" alt="4"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/4/camera03.webp" type="image/webp">      <img class="pile-img" src="images/Projects/4/camera03.jpg" alt="4"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/4/camera05.webp" type="image/webp">      <img class="pile-img" src="images/Projects/4/camera05.jpg" alt="4"
-           data-i="2" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/4/camera10edit.webp" type="image/webp">      <img class="pile-img" src="images/Projects/4/camera10edit.jpg" alt="4"
-           data-i="3" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/4/camera2.webp" type="image/webp">      <img class="pile-img" src="images/Projects/4/camera2.jpg" alt="4"
-           data-i="4" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="5">
-  <div class="proj-info">
-    <span class="proj-idx">05</span>
-    <h3 class="proj-title">5</h3>
-    <span class="proj-count">4 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/5/c05.webp" type="image/webp">      <img class="pile-img" src="images/Projects/5/c05.jpg" alt="5"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/5/c8asli.webp" type="image/webp">      <img class="pile-img" src="images/Projects/5/c8asli.jpg" alt="5"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/5/c9.webp" type="image/webp">      <img class="pile-img" src="images/Projects/5/c9.jpg" alt="5"
-           data-i="2" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/5/c9asli.webp" type="image/webp">      <img class="pile-img" src="images/Projects/5/c9asli.jpg" alt="5"
-           data-i="3" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="6">
-  <div class="proj-info">
-    <span class="proj-idx">06</span>
-    <h3 class="proj-title">6</h3>
-    <span class="proj-count">5 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/6/2.webp" type="image/webp">      <img class="pile-img" src="images/Projects/6/2.jpg" alt="6"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/6/8.webp" type="image/webp">      <img class="pile-img" src="images/Projects/6/8.jpg" alt="6"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/6/8a.webp" type="image/webp">      <img class="pile-img" src="images/Projects/6/8a.jpg" alt="6"
-           data-i="2" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/6/c6a.webp" type="image/webp">      <img class="pile-img" src="images/Projects/6/c6a.jpg" alt="6"
-           data-i="3" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/6/d.webp" type="image/webp">      <img class="pile-img" src="images/Projects/6/d.jpg" alt="6"
-           data-i="4" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="7">
-  <div class="proj-info">
-    <span class="proj-idx">07</span>
-    <h3 class="proj-title">7</h3>
-    <span class="proj-count">4 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/7/c014.webp" type="image/webp">      <img class="pile-img" src="images/Projects/7/c014.jpg" alt="7"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/7/c017.webp" type="image/webp">      <img class="pile-img" src="images/Projects/7/c017.jpg" alt="7"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/7/c08.webp" type="image/webp">      <img class="pile-img" src="images/Projects/7/c08.jpg" alt="7"
-           data-i="2" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/7/c18.webp" type="image/webp">      <img class="pile-img" src="images/Projects/7/c18.jpg" alt="7"
-           data-i="3" loading="lazy">
-    </picture>  </div>
-</article><article class="proj" data-slug="8">
-  <div class="proj-info">
-    <span class="proj-idx">08</span>
-    <h3 class="proj-title">8</h3>
-    <span class="proj-count">3 Bilder</span>
-
-  </div>
-
-  <div class="proj-pile">    <picture>      <source srcset="images/Projects/8/c20.webp" type="image/webp">      <img class="pile-img" src="images/Projects/8/c20.jpg" alt="8"
-           data-i="0" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/8/c22.webp" type="image/webp">      <img class="pile-img" src="images/Projects/8/c22.jpg" alt="8"
-           data-i="1" loading="lazy">
-    </picture>    <picture>      <source srcset="images/Projects/8/c24.webp" type="image/webp">      <img class="pile-img" src="images/Projects/8/c24.jpg" alt="8"
-           data-i="2" loading="lazy">
-    </picture>  </div>
-</article>    </div>
+      <div class="room-invite-copy">
+        <p class="room-note">Am Rechner, am Handy — und mit einer Brille mittendrin.</p>
+        <div class="tool-actions">
+          <a class="tool-cta" href="projekte/">Im Raum ansehen</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -308,7 +200,33 @@ loading="lazy">
   <p class="svc-desc">Der Entwurf in Originalgröße am echten Ort. Im Rohbau, im Raum, im Garten.</p>
   <div class="svc-tags"><span class="svc-tag">AR</span><span class="svc-tag">MR</span><span class="svc-tag">Vor Ort</span>  </div>
 </div>    </div>
+
+<div class="mgr-panel reveal">
+
+  <figure class="mgr-video">
+    <video
+      class="mgr-player"
+      poster="assets/video/kaizenmanager.jpg?v=1793780458"
+      muted loop playsinline preload="none"
+      aria-label="KaizenManager: Aufnahme der Oberfläche">
+      <source src="assets/video/kaizenmanager.mp4?v=1793780458" type="video/mp4">
+    </video>
+  </figure>
+
+  <div class="mgr-copy">
+    <p class="section-label">Plattform</p>
+    <h3 class="mgr-name">
+      <span class="wm-light">Kaizen</span><span class="wm-structure">Manager</span>
+    </h3>
+    <hr class="rule-brand mgr-rule">
+
+    <p class="tool-lead">KaizenManager macht Ihr Team auf der Baustelle schneller.</p>
+    <p class="tool-body">Laden Sie Ihr IFC-Modell hoch, und jedes Bauteil erscheint in einer Web-Plattform – mit allem, was Ihr Team zur Projektsteuerung braucht, und Sie entscheiden, wer was sehen darf. Vergeben Sie Labels für jedes Bauteil, in den Kategorien, mit denen Ihr Projekt arbeitet.</p>
+    <p class="tool-body">Auf der Baustelle macht der Bauleiter ein Foto oder spricht eine Notiz ins Handy, und sie hängt sofort am richtigen Bauteil – Baustelle und Büro arbeiten an einer Sache statt an zwei Versionen davon.</p>
+    <p class="tool-body">Und wenn jemand im Team eine Frage hat, muss niemand suchen: Die Plattform liest Ihr Modell und antwortet im Chat – was eine Wand kostet, wann sie dran ist, was dazu gemeldet wurde und von wem.</p>
   </div>
+
+</div>  </div>
 </section>
 
 <!-- KÜCHLKASTL -->
@@ -428,8 +346,24 @@ window.NKD_CAPTIONS = [{"from": 0, "mode": "", "service": "3D-Modellierung", "su
   <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
 </button>
 
-<script src="assets/js/scroll.js?v=1793539268"></script>
-<script src="assets/js/pieces.js?v=1793539268"></script>
-<script src="assets/js/main.js?v=1793539268"></script>
+<script>
+window.NKD_PREVIEW = {"base": "", "covers": [{"caption": "Innenarchitektur", "src": "images/Projects/1/2.jpg", "webp": "images/Projects/1/2.webp"}, {"caption": "Innenarchitektur und K\u00fcchenplanung", "src": "images/Projects/2/c03 kitchen .jpg", "webp": "images/Projects/2/c03 kitchen .webp"}, {"caption": "Fassade und Garten", "src": "images/Projects/3/c12.jpg", "webp": "images/Projects/3/c12.webp"}, {"caption": "B\u00fcro", "src": "images/Projects/4/c06.jpg", "webp": "images/Projects/4/c06.webp"}, {"caption": "Fassade", "src": "images/Projects/5/c05.jpg", "webp": "images/Projects/5/c05.webp"}, {"caption": "Kindergarten", "src": "images/Projects/6/2.jpg", "webp": "images/Projects/6/2.webp"}, {"caption": "Innenarchitektur und K\u00fcchenplanung", "src": "images/Projects/7/c014.jpg", "webp": "images/Projects/7/c014.webp"}, {"caption": "Innenarchitektur", "src": "images/Projects/8/c20.jpg", "webp": "images/Projects/8/c20.webp"}]};
+/* three.js wiegt mehr als der halbe Rest der Seite. Also wird es erst
+   geholt, wenn die Vorschau wirklich ins Bild kommt — und gar nicht, wenn
+   jemand weniger Bewegung eingestellt hat. */
+(function () {
+  const stage = document.querySelector('.room-preview-stage');
+  if (!stage || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    io.disconnect();
+    import('./assets/js/room-preview.js?v=1793780458').catch(() => {});
+  }, { rootMargin: '200px' });
+  io.observe(stage);
+})();
+</script>
+<script src="assets/js/scroll.js?v=1793780458"></script>
+<script src="assets/js/pieces.js?v=1793780458"></script>
+<script src="assets/js/main.js?v=1793780458"></script>
 </body>
 </html>
