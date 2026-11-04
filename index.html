@@ -41,9 +41,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=1793780458">
-<link rel="stylesheet" href="assets/css/scroll.css?v=1793780458">
-<link rel="stylesheet" href="assets/css/pieces.css?v=1793780458">
+<link rel="stylesheet" href="assets/css/style.css?v=1793791912">
+<link rel="stylesheet" href="assets/css/scroll.css?v=1793791912">
+<link rel="stylesheet" href="assets/css/pieces.css?v=1793791912">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon.png">
 <script type="importmap">
 {
@@ -133,7 +133,8 @@ loading="lazy">
 
     <div class="room-invite reveal">
       <a class="room-preview" href="projekte/" aria-label="Projekte im Raum ansehen">
-        <img class="room-preview-poster" src="images/Projects/1/2.jpg"
+        <img class="room-preview-poster"
+             src="images/Projects/2/c03%20kitchen%20.jpg?v=1793791912"
              alt="" loading="lazy" decoding="async">
         <span class="room-preview-stage"></span>
         <span class="room-preview-tag">Vorschau</span>
@@ -206,11 +207,14 @@ loading="lazy">
   <figure class="mgr-video">
     <video
       class="mgr-player"
-      poster="assets/video/kaizenmanager.jpg?v=1793780458"
-      muted loop playsinline preload="none"
+      poster="assets/video/kaizenmanager.jpg?v=1793791912"
+      autoplay muted loop playsinline preload="metadata"
       aria-label="KaizenManager: Aufnahme der Oberfläche">
-      <source src="assets/video/kaizenmanager.mp4?v=1793780458" type="video/mp4">
+      <source src="assets/video/kaizenmanager.mp4?v=1793791912" type="video/mp4">
     </video>
+    <button class="mgr-toggle" type="button" aria-label="Aufnahme abspielen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,5 19,12 8,19"/></svg>
+    </button>
   </figure>
 
   <div class="mgr-copy">
@@ -357,13 +361,13 @@ window.NKD_PREVIEW = {"base": "", "covers": [{"caption": "Innenarchitektur", "sr
   const io = new IntersectionObserver((entries) => {
     if (!entries.some(e => e.isIntersecting)) return;
     io.disconnect();
-    import('./assets/js/room-preview.js?v=1793780458').catch(() => {});
+    import('./assets/js/room-preview.js?v=1793791912').catch(() => {});
   }, { rootMargin: '200px' });
   io.observe(stage);
 })();
 </script>
-<script src="assets/js/scroll.js?v=1793780458"></script>
-<script src="assets/js/pieces.js?v=1793780458"></script>
-<script src="assets/js/main.js?v=1793780458"></script>
+<script src="assets/js/scroll.js?v=1793791912"></script>
+<script src="assets/js/pieces.js?v=1793791912"></script>
+<script src="assets/js/main.js?v=1793791912"></script>
 </body>
 </html>

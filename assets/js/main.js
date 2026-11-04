@@ -174,26 +174,47 @@ if (contactForm) {
 })();
 
 /* ===========================================================
-   KaizenManager: das Video läuft nur, wenn es jemand sieht
+   KaizenManager: eine Schleife, die sich wie ein GIF benimmt
 
-   28 Sekunden Schleife ohne Ton. Außerhalb des Bildes kostet sie nur
-   Akku, und geladen wird sie erst, wenn der Abschnitt näher kommt —
-   auf dem Handy zählt jedes Megabyte.
+   Gestartet wird sie vom Browser selbst (autoplay im Markup) — das ist
+   der einzige Weg, der auch dann hält, wenn ein Skript zu spät kommt
+   oder der Datensparmodus dazwischenredet. Hier steht nur noch, was ein
+   GIF nicht kann: anhalten, solange niemand hinsieht, und einen Knopf
+   anbieten, wenn der Browser doch nicht mitspielt.
    =========================================================== */
 (function () {
-  const video = document.querySelector('.mgr-player');
+  const video  = document.querySelector('.mgr-player');
   if (!video) return;
-  // Weniger Bewegung: das Standbild aus dem poster-Attribut bleibt stehen.
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const figure = video.closest('.mgr-video');
+  const button = figure.querySelector('.mgr-toggle');
 
+  /* Weniger Bewegung heißt hier: nicht von selbst. Der Knopf bleibt,
+     wer sie sehen will, tippt sie an. */
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let wanted = !REDUCED;
+  if (REDUCED) { video.autoplay = false; video.pause(); }
+
+  function mark() {
+    const stopped = video.paused;
+    figure.classList.toggle('is-paused', stopped);
+    button.setAttribute('aria-label', stopped ? 'Aufnahme abspielen' : 'Aufnahme anhalten');
+  }
+  const start = () => video.play().then(mark, mark);
+
+  video.addEventListener('play', mark);
+  video.addEventListener('pause', mark);
+  mark();
+
+  button.addEventListener('click', () => {
+    wanted = video.paused;
+    if (wanted) start(); else video.pause();
+  });
+
+  /* Außerhalb des Bildes kostet die Schleife nur Akku. */
   new IntersectionObserver((entries) => {
     for (const e of entries) {
-      if (e.isIntersecting) {
-        video.preload = 'auto';
-        video.play().catch(() => {});   // z. B. Datensparmodus — Standbild bleibt
-      } else {
-        video.pause();
-      }
+      if (e.isIntersecting) { if (wanted) start(); }
+      else video.pause();
     }
   }, { threshold: 0.25 }).observe(video);
 })();

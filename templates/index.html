@@ -21,7 +21,12 @@
          klein und ohne Bedienung. Geladen wird er erst, wenn er ins Bild
          kommt — bis dahin liegt hier nur ein Standbild. #}
       <a class="room-preview" href="projekte/" aria-label="Projekte im Raum ansehen">
-        <img class="room-preview-poster" src="{{ projects[0].dir }}{{ projects[0].cover }}"
+        {# Festes Standbild aus site.json, nicht das Titelbild des ersten
+           Projekts: das Bild soll den Raum verkaufen, und welches Projekt
+           vorne steht, kann sich jederzeit ändern. Leerzeichen im
+           Dateinamen müssen in der Adresse maskiert werden. #}
+        <img class="room-preview-poster"
+             src="{{ site.room_preview | replace(' ', '%20') }}?v={{ asset_v }}"
              alt="" loading="lazy" decoding="async">
         <span class="room-preview-stage"></span>
         <span class="room-preview-tag">Vorschau</span>

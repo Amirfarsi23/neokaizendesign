@@ -362,23 +362,46 @@ a, button, input, textarea, select, .hamburger {
   .tool-ghost:hover { border-color: var(--teal); color: var(--teal-lift); }
   .tool-mail:hover { color: var(--teal-lift); border-color: var(--teal); }
   .room-preview:hover { border-color: var(--teal); }
+  .mgr-video:hover .mgr-toggle { opacity: 1; }
 }
 
 /* ===========================================================
    KaizenManager — Plattform in den Leistungen
    =========================================================== */
+/* Nebeneinander war die Aufnahme halb so breit wie die Tafel und damit
+   zu klein, um etwas darin zu erkennen. Jetzt steht sie oben und allein:
+   760 px statt 490 px, also halb so groß wieder dazu. Die Grenze ist
+   nicht willkürlich — die Aufnahme ist 1280 px breit, und wer sie weiter
+   aufzieht, sieht nur noch weichere Kanten. */
 .mgr-panel {
-  display: grid; grid-template-columns: 1.05fr .95fr;
-  gap: clamp(1.4rem, 3.5vw, 3.2rem); align-items: center;
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(1.3rem, 3vw, 2.2rem); align-items: start;
   margin-top: clamp(2.2rem, 5vw, 4rem);
   border: 1px solid var(--border); background: var(--bg2);
   padding: clamp(1.1rem, 2.6vw, 2.2rem);
 }
-.mgr-video { margin: 0; }
+.mgr-video { margin: 0; position: relative; width: min(100%, 760px); }
 .mgr-player {
   display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
   background: var(--bg); border: 1px solid var(--border);
 }
+
+/* Der Knopf deckt die ganze Aufnahme ab, ist aber nur zu sehen, wenn
+   sie steht — oder wenn eine Maus darüberfährt und anhalten darf. */
+.mgr-toggle {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--white); opacity: 0;
+  transition: opacity 220ms cubic-bezier(.23, 1, .32, 1);
+}
+.mgr-video.is-paused .mgr-toggle { opacity: 1; }
+.mgr-toggle:focus-visible { opacity: 1; outline: 2px solid var(--teal); outline-offset: -2px; }
+.mgr-toggle svg {
+  width: clamp(46px, 9vw, 66px); height: auto; fill: currentColor;
+  filter: drop-shadow(0 2px 16px rgba(0, 0, 0, .65));
+  transition: transform 180ms cubic-bezier(.23, 1, .32, 1);
+}
+.mgr-toggle:active svg { transform: scale(.94); }
 .mgr-name {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: .95;
@@ -386,8 +409,5 @@ a, button, input, textarea, select, .hamburger {
 }
 .mgr-rule { width: min(260px, 60%); margin: 1rem 0 1.3rem; }
 .mgr-copy .tool-lead { max-width: 30ch; }
-.mgr-copy .tool-body { max-width: 54ch; }
+.mgr-copy .tool-body { max-width: 62ch; }
 
-@media (max-width: 900px) {
-  .mgr-panel { grid-template-columns: 1fr; gap: 1.5rem; }
-}

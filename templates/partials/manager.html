@@ -1,16 +1,24 @@
 {# KaizenManager — Plattform-Abschnitt innerhalb der Leistungen.
-   Das Video ist stumm und ohne Ton gedreht; es läuft als Schleife und
-   startet erst, wenn der Abschnitt im Bild ist (siehe main.js). #}
+   Die Aufnahme ist stumm, ohne Tonspur und 28 Sekunden lang: sie läuft
+   wie ein GIF. autoplay steht bewusst im Markup — der Browser startet
+   eine stumme Schleife selbst und zuverlässiger als jedes Skript.
+   main.js hält sie nur an, solange niemand hinsieht, und legt den Knopf
+   darüber, falls der Browser das Starten verweigert. #}
 <div class="mgr-panel reveal">
 
   <figure class="mgr-video">
     <video
       class="mgr-player"
       poster="{{ site.manager.poster }}?v={{ asset_v }}"
-      muted loop playsinline preload="none"
+      autoplay muted loop playsinline preload="metadata"
       aria-label="KaizenManager: Aufnahme der Oberfläche">
       <source src="{{ site.manager.video }}?v={{ asset_v }}" type="video/mp4">
     </video>
+    {# Liegt über der ganzen Aufnahme, ist aber nur zu sehen, wenn sie
+       steht. So kommt auch ohne Maus jemand an den Start heran. #}
+    <button class="mgr-toggle" type="button" aria-label="Aufnahme abspielen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,5 19,12 8,19"/></svg>
+    </button>
   </figure>
 
   <div class="mgr-copy">

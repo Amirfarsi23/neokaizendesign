@@ -31,14 +31,19 @@ const HINT_ROOM    = TOUCH ? 'Ziehen dreht den Raum · Projekt antippen' : null;
 const HINT_PROJECT = TOUCH ? 'Bild antippen · zum Schließen Zurück' : 'Bild anklicken · Esc zurück';
 
 const COVER_RADIUS    = NARROW ? 6.2 : 9.5;   // Abstand der Projekttafeln
-const COVER_HEIGHT    = NARROW ? 3.0 : 3.2;   // Obergrenze, nicht Vorgabe
 const COVER_Y_SPREAD  = NARROW ? 0.0 : 1.3;   // Streuung in der Höhe
 const COVER_PER_ROW   = NARROW ? 4   : 8;     // hochkant passen nicht acht nebeneinander
 const COVER_ROW_SPACING = 4.0;
 const SHOT_RADIUS     = NARROW ? 5.6 : 7.6;   // Bilder innerhalb eines Projekts
-const SHOT_HEIGHT     = NARROW ? 2.6 : 2.8;
 const SHOT_PER_ROW    = NARROW ? 4   : 7;
 const ROW_SPACING     = NARROW ? 3.4 : 3.5;
+/* Eine Tafel darf nie so hoch werden, dass sie der Reihe darüber ins
+   Bild wächst — aber auch nicht kleiner bleiben, als der Platz hergibt.
+   Früher stand hier eine feste Obergrenze (2.8). Die hat auf dem Monitor
+   ein Drittel der verfügbaren Fläche verschenkt: ein 1800-Pixel-Foto kam
+   auf 456 Bildschirmpixel heraus. Jetzt begrenzt nur noch der
+   Reihenabstand, und das auch nur, wenn es überhaupt zwei Reihen gibt. */
+const ROW_FILL        = 0.84;
 
 const SPIN_WHEEL      = 0.0016;  // Rad -> Drehung
 const SPIN_DRAG       = 0.004;   // Finger/Maus-Ziehen -> Drehung
@@ -66,7 +71,11 @@ const vrSlot   = document.getElementById('xr-vr');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(BG);
-scene.fog = new THREE.FogExp2(BG, 0.042);   // Tiefendunst statt harter Kante
+/* Der Dunst soll Tiefe andeuten, nicht die Bilder dämpfen. Bei 0.042
+   kam von einem Foto auf 9.5 Metern nur noch 85 % der Helligkeit an —
+   genau das sah nach schlechterer Qualität aus. Bei 0.018 sind es 97 %,
+   und der Staub in zwanzig Metern verschwindet trotzdem im Schwarz. */
+scene.fog = new THREE.FogExp2(BG, 0.018);
 
 const camera = new THREE.PerspectiveCamera(NARROW ? 80 : 72, innerWidth / innerHeight, 0.1, 100);
 
@@ -143,11 +152,11 @@ function texAspect(tex) {
    Nachbarin. Also wird nicht mehr eine feste Höhe gesetzt, sondern aus
    zwei Grenzen die kleinere genommen — was der Bildausschnitt hergibt,
    und was der Platz auf dem Kreis hergibt. */
-function fitSize(aspect, radius, step) {
+function fitSize(aspect, radius, step, maxH) {
   const visH = 2 * radius * Math.tan((camera.fov * Math.PI / 180) / 2);
   const visW = visH * camera.aspect;
-  const maxW = Math.min(visW * 0.88, radius * step * 0.84);
-  const h = Math.min(visH * 0.46, maxW / aspect);
+  const maxW = Math.min(visW * 0.9, radius * step * 0.9);
+  const h = Math.min(visH * 0.62, maxW / aspect, maxH || Infinity);
   return { h: Math.max(0.9, h), w: Math.max(0.9, h) * aspect };
 }
 
@@ -269,7 +278,8 @@ async function buildOverview() {
     const row    = Math.floor(i / perRow);
     const k      = i % perRow;
 
-    const size = fitSize(texAspect(tex), COVER_RADIUS, step);
+    const size = fitSize(texAspect(tex), COVER_RADIUS, step,
+                         rows > 1 ? COVER_ROW_SPACING * ROW_FILL : 0);
     const mesh = makePanel(tex, size.h);
 
     /* Beide Reihen auf derselben Achse: so steht an jeder der vier
@@ -358,8 +368,9 @@ async function openProject(p, fromMesh) {
     const angle = startAngle + (k - (inRow - 1) / 2) * step;
     const y = (rows === 1 ? 0 : (row - (rows - 1) / 2) * ROW_SPACING) + Math.sin(i * 1.9) * 0.18;
 
-    const size = fitSize(texAspect(tex), SHOT_RADIUS, step);
-    const mesh = makePanel(tex, Math.min(size.h, SHOT_HEIGHT));
+    const size = fitSize(texAspect(tex), SHOT_RADIUS, step,
+                         rows > 1 ? ROW_SPACING * ROW_FILL : 0);
+    const mesh = makePanel(tex, size.h);
     placeOnRing(mesh, angle, SHOT_RADIUS + Math.cos(i * 2.1) * 0.35, y);
     mesh.userData.caption = pic.caption || p.title;
     mesh.userData.fade = 'in';
